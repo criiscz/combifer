@@ -39,7 +39,7 @@
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
 
-  --yellow-login: #f9d71c;
+  --yellow-login: #FDDC28;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -105,5 +105,11 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    min-height: 100vh;
   }
 }

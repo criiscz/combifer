@@ -1,7 +1,7 @@
 import LogoLogin from "@/app/login/LogoLogin";
 import styles from './login.module.css'
 
-export default function DashboardLayout({
+export default function LoginLayout({
                                           children,
                                         }: {
   children: React.ReactNode,
@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <body>
       <section className={styles.loginContainer}>
-        <LogoLogin/>
+        <LogoLogin style={'vertical'}/>
         {children}
       </section>
     </body>

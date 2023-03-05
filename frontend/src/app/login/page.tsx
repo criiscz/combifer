@@ -1,4 +1,3 @@
-'use server'
 import styles from './login.module.css';
 import Link from "next/link";
 import LoginForm from "@/app/login/LoginForm";

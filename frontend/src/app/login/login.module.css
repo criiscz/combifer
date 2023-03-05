@@ -22,6 +22,15 @@
     font-weight: bolder;
 }
 
+.logo_h {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Inter, serif;
+    font-weight: bolder;
+}
+
 .logo h1 {
     font-size: 6rem;
     font-weight: bolder;
@@ -33,6 +42,23 @@
     background: black;
     width: 30rem;
     color: var(--yellow-login);
+    text-align: center;
+    letter-spacing: 10px;
+}
+
+.logo_h h1 {
+    display: none;
+    font-size: 6rem;
+    font-weight: bolder;
+    text-shadow: 1px 1px 15px #0003;
+}
+
+.logo_h h2 {
+    font-size: 2.5rem;
+    font-family: Inter, serif;
+    font-weight: bold;
+    color: black;
+    margin: 0 10px;
     text-align: center;
     letter-spacing: 10px;
 }

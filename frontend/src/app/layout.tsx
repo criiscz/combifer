@@ -11,11 +11,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-    {/*<CacheProvider>*/}
-    {/*  <ChakraProvider>*/}
         <body>{children}</body>
-    {/*  </ChakraProvider>*/}
-    {/*</CacheProvider>*/}
     </html>
   )
 }

@@ -1,0 +1,166 @@
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: 0 0 0.8rem rgba(0, 0, 0, 0.1);
+}
+
+.navbar__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.navbar__links {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ------------------  Head Name ------------------ */
+
+.navbar__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 10rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.navbar__header_data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.navbar__header_data h1 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #383838;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar__header_data h2 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #929292;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ------------------  Head Time ------------------ */
+
+.navbar__info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar__icon_w_text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    color: #818181;
+    font-family: 'Inter', sans-serif;
+    font-weight: lighter;
+}
+
+.navbar__icon_w_text h3 {
+    padding-left: 0.5rem;
+    font-weight: normal;
+}
+
+.navbar__sysinfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar__logout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    font-size: .9rem;
+    font-family: 'Inter', sans-serif;
+    color: #818181;
+    height: 100%;
+}
+
+.navbar__logout a {
+    padding-left: 0.2rem;
+    font-weight: normal;
+}
+
+.navbar__logout:hover {
+    color: #383838;
+}
+
+/* ------------------  Nav Links ------------------ */
+
+.navbar__links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    margin-bottom: 0rem;
+}
+
+.navbar__link_ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.navbar__link_1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: normal;
+    gap: 1rem;
+    align-items: center;
+    height: 3rem;
+    padding: 0 5rem;
+    width: 100%;
+    color: #818181;
+    font-family: 'Inter', sans-serif;
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
+.navbar__link_1:hover {
+    color: #383838;
+    outline: none;
+    background: #f5f5f5;
+}
+
+.navbar__link_1:focus {
+    color: #383838;
+    outline: none;
+    background: #f5f5f5;
+}
+
+.navbar__link_1:active {
+    color: #eccd1c;
+    outline: none;
+    background: #f5f5f5;
+}
+
+
+
