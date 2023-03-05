@@ -1,0 +1,162 @@
+Table "AGENTS" {
+  "id" INT [pk, increment]
+  "document_type" TEXT [not null]
+  "person_type" VARCHAR(30) [not null]
+  "name" TEXT [not null]
+  "last_name" TEXT [not null]
+  "phone" VARCHAR(20) [not null]
+  "email" EMAIL [not null]
+}
+
+Table "ROLES" {
+  "id" INT [pk, increment]
+  "name" VARCHAR(45) [not null]
+  "description" TEXT
+}
+
+Table "USERS" {
+  "id" INT [pk, increment]
+  "username" VARCHAR(45) [unique, not null]
+  "password" VARCHAR(45) [not null]
+  "description" TEXT
+  "agent_id" INT [not null]
+}
+
+Table "USER_ROLES" {
+  "role_id" INT [not null]
+  "user_id" INT [not null]
+}
+
+Table "PERMISSIONS" {
+  "id" INT [pk, increment]
+  "name" VARCHAR(45) [not null]
+  "access_module" VARCHAR(45) [not null]
+  "role_id" INT [not null]
+}
+
+Table "ORDERS" {
+  "id" INT [pk, increment]
+  "create_date" DATE [not null]
+  "receive_date" DATE
+  "description" TEXT
+  "employee_id" INT [not null]
+}
+
+Table "ORDER_PRODUCTS" {
+  "id" INT [pk, increment]
+  "product_quantity" INT [not null]
+  "product_unit_price" FLOAT [not null]
+  "product_name" TEXT [not null]
+  "order_id" INT [not null]
+  "product_lot_id" INT [not null]
+} 
+
+Table "PRODUCT_LOTS" {
+  "id" INT [pk, increment]
+  "price" FLOAT [not null]
+  "enter_date" DATE [not null]
+  "emptyness_date" DATE 
+  "product_id" INT [not null]
+}
+
+Table "PRODUCTS" {
+  "id" INT [pk, increment]
+  "name" TEXT [not null]
+  "description" TEXT
+  "measure_unit" MeasureUnit
+  "location_id" Int [not null]
+  "category_product_id" Int [not null]
+}
+
+Table "SALES" {
+  "id" INT [pk, increment]
+  "creation_date" DATE [not null]
+  "description" TEXT
+  "client_id" INT [not null]
+  "employee_id" INT [not null]
+}
+
+Table "SALE_PRODUCTS" {
+  "id" INT [pk, increment]
+  "product_quiantity" INT [not null]
+  "product_discount" FLOAT [not null]
+  "product_measure_unit" MeasureUnit
+  "product_unit_price" FLOAT [not null]
+  "product_name" TEXT [not null]
+  "product_description" TEXT
+  "sale_id" INT [not null]
+  "tax_id" INT [not null]
+  "product_lot_id" INT [not null]
+}
+
+Table "TAXES" {
+  "id" INT [pk, increment]
+  "name" TEXT  [not null]
+  "description" TEXT
+  "value" FLOAT [not null]
+}
+
+Table "CATEGORY_PRODUCTS" {
+  "id" INT [pk, increment]
+  "name" TEXT [not null]
+  "description" TEXT
+}
+
+Table "LOCATION" {
+  "id" INT [pk, increment]
+  "name" TEXT [not null]
+  "description" TEXT
+  "img_url" TEXT
+}
+
+Enum MeasureUnit {
+  METER
+  KILOGRAM
+  POUND
+  UNIT
+  LITER
+}
+
+Enum PersonType {
+  NATURAL
+  LEGAL
+}
+
+Enum DocumentType {
+  CITIZENSHIP_CARD
+  IDENTITY_CARD
+  PASSPORT
+  FOREIGN_CARD
+  NIT
+}
+
+Ref "fk_USERS_AGENT1":"AGENTS"."id" - "USERS"."agent_id" [update: no action, delete: no action]
+
+Ref "fk_USER_ROLES_ROLES1":"ROLES"."id" < "USER_ROLES"."role_id" [update: no action, delete: no action]
+
+Ref "fk_USER_ROLES_USERS1":"USERS"."id" < "USER_ROLES"."user_id" [update: no action, delete: no action]
+
+Ref "fk_PERMISSIONS_ROLES1":"ROLES"."id" < "PERMISSIONS"."role_id" [update: no action, delete: no action]
+
+
+Ref: "AGENTS"."id" < "ORDERS"."employee_id"
+
+Ref: "AGENTS"."id" < "SALES"."employee_id"
+
+Ref: "AGENTS"."id" < "SALES"."client_id"
+
+Ref: "TAXES"."id" < "SALE_PRODUCTS"."tax_id"
+
+Ref: "PRODUCT_LOTS"."id" < "SALE_PRODUCTS"."product_lot_id"
+
+Ref: "PRODUCT_LOTS"."id" < "ORDER_PRODUCTS"."product_lot_id"
+
+Ref: "ORDERS"."id" < "ORDER_PRODUCTS"."order_id"
+
+Ref: "PRODUCTS"."id" < "PRODUCT_LOTS"."product_id"
+
+Ref: "CATEGORY_PRODUCTS"."id" < "PRODUCTS"."category_product_id"
+
+Ref: "LOCATION"."id" < "PRODUCTS"."location_id"
+
+Ref: "SALES"."id" < "SALE_PRODUCTS"."sale_id"
