@@ -1,0 +1,35 @@
+.inputField {
+    font-family: Inter, serif;
+}
+.inputField input {
+    padding: 1rem;
+    border:none;
+    background: #eeeeee;
+    border-radius: .5rem;
+    width: 20rem;
+    font-size: medium;
+}
+
+.inputField h2 {
+    font-family: Inter, serif;
+    font-size: medium;
+    color: #818181;
+    padding-bottom: 10px;
+}
+
+.button button {
+    padding: 1rem;
+    border: none;
+    width: 20rem;
+    border-radius: .5rem;
+    font-weight: bolder;
+    font-size: 1rem;
+    margin: 1rem;
+    background: #f9d71c;
+    cursor: pointer;
+    color: #383838;
+}
+
+.button button:hover {
+    background: #eccd1c;
+}

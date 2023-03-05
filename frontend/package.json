@@ -23,5 +23,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "4.9.5"
+  },
+  "devDependencies": {
+    "@chakra-ui/next-js": "^2.0.1",
+    "@iconify/react": "^4.1.0"
   }
 }
