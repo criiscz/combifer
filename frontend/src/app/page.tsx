@@ -2,7 +2,7 @@
 import Login from "@/app/login/page";
 import { useRouter } from 'next/navigation'
 import {useEffect} from "react";
-import LogoLogin from "@/app/login/LogoLogin";
+import LogoLogin from "@/app/login/components/LogoLogin";
 import styles from './page.module.css'
 
 export default function Home() {

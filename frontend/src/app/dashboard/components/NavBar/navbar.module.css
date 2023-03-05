@@ -92,24 +92,7 @@
     font-family: 'Inter', sans-serif;
 }
 
-.navbar__logout {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    font-size: .9rem;
-    font-family: 'Inter', sans-serif;
-    color: #818181;
-    height: 100%;
-}
 
-.navbar__logout a {
-    padding-left: 0.2rem;
-    font-weight: normal;
-}
-
-.navbar__logout:hover {
-    color: #383838;
-}
 
 /* ------------------  Nav Links ------------------ */
 
@@ -150,17 +133,23 @@
     background: #f5f5f5;
 }
 
-.navbar__link_1:focus {
+/* ------------------  Nav Logout ------------------ */
+
+.navbar__logout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    color: #818181;
+    margin-bottom: 1.5rem;
+}
+
+.navbar__logout a {
+    padding-left: 0.2rem;
+    font-weight: normal;
+}
+
+.navbar__logout:hover {
     color: #383838;
-    outline: none;
-    background: #f5f5f5;
 }
-
-.navbar__link_1:active {
-    color: #eccd1c;
-    outline: none;
-    background: #f5f5f5;
-}
-
-
-

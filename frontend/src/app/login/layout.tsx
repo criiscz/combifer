@@ -1,4 +1,4 @@
-import LogoLogin from "@/app/login/LogoLogin";
+import LogoLogin from "@/app/login/components/LogoLogin";
 import styles from './login.module.css'
 
 export default function LoginLayout({

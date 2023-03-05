@@ -1,6 +1,6 @@
 'use client'
 import styles from './register.module.css'
-import LogoLogin from "@/app/login/LogoLogin";
+import LogoLogin from "@/app/login/components/LogoLogin";
 import Modal from "@/app/components/Modal/Modal";
 import ConfirmDialog from './components/ConfirmDialog';
 import {useRouter} from 'next/navigation'
