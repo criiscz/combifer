@@ -71,6 +71,7 @@
     font-size: 1rem;
     color: #818181;
     font-weight: bold;
+    padding: .8rem .2rem;
     /*margin-top: 1rem;*/
 }
 
@@ -80,6 +81,28 @@
     border-radius: .5rem;
     width: 20rem;
     margin-bottom: 1rem;
+    color: #818181;
+}
+
+.form_input_error{
+    border: 1px solid #FF0000;
+    border-radius: .5rem;
+    background: #FFE0E0;
+    color: #FF7474;
+    width: 20rem;
+}
+
+.form_error{
+    display: none;
+
+}
+
+.form_error_active{
+    display: block;
+    color: red;
+    font-size: .8rem;
+    text-align: justify;
+    padding: .5rem .2rem;
 }
 
 .form_button {
