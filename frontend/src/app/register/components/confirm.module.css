@@ -1,0 +1,51 @@
+.dialog {
+    width: 20%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 10px;
+}
+
+.dialogHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 50%;
+    font-size: .8rem;
+
+}
+
+.dialogBody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 25%;
+}
+
+.dialogBody p {
+    font-weight: lighter;
+}
+
+.dialogButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--yellow-login);
+    border:none;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 4rem;
+    width: 10rem;
+    margin: 1rem 1rem 3rem 1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.dialogButton:hover {
+    background: #eccd1c;
+}
