@@ -1,11 +1,8 @@
 package category_products.infrastructure.controller
 
-
 import io.circe.generic.auto._
 import sttp.tapir.generic.auto._
 import sttp.tapir.PublicEndpoint
-import sttp.tapir.server.ziohttp.ZioHttpInterpreter
-import sttp.tapir.swagger.bundle.SwaggerInterpreter
 import sttp.tapir.ztapir._
 import sttp.tapir.json.circe._
 import shared.BaseController
