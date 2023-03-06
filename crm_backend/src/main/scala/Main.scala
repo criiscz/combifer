@@ -11,9 +11,8 @@ import sttp.tapir.ztapir.ZServerEndpoint
 import sttp.tapir.json.circe._
 
 import category_products.infrastructure.controller.CategoryProductController
-import category_products.infrastructure.repository.CategoryProductRepositoryImpl
+import products.infrastructure.controller.ProductController
 import shared.BaseController
-import category_products.application.get_categories.GetCategoriesUseCase
 import java.io.IOException
 import sttp.tapir.Endpoint
 
@@ -21,7 +20,8 @@ import sttp.tapir.Endpoint
 object Main extends ZIOAppDefault with DI:
 
   val controllers = List(
-    CategoryProductController()
+    CategoryProductController(),
+    ProductController()
   )
 
   val swaggerEndpoints: List[ZServerEndpoint[Any, Any]] = SwaggerInterpreter().fromEndpoints[Task](controllers.map(_.routes()).flatten, "Combifer", "1.0")

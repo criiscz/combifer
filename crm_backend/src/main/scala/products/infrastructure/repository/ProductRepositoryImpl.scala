@@ -1,4 +1,4 @@
-package products.infraestructure.repository
+package products.infrastructure.repository
 
 import products.domain.repository.ProductRepository
 import products.domain.entity.Product
