@@ -17,6 +17,7 @@ local.sbt
 
 # Bloop
 .bsp
+.bsp/*
 
 # VS Code
 .vscode/
@@ -24,6 +25,7 @@ local.sbt
 # Metals
 .bloop/
 .metals/
+.metals/*
 metals.sbt
 
 # IDEA
