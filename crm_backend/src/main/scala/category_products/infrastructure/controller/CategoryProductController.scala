@@ -17,13 +17,17 @@ import category_products.application.get_categories._
 import category_products.application.get_category._
 import category_products.application.create_category._
 import category_products.application.update_category._
+import category_products.application.remove_category._
 
 import shared.responses.PaginatedResponse
+import products.domain.repository.ProductRepository
 
-class CategoryProductController() (using categoryProductRepository: CategoryProductRepository) extends BaseController:
+class CategoryProductController()
+  (using categoryProductRepository: CategoryProductRepository, productRepository:ProductRepository) 
+  extends BaseController:
 
-  override def endpoints() = List(getAllCategoryProductRoute, createCategoryRoute, updateCategoryRoute, getCategoryRoute)
-  override def routes() = List(getAllCategoryProduct, createCategory, updateCategory, getCategory)
+  override def endpoints() = List(getAllCategoryProductRoute, createCategoryRoute, updateCategoryRoute, getCategoryRoute, removeCategoryRoute)
+  override def routes() = List(getAllCategoryProduct, createCategory, updateCategory, getCategory, removeCategory)
 
   private val getCategory: PublicEndpoint[Long, String , ResponseGetCategory, Any] = 
     endpoint
@@ -82,4 +86,18 @@ class CategoryProductController() (using categoryProductRepository: CategoryProd
   private val updateCategoryRoute: ZServerEndpoint[Any, Any] = updateCategory.zServerLogic { (id:Long, request:RequestUpdateCategory) =>
     val response = UpdateCategoryUseCase(id).execute(request)
     ZIO.succeed(response.get)
+  }
+
+  private val removeCategory: PublicEndpoint[Long, String , ResponseRemoveCategory, Any] = 
+    endpoint
+    .in("category-products" / path[Long]("id"))
+    .delete
+    .errorOut(stringBody)
+    .out(jsonBody[ResponseRemoveCategory])
+
+  private val removeCategoryRoute: ZServerEndpoint[Any, Any] = removeCategory.zServerLogic{ (id:Long) => 
+    RemoveCategoryUseCase().execute(RequestRemoveCategory(id)) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail("Category not found!")
+    }
   }

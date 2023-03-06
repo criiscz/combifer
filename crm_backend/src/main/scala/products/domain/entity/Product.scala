@@ -5,6 +5,6 @@ case class Product(
   name: String, 
   description: Option[String],
   measureUnit: String,
-  location_id: Long,
-  category_product_id: Long
+  locationId: Long,
+  categoryProductId: Long
 )

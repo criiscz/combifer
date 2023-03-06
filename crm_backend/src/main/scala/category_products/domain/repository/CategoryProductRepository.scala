@@ -11,3 +11,4 @@ trait CategoryProductRepository:
   def getTotalAmountOfCategories():Long
   def insertCategory(category:CategoryProduct): Unit
   def updateCategory(category:CategoryProduct): Unit
+  def removeCategory(id: Long): Unit

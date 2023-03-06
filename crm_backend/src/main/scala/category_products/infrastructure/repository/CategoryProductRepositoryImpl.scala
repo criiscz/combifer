@@ -5,7 +5,6 @@ import category_products.domain.entity.CategoryProduct
 import shared.BaseRepository
 
 import zio._
-import io.getquill.context.jdbc._
 import scala.quoted.Quotes
 import io.getquill._
 import com.zaxxer.hikari.HikariDataSource
@@ -46,4 +45,11 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseR
       query[CategoryProduct]
       .filter(_.id == lift(category.id))
       .updateValue(lift(category)))
+
+  override def removeCategory(id: Long): Unit =
+    ctx.run(
+      query[CategoryProduct]
+        .filter(_.id == lift(id))
+        .delete
+    )
 
