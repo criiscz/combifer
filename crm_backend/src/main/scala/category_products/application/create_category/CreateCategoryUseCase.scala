@@ -9,7 +9,6 @@ class CreateCategoryUseCase()(using categoryProductRepository: CategoryProductRe
   override def execute(request: RequestCreateCategory): Option[ResponseCreateCategory] =
     categoryProductRepository.insertCategory(
       CategoryProduct(
-        id = -1,
         name = request.name,
         description = request.description
       )
