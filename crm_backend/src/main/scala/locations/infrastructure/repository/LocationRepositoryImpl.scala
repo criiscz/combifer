@@ -12,6 +12,7 @@ import com.zaxxer.hikari.HikariDataSource
 
 
 class LocationRepositoryImpl extends LocationRepository with BaseRepository:
+
   implicit val myEntitySchemaMeta: SchemaMeta[Location] = schemaMeta[Location]("LOCATIONS")
   import ctx._
 
@@ -50,6 +51,10 @@ class LocationRepositoryImpl extends LocationRepository with BaseRepository:
       query[Location]
         .filter(_.id == lift(id))
         .delete
+    )
+  override def getTotalAmountOfLocations(): Long =
+    ctx.run(
+      query[Location].size
     )
 
 
