@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from './login.module.css'
+import styles from '../login.module.css'
 
 export default function LogoLogin({style, width=200, height=200}: IProps) {
   const styleIsVertical = style === 'vertical';
