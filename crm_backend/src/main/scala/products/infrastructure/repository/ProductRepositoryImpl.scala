@@ -11,17 +11,45 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
   import ctx._
 
   override def getProduct(id: Long): Option[Product] =
-    ctx
-      .run(
-        query[Product].filter(_.id == lift(id))
-      ).headOption
+    ctx.run(
+      query[Product].filter(_.id == lift(id))
+    ).headOption
 
   override def getProductsWithCategory(categoryId: Long): List[Product] = 
-    ctx
-      .run(
-        query[Product]
-          .filter(_.categoryProductId == lift(categoryId))
-      )
+    ctx.run(
+      query[Product]
+        .filter(_.categoryProductId == lift(categoryId))
+    )
 
+  override def getProducts(from: Int, to: Int):List[Product] = 
+    ctx.run(
+      query[Product]
+        .sortBy(_.id)(Ord.ascNullsLast)
+        .drop(lift(from))
+        .take(lift(to))
+    )
 
+  override def getTotalAmountOfProducts():Long = 
+    ctx.run(query[Product].size)
 
+  override def insertProduct(product:Product):Unit =
+    implicit val excludeInsert = insertMeta[Product](_.id)
+    ctx.run(
+      query[Product]
+        .insertValue(lift(product))
+    )
+
+  override def updateProduct(product:Product):Unit =
+    implicit val excludeUpdate = updateMeta[Product](_.id)
+    ctx.run(
+      query[Product]
+        .filter(_.id == lift(product.id))
+        .updateValue(lift(product))
+    )
+
+  override def removeProduct(id: Long): Unit = 
+    ctx.run(
+      query[Product]
+        .filter(_.id == lift(id))
+        .delete
+    )
