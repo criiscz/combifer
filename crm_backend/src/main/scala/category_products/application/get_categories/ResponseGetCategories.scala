@@ -1,8 +1,7 @@
 package category_products.application.get_categories
 
 import category_products.domain.entity.CategoryProduct
-import shared.responses.PaginatedResponse
-import shared.responses.Meta
+import shared.responses._
 
 sealed class ResponseGetCategories(
   data:List[CategoryProduct],

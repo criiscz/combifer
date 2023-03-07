@@ -52,7 +52,7 @@ class CategoryProductController()
 
   private val getAllCategoryProductRoute: ZServerEndpoint[Any, Any] = getAllCategoryProduct.zServerLogic { params =>
     val response = GetCategoriesUseCase().execute(
-      RequestGetCategories.create(
+      RequestGetCategories(
         params._1,
         params._2)
       )
