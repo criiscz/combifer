@@ -3,6 +3,7 @@ import styles from './navbar.module.css'
 import Link from "next/link";
 import React from "react";
 import {Icon} from "@iconify/react";
+import MenuOption from "@/app/dashboard/components/NavBar/MenuOption/MenuOption";
 
 export default function NavBar({name, role, id}: NavBarProps) {
 
@@ -52,39 +53,30 @@ export default function NavBar({name, role, id}: NavBarProps) {
               <h3 className={styles.navbar__data__time}>{time}</h3>
             </div>
           </div>
-          <div className={styles.navbar__logout}>
-            <Icon icon="bi:door-open-fill"/>
-            <Link href={'#'}> Cerrar Sesión </Link>
-          </div>
+
         </div>
       </div>
       <div className={styles.navbar__links}>
         <ul className={styles.navbar__link_ul}>
           <li className={styles.navbar__link_1}>
-            <Icon icon="bi:house"/>
-            <Link href={'/dashboard/inventory'} >
-              Inventario
-            </Link>
+            <MenuOption icon={"bi:house"} text={'Inventario'} link={'/dashboard/inventory'}/>
           </li>
           <li className={styles.navbar__link_1}>
-            <Icon icon="ic:outline-sell"/>
-            <Link href={'#'} >
-              Ventas
-            </Link>
+            <MenuOption icon={"ic:outline-sell"} text={'Ventas'} link={'/dashboard/sells'}/>
           </li>
           <li className={styles.navbar__link_1}>
-            <Icon icon="mdi:report-bell-curve"/>
-            <Link href={'#'} >
-              Reportes
-            </Link>
+            <MenuOption icon={"mdi:report-bell-curve"} text={'Reportes'} link={'/dashboard/reports'}/>
           </li>
           <li className={styles.navbar__link_1}>
-            <Icon icon="bi:gear"/>
-            <Link href={'#'} >
-              Configuración
-            </Link>
+            <MenuOption icon={'bi:gear'} text={'Configuración'} link={'/dashboard/settings'}/>
           </li>
         </ul>
+      </div>
+      <div>
+        <div className={styles.navbar__logout}>
+          <Icon icon="bi:door-open-fill"/>
+          <Link href={'#'}> Cerrar Sesión </Link>
+        </div>
       </div>
     </nav>
 
