@@ -13,27 +13,25 @@ import sttp.tapir.json.circe._
 import category_products.infrastructure.controller.CategoryProductController
 import products.infrastructure.controller.ProductController
 import locations.infrastructure.controller.LocationController
-import shared.BaseController
 import java.io.IOException
 import sttp.tapir.Endpoint
+import shared.mapper.endpoints.Exposer
+import shared.mapper.open_api.OpenAPIGenerator
 
 
 object Main extends ZIOAppDefault with DI:
 
-  val controllers = List(
-    CategoryProductController(),
-    ProductController(),
-    LocationController()
-  )
-
-  val swaggerEndpoints: List[ZServerEndpoint[Any, Any]] = SwaggerInterpreter().fromEndpoints[Task](controllers.flatMap(_.routes()), "Combifer", "1.0")
-
+  CategoryProductController()
+  ProductController()
+  LocationController()
+    
   val routes: HttpApp[Any, Throwable] = 
     ZioHttpInterpreter()
     .toHttp(
-      controllers.flatMap(_.endpoints()) ++
-      swaggerEndpoints 
+      Exposer.availableEndpoints.toList ++
+      OpenAPIGenerator().getDocs()
     )
+
   override def run: URIO[Any, ExitCode] =
     Server
       .serve(routes.withDefaultErrorResponse)
