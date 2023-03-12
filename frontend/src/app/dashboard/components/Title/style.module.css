@@ -1,0 +1,18 @@
+.title__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 20%;
+    padding: 0 20px;
+    background-color: var(--yellow-light);
+    box-shadow: 0 15px 23px -18px rgba(0, 0, 0, 0.2);
+    border-radius: .5rem;
+}
+
+.title__text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}

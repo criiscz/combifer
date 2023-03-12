@@ -1,0 +1,12 @@
+.overview__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 2rem;
+    width: 30%;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.5rem 0.1rem var(--gray-D9);
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-strong);
+}

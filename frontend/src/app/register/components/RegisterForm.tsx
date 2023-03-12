@@ -65,7 +65,7 @@ export default function RegisterForm() {
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.form_row}>
         <div>
-          <label htmlFor="name">Nombre</label>
+          <label htmlFor="name" >Nombre</label>
           <input type="text" name="name" id="name" required onChange={handleChange}
                  placeholder={'Escribe tu nombre'}/>
         </div>

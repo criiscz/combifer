@@ -35,7 +35,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--yellow-login);
+    background: var(--yellow-strong);
     border:none;
     border-radius: 10px;
     cursor: pointer;

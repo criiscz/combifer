@@ -7,7 +7,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
       <aside className={styles.asideNavBar}>
         <NavBar name={'Juan Peréz'} role={'Administrador'}/>
       </aside>
-      <main>
+      <main className={styles.body}>
         {children}
       </main>
     </body>
