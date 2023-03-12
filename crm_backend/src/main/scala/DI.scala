@@ -8,6 +8,5 @@ import products.infrastructure.repository.ProductRepositoryImpl
 trait DI:
   given categoryProductRepository: CategoryProductRepository = new CategoryProductRepositoryImpl()
   given productRepository: ProductRepository = new ProductRepositoryImpl()
-
   given locationRepository: LocationRepository = new LocationRepositoryImpl()
 
