@@ -17,6 +17,7 @@ import locations.application.get_location._
 import locations.application.get_locations._
 import locations.application.create_location._
 import locations.application.update_location._
+import locations.application.remove_location._
 import org.scalameta.adt.none
 
 class LocationController() (using locationRepository:LocationRepository):
@@ -88,5 +89,20 @@ class LocationController() (using locationRepository:LocationRepository):
     UpdateLocationUseCase(id).execute(data) match {
       case Some(value) => ZIO.succeed(value)
       case None => ZIO.fail(ErrorResponse(message = "Can't update location"))
+    }
+  }.expose
+
+  private val removeLocation: PublicEndpoint[Long, ErrorResponse, ResponseRemoveLocation, Any] =
+    endpoint
+      .in("locations" / path[Long]("id"))
+      .delete
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[ResponseRemoveLocation])
+      .expose
+
+  private val removeLocationRoute: ZServerEndpoint[Any,Any] = removeLocation.zServerLogic{id =>
+    RemoveLocationUseCase().execute(RequestRemoveLocation(id)) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Remove"))
     }
   }.expose
