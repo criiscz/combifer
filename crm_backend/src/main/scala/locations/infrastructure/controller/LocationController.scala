@@ -1,8 +1,6 @@
 package locations.infrastructure.controller
 
-import locations.application.create_location.*
 import locations.domain.repository.LocationRepository
-import locations.application.get_locations.{RequestGetLocations, ResponseGetLocations, GetLocationsUseCase}
 import locations.domain.entity.Location
 
 import io.circe.generic.auto.*
@@ -13,14 +11,20 @@ import sttp.tapir.ztapir.*
 import sttp.tapir.json.circe.*
 
 import shared.mapper.endpoints.Exposer._
-import shared.responses.{ErrorResponse, PaginatedResponse}
+import shared.responses._
 import zio._
+import locations.application.get_location._
+import locations.application.get_locations._
+import locations.application.create_location._
+import locations.application.update_location._
+import locations.application.remove_location._
+import org.scalameta.adt.none
 
-class LocationController()(using locationRepository:LocationRepository):
+class LocationController() (using locationRepository:LocationRepository):
 
   private val createLocation: PublicEndpoint[RequestCreateLocation, ErrorResponse, ResponseCreateLocation, Any] =
     endpoint
-      .in("location-products")
+      .in("locations")
       .post
       .in(jsonBody[RequestCreateLocation])
       .errorOut(jsonBody[ErrorResponse])
@@ -28,27 +32,77 @@ class LocationController()(using locationRepository:LocationRepository):
       .expose
 
   private val createLocationRoute: ZServerEndpoint[Any, Any] = createLocation.zServerLogic{request =>
-    val response = CreateLocationUseCase().execute(request)
-    ZIO.succeed(response.get)
+    CreateLocationUseCase().execute(request) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Can't create Location"))
+    }
   }.expose
 
-  private val getAllLocations:PublicEndpoint[(Int, Int), String, PaginatedResponse[Location], Any] =
+  private val getAllLocations:PublicEndpoint[(Int, Int), ErrorResponse, PaginatedResponse[Location], Any] =
     endpoint
-      .in("locations-products")
+      .in("locations")
       .get
       .in(
         query[Int]("page").and(query[Int]("per_page"))
       )
-      .errorOut(stringBody)
+      .errorOut(jsonBody[ErrorResponse])
       .out(jsonBody[PaginatedResponse[Location]])
       .expose
 
   private val getAllLocationsRoute: ZServerEndpoint[Any,Any] = getAllLocations.zServerLogic{params =>
-    val response = GetLocationsUseCase().execute(
+    GetLocationsUseCase().execute(
       RequestGetLocations(
         params._1,
         params._2
       )
-    )
-    ZIO.succeed(response.get)
+    ) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Can't get all locations"))
+    }
+  }.expose
+
+  private val getLocation: PublicEndpoint[Long, ErrorResponse, ResponseGetLocation, Any] = 
+    endpoint
+      .in("locations" / path[Long]("id"))
+      .get
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[ResponseGetLocation])
+      .expose
+
+  private val getLocationRoute: ZServerEndpoint[Any,Any] = getLocation.zServerLogic{id =>
+    GetLocationUseCase().execute(RequestGetLocation(id)) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Can't find location"))
+    }
+  }.expose
+
+  private val updateLocation: PublicEndpoint[(Long, RequestUpdateLocation), ErrorResponse, ResponseUpdateLocation, Any] = 
+    endpoint
+      .in("locations" / path[Long]("id"))
+      .put
+      .in(jsonBody[RequestUpdateLocation])
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[ResponseUpdateLocation])
+      .expose
+    
+  private val updateLocationRoute: ZServerEndpoint[Any,Any] = updateLocation.zServerLogic{(id:Long, data: RequestUpdateLocation) =>
+    UpdateLocationUseCase(id).execute(data) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Can't update location"))
+    }
+  }.expose
+
+  private val removeLocation: PublicEndpoint[Long, ErrorResponse, ResponseRemoveLocation, Any] =
+    endpoint
+      .in("locations" / path[Long]("id"))
+      .delete
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[ResponseRemoveLocation])
+      .expose
+
+  private val removeLocationRoute: ZServerEndpoint[Any,Any] = removeLocation.zServerLogic{id =>
+    RemoveLocationUseCase().execute(RequestRemoveLocation(id)) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Remove"))
+    }
   }.expose
