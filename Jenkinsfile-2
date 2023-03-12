@@ -1,0 +1,21 @@
+
+ pipeline {
+     agent any
+     stages {
+         stage('Change directory') {
+             steps {
+                 sh 'cd /home/jenkinsTest && pwd'
+             }
+         }
+         stage('Compile') {
+             steps {
+                 sh 'sbt compile'
+             }
+         }
+         stage('Package') {
+             steps {
+                 sh 'sbt assembly'
+             }
+         }
+     }
+ }
