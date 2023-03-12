@@ -2,11 +2,7 @@
  pipeline {
      agent any
      stages {
-         stage('Change directory') {
-             steps {
-                 sh 'cd /home/jenkinsTest && pwd'
-             }
-         }
+       
          stage('Compile') {
              steps {
                  sh 'sbt compile'
@@ -17,5 +13,11 @@
                  sh 'sbt assembly'
              }
          }
+         stage('Run app') {
+             steps {
+                 sh 'sbt run'
+             }
+         }
+         
      }
  }
