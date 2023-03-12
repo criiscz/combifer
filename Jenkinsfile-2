@@ -3,16 +3,7 @@
      agent any
      stages {
        
-         stage('Compile') {
-             steps {
-                 sh 'sbt compile'
-             }
-         }
-         stage('Package') {
-             steps {
-                 sh 'sbt assembly'
-             }
-         }
+      
          stage('Run app') {
              steps {
                  sh 'cd crm_backend/ &&'
