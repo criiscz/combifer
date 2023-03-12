@@ -1,15 +1,12 @@
 
  pipeline {
      agent any
-     stages {
-       
-      
+     stages {        
          stage('Run app') {
              steps {
                  sh 'cd crm_backend/ &&'
                  sh 'sbt run'
              }
-         }
-         
+         }         
      }
  }
