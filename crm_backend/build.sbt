@@ -51,3 +51,4 @@ assemblyMergeStrategy in assembly := {
   case PathList("META-INF", _*) => MergeStrategy.discard
   case _                        => MergeStrategy.first
 }
+assemblyJarName in assembly := "back.jar"
