@@ -7,8 +7,13 @@ import io.getquill._
 
 class ProductRepositoryImpl extends ProductRepository with BaseRepository:
 
-  implicit val myEntitySchemaMeta:SchemaMeta[Product] = schemaMeta[Product]("PRODUCTS")
   import ctx._
+  implicit inline def myEntitySchemaMeta():SchemaMeta[Product] = 
+    schemaMeta[Product]("products")
+  implicit inline def excludeInsert():InsertMeta[Product] =
+    insertMeta[Product](_.id)
+  implicit inline def excludeUpdate():UpdateMeta[Product] = 
+    updateMeta[Product](_.id)
 
   override def getProduct(id: Long): Option[Product] =
     ctx.run(
@@ -33,14 +38,11 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
     ctx.run(query[Product].size)
 
   override def insertProduct(product:Product):Unit =
-    implicit val excludeInsert = insertMeta[Product](_.id)
     ctx.run(
-      query[Product]
-        .insertValue(lift(product))
+      query[Product].insertValue(lift(product))
     )
 
   override def updateProduct(product:Product):Unit =
-    implicit val excludeUpdate = updateMeta[Product](_.id)
     ctx.run(
       query[Product]
         .filter(_.id == lift(product.id))
@@ -53,3 +55,9 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
         .filter(_.id == lift(id))
         .delete
     )
+
+  override def getProductsWithLocation(locationId: Long): List[Product] =
+    ctx.run(
+      query[Product]
+        .filter(_.locationId == lift(locationId))
+      )
