@@ -36,7 +36,7 @@ object Main extends ZIOAppDefault with DI:
     Server
       .serve(routes.withDefaultErrorResponse)
       .provide(
-        ServerConfig.live(ServerConfig.default.port(8080)),
+        ServerConfig.live(ServerConfig.default.port(8090)),
         Server.live
       ).exitCode
 

@@ -11,12 +11,16 @@ import com.zaxxer.hikari.HikariDataSource
 
 class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseRepository:
 
-  implicit val myEntitySchemaMeta:SchemaMeta[CategoryProduct] = schemaMeta[CategoryProduct]("CATEGORY_PRODUCTS")
   import ctx._
+  implicit inline def myEntitySchemaMeta():SchemaMeta[CategoryProduct] = 
+    schemaMeta[CategoryProduct]("category_products")
+  implicit inline def excludeInsert():InsertMeta[CategoryProduct] = 
+    insertMeta[CategoryProduct](_.id)
+  implicit inline def excludeUpdate():UpdateMeta[CategoryProduct] = 
+    updateMeta[CategoryProduct](_.id)
 
   override def getCategory(id: Long): Option[CategoryProduct] = 
-    ctx
-      .run(
+    ctx.run(
         query[CategoryProduct].filter(_.id == lift(id))
       ).headOption
 
@@ -33,14 +37,12 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseR
     ctx.run(query[CategoryProduct].size)
 
   override def insertCategory(category:CategoryProduct): Unit = 
-    implicit val excludeInsert = insertMeta[CategoryProduct](_.id)
     ctx.run(
       query[CategoryProduct]
         .insertValue( lift(category))
     )
 
   override def updateCategory(category:CategoryProduct): Unit = 
-    implicit val excludeUpdate = updateMeta[CategoryProduct](_.id)
     ctx.run(
       query[CategoryProduct]
       .filter(_.id == lift(category.id))

@@ -4,18 +4,19 @@ import locations.domain.repository.LocationRepository
 import locations.domain.entity.Location
 import shared.BaseRepository
 
-
 import zio._
 import scala.quoted.Quotes
 import io.getquill._
-import com.zaxxer.hikari.HikariDataSource
-
 
 class LocationRepositoryImpl extends LocationRepository with BaseRepository:
 
-  implicit val myEntitySchemaMeta: SchemaMeta[Location] = schemaMeta[Location]("LOCATIONS")
   import ctx._
-
+  implicit inline def myEntitySchemaMeta():SchemaMeta[Location] = 
+    schemaMeta[Location]("locations")
+  implicit def excludeInsert():InsertMeta[Location] =
+    insertMeta[Location](_.id)
+  implicit def excludeUpdate():UpdateMeta[Location] = 
+    updateMeta[Location](_.id)
 
   override def getLocation(id: Long): Option[Location] =
     ctx
@@ -33,14 +34,12 @@ class LocationRepositoryImpl extends LocationRepository with BaseRepository:
     ctx.run(q)
 
   override def insertLocation(location: Location): Unit =
-    implicit val excludeInsert = insertMeta[Location](_.id)
     ctx.run(
       query[Location]
         .insertValue(lift(location))
     )
 
   override def updateLocation(location: Location): Unit =
-    implicit val excludeUpdate = updateMeta[Location](_.id)
     ctx.run(
       query[Location]
         .filter(_.id == lift(location.id))
@@ -56,5 +55,3 @@ class LocationRepositoryImpl extends LocationRepository with BaseRepository:
     ctx.run(
       query[Location].size
     )
-
-
