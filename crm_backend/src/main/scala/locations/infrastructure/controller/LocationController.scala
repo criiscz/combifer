@@ -1,5 +1,6 @@
 package locations.infrastructure.controller
 
+import products.domain.repository.ProductRepository
 import locations.domain.repository.LocationRepository
 import locations.domain.entity.Location
 
@@ -20,7 +21,7 @@ import locations.application.update_location._
 import locations.application.remove_location._
 import org.scalameta.adt.none
 
-class LocationController() (using locationRepository:LocationRepository):
+class LocationController() (using locationRepository:LocationRepository, productRepository: ProductRepository):
 
   private val createLocation: PublicEndpoint[RequestCreateLocation, ErrorResponse, ResponseCreateLocation, Any] =
     endpoint
@@ -103,6 +104,7 @@ class LocationController() (using locationRepository:LocationRepository):
   private val removeLocationRoute: ZServerEndpoint[Any,Any] = removeLocation.zServerLogic{id =>
     RemoveLocationUseCase().execute(RequestRemoveLocation(id)) match {
       case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Remove"))
+      case None => ZIO.fail(ErrorResponse(message = "Can' remove location"))
     }
   }.expose
+
