@@ -18,5 +18,10 @@
                  sh 'sbt run'
              }
          }
+         stage('RunApp') {
+             steps {                 
+                 sh 'sbt run'
+             }
+         }
      }
  }
