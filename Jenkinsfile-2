@@ -1,7 +1,13 @@
 
  pipeline {
      agent any
-     stages {        
+     stages {
+        stage('Checkout') {
+           steps {
+             // Clonar el repositorio desde Git
+             checkout scm
+           }
+         }
          stage('Run app') {
              steps {
                  sh 'cd crm_backend/ &&'
