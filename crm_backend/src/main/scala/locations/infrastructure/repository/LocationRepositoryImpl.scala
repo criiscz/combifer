@@ -11,11 +11,11 @@ import io.getquill._
 class LocationRepositoryImpl extends LocationRepository with BaseRepository:
 
   import ctx._
-  implicit inline def myEntitySchemaMeta():SchemaMeta[Location] = 
+  implicit val myEntitySchemaMeta:SchemaMeta[Location] = 
     schemaMeta[Location]("locations")
-  implicit def excludeInsert():InsertMeta[Location] =
+  implicit val excludeInsert:InsertMeta[Location] =
     insertMeta[Location](_.id)
-  implicit def excludeUpdate():UpdateMeta[Location] = 
+  implicit val excludeUpdate:UpdateMeta[Location] = 
     updateMeta[Location](_.id)
 
   override def getLocation(id: Long): Option[Location] =

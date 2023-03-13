@@ -8,11 +8,12 @@ import io.getquill._
 class ProductRepositoryImpl extends ProductRepository with BaseRepository:
 
   import ctx._
-  implicit inline def myEntitySchemaMeta():SchemaMeta[Product] = 
+
+  implicit val myEntitySchemaMeta:SchemaMeta[Product] = 
     schemaMeta[Product]("products")
-  implicit inline def excludeInsert():InsertMeta[Product] =
+  implicit val excludeInsert:InsertMeta[Product] =
     insertMeta[Product](_.id)
-  implicit inline def excludeUpdate():UpdateMeta[Product] = 
+  implicit val excludeUpdate:UpdateMeta[Product] = 
     updateMeta[Product](_.id)
 
   override def getProduct(id: Long): Option[Product] =
