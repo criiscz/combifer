@@ -10,13 +10,9 @@
          }
          stage('changeDir') {
              steps {
-                 sh 'cd crm_backend/ && pwd'               
+                 sh 'cd crm_backend/ && sbt run'               
              }
          }
-         stage('RunApp') {
-             steps {                 
-                 sh 'sbt run'
-             }
-         }
+         
      }
  }
