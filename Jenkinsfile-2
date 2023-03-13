@@ -8,11 +8,15 @@
              checkout scm
            }
          }
-         stage('Run app') {
+         stage('changeDir') {
              steps {
-                 sh 'cd crm_backend/ &&'
+                 sh 'cd crm_backend/ && pwd'               
+             }
+         }
+         stage('RunApp') {
+             steps {                 
                  sh 'sbt run'
              }
-         }         
+         }
      }
  }
