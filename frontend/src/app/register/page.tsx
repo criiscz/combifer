@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import styles from './register.module.css'
 import RegisterForm from "@/app/register/components/RegisterForm";
-import {Modal} from "@mui/material";
 export default function RegisterPage(props: any){
     return(
         <section className={styles.registerPane}>

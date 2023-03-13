@@ -1,6 +1,6 @@
 'use client'
 import styles from './confirm.module.css'
-import {concatClassNames as cn} from "@/app/helpers/helpers";
+import {concatClassNames as cn} from "@/helpers/helpers";
 import {Icon} from '@iconify/react';
 import {Inter} from 'next/font/google'
 import {Component} from "react";

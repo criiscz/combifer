@@ -1,6 +1,6 @@
 import styles from './style.module.css'
 import {Product} from "@/models/Product";
-import Table from "@/app/dashboard/inventory/components/Table/Table";
+import Table from "../Table/Table";
 
 export default function ProductList({products}: { products: Product[] }) {
   return (

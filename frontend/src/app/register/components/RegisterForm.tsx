@@ -1,7 +1,7 @@
 'use client'
 import styles from './registerForm.module.css'
 import React, {FormEvent, useState} from "react";
-import RegisterContext from "@/app/helpers/store";
+import RegisterContext from "@/helpers/store";
 
 export default function RegisterForm() {
   // ---------------- State ----------------

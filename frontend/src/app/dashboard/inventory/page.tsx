@@ -8,35 +8,41 @@ import {getAllProducts, getProduct} from "@/api/Products";
 import {useEffect, useState} from "react";
 import ProductList from "@/app/dashboard/inventory/components/ProductList/ProductList";
 import Overview from "@/app/dashboard/inventory/components/Overview/Overview";
+import {Product} from "@/models/Product";
+import Button from "@/app/components/Button";
+import {Icon} from "@iconify/react";
 
 export default function InventoryPage() {
   const cookies = new cookie()
 
-  const [products, setProducts] = useState<any>([])
+  const [products, setProducts] = useState<Product[]>([])
 
   const {data} = useQuery('products', () => getAllProducts(cookies.get('token')))
 
   useEffect(() => {
-    setProducts(data)
+    setProducts(data as Product[])
   }, [data])
 
 
   const SearchProduct = (name: string) => {
-    if (name === '') setProducts(data)
+    if (name === '') setProducts(data as Product[])
     else setProducts(data!.filter((product: any) => product.name.toLowerCase().includes(name.toLowerCase())))
+  }
+
+  const AddProduct = (product:Product) => {
+    // TODO: Add product to the list
+  }
+
+  const showAddProduct = () => {
+
   }
 
   return (
     <div className={styles.inventory_container}>
-      {/*
-        Order:
-        [SearchBar] - [Title]
-        [Product List] - [Overview]
-        */}
-
       <section className={styles.inventory__header}>
         <SearchBar onSubmit={SearchProduct}/>
-        <Title Title={'Lista de Productos'}/>
+        {/*<Title Title={'Lista de Productos'}/>*/}
+        <Button title={'Agregar Producto'} onClick={AddProduct} icon={'ri:add-circle-line'}/>
       </section>
       <section className={styles.inventory__body}>
         {

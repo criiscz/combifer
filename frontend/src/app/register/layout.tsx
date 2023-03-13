@@ -5,7 +5,7 @@ import Modal from "@/app/components/Modal/Modal";
 import ConfirmDialog from './components/ConfirmDialog';
 import {useRouter} from 'next/navigation'
 import React, {useEffect} from "react";
-import RegisterContext from "@/app/helpers/store";
+import RegisterContext from '@/helpers/store';
 
 
 export default function RegisterLayout({
@@ -26,7 +26,7 @@ export default function RegisterLayout({
     if (localStorage.getItem('token') !== null) {
       router.push('/dashboard')
     }
-  }, [])
+  }, [router])
 
   return (
     <body>

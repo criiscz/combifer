@@ -17,20 +17,33 @@
     padding-bottom: 10px;
 }
 
-.button button {
-    padding: 1rem;
-    border: none;
-    width: 20rem;
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--yellow-strong);
     border-radius: .5rem;
-    font-weight: bolder;
-    font-size: 1rem;
-    margin: 1rem;
-    background: #f9d71c;
+    width: 20rem;
+    font-size: medium;
+    padding: 1rem 1rem;
+    color: var(--black);
+    font-family: Inter, serif;
+    box-shadow: 0 23px 15px -18px rgba(0, 0, 0, 0.1);
+    gap: 1rem;
     cursor: pointer;
-    color: #383838;
 }
 
-.button button:hover {
+.button button {
+    border:none;
+    background: inherit;
+    border-radius: .5rem;
+    font-size: larger;
+    color: var(--black);
+    font-family: 'Inter', serif;
+    font-weight: 600;
+}
+
+.button:hover {
     background: #eccd1c;
 }
 
