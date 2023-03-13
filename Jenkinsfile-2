@@ -13,11 +13,6 @@
                  sh 'cd crm_backend/ && pwd'               
              }
          }
-         stage('Compile') {
-             steps {                 
-                 sh 'sbt'
-             }
-         }
          stage('RunApp') {
              steps {                 
                  sh 'sbt run'
