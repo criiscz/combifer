@@ -1,8 +1,11 @@
 val scala3Version = "3.2.2"
 
+libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "openapi-model" % "early-semver"
+libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "apispec-model" % "early-semver"
+
 val zioVersion = "2.0.9"
 val zioHttpVersion = "0.0.4"
-val tapirVersion = "1.2.9"
+val tapirVersion = "1.2.10"
 
 val zioDependencies = Seq(
   "dev.zio" %% "zio" % zioVersion,
@@ -13,7 +16,7 @@ val tapirDependencies = Seq(
   "com.softwaremill.sttp.tapir" %% "tapir-zio" % tapirVersion,
   "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server" % tapirVersion,
   "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % tapirVersion,
-  "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % tapirVersion
+  "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % tapirVersion 
 )
 
 val testingDependencies = Seq(
@@ -24,6 +27,7 @@ val quillDependencies = Seq(
   "io.getquill" %% "quill-jdbc-zio" % "4.6.0.1",
   "org.postgresql" % "postgresql" % "42.5.4"
 )
+
 
 
 lazy val root = project
@@ -38,3 +42,12 @@ lazy val root = project
     libraryDependencies ++= tapirDependencies,
     libraryDependencies ++= testingDependencies,
   )
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", "maven", "org.webjars", "swagger-ui", "pom.properties") =>
+    MergeStrategy.singleOrError
+  case PathList("META-INF", "resources", "webjars", "swagger-ui", xs@_*) =>
+    MergeStrategy.first
+  case PathList("META-INF", _*) => MergeStrategy.discard
+  case _                        => MergeStrategy.first
+}
