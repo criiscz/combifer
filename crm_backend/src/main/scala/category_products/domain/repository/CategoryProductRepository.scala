@@ -6,6 +6,6 @@ trait CategoryProductRepository:
   def getCategory(id: Long):Option[CategoryProduct]
   def getCategories(from:Int, to:Int):List[CategoryProduct]
   def getTotalAmountOfCategories():Long
-  def insertCategory(category:CategoryProduct): Unit
-  def updateCategory(category:CategoryProduct): Unit
-  def removeCategory(id: Long): Unit
+  def insertCategory(category:CategoryProduct): CategoryProduct
+  def updateCategory(category:CategoryProduct): CategoryProduct
+  def removeCategory(id: Long): CategoryProduct
