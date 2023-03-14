@@ -20,15 +20,15 @@ val tapirDependencies = Seq(
 )
 
 val testingDependencies = Seq(
-  "org.scalameta" %% "munit" % "0.7.29" % Test 
+  "org.scalameta" %% "munit" % "0.7.29" % Test,
+  "com.h2database" % "h2" % "2.1.214" % Test
 )
 
 val quillDependencies = Seq(
   "io.getquill" %% "quill-jdbc-zio" % "4.6.0.1",
-  "org.postgresql" % "postgresql" % "42.5.4"
+  "org.postgresql" % "postgresql" % "42.5.4",
+  "org.slf4j" % "slf4j-nop" % "1.7.32",
 )
-
-
 
 lazy val root = project
 .in(file("."))
