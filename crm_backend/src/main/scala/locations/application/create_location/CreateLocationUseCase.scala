@@ -6,7 +6,7 @@ import shared.application.BaseUseCase
 
 class CreateLocationUseCase()(using locationRepository:LocationRepository) extends BaseUseCase[RequestCreateLocation, ResponseCreateLocation]:
   override def execute(request: RequestCreateLocation): Option[ResponseCreateLocation] =
-    locationRepository.insertLocation(
+    val location = locationRepository.insertLocation(
       Location(
         name = request.name,
         description = request.description,
@@ -14,5 +14,5 @@ class CreateLocationUseCase()(using locationRepository:LocationRepository) exten
       )
     )
     Some(
-      ResponseCreateLocation(completed = true)
+      ResponseCreateLocation(data = location)
     )
