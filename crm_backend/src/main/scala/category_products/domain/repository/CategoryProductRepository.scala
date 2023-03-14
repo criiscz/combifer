@@ -1,9 +1,6 @@
 package category_products.domain.repository
 
 import category_products.domain.entity.CategoryProduct
-import scala.concurrent.duration._
-import io.getquill._
-import zio._
 
 trait CategoryProductRepository:
   def getCategory(id: Long):Option[CategoryProduct]
