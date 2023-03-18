@@ -10,6 +10,9 @@ import sttp.tapir.json.circe._
 import product_lots.domain.repository.ProductLotRepository
 import product_lots.application.create_lot._
 import product_lots.application.get_lot._
+import product_lots.application.get_lots._
+
+import product_lots.domain.entity._
 
 import shared.responses._
 import shared.mapper.endpoints.Exposer._
@@ -45,5 +48,21 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
     GetLotUseCase().execute(RequestGetLot(id)) match {
       case Some(value) => ZIO.succeed(value)
       case None => ZIO.fail(ErrorResponse(message = "Can't find product lot")) 
+    }
+  }.expose
+
+  private val getProductLots:PublicEndpoint[(Int, Int), ErrorResponse, PaginatedResponse[ProductLot], Any] =
+    endpoint
+      .in("products-lots")
+      .in(query[Int]("page").and(query[Int]("per_page")))
+      .get
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[PaginatedResponse[ProductLot]])
+      .expose
+  
+  private val getProductLotsRoute: ZServerEndpoint[Any, Any] = getProductLots.zServerLogic{ (page, perPage) => 
+    GetLotsUseCase().execute(RequestGetLots(page, perPage)) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Can't list products")) 
     }
   }.expose

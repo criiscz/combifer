@@ -6,7 +6,7 @@ import category_products.domain.repository.CategoryProductRepository
 class GetCategoriesUseCase()(using categoryProductRepository: CategoryProductRepository) extends BaseUseCase[RequestGetCategories, ResponseGetCategories]:
 
   override def execute(request: RequestGetCategories): Option[ResponseGetCategories] = 
-    return Some(
+    Some(
       ResponseGetCategories(
         data = categoryProductRepository.getCategories(request.page, request.perPage),
         request = request,
