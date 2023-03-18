@@ -1,19 +1,18 @@
 package product_lots.infrastructure.repository
 
 import product_lots.domain.repository.ProductLotRepository
-import shared.BaseRepository
+
+import products.domain.entity.Product
 import product_lots.domain.entity.ProductLot
+import category_products.domain.entity.CategoryProduct
+import locations.domain.entity.Location
+
+import shared.BaseRepository
 import io.getquill._
 
 class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
 
   import ctx._
-  implicit val myEntitySchemaMeta:SchemaMeta[ProductLot] = 
-    schemaMeta[ProductLot]("products_lots")
-  implicit val excludeInsert:InsertMeta[ProductLot] =
-    insertMeta[ProductLot](_.id)
-  implicit val excludeUpdate:UpdateMeta[ProductLot] = 
-    updateMeta[ProductLot](_.id)
 
   override def getLots(from: Int, to: Int): List[ProductLot] =
      ctx.run(
@@ -67,3 +66,13 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
       .size
     )
 
+  override def getLotInventory(id:Long): Option[(ProductLot, Product, CategoryProduct, Location)] =
+    val q = quote {
+      for {
+        lot <- query[ProductLot].filter(_.id == lift(id))
+        product <- query[Product].join(_.id == lot.productId)
+        category <- query[CategoryProduct].join(_.id == product.categoryProductId)
+        location <- query[Location].join(_.id == product.locationId)
+      } yield (lot,product,category, location)
+    }
+    ctx.run(q).headOption

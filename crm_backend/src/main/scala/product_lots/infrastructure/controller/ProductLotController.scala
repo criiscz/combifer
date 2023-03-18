@@ -9,6 +9,7 @@ import sttp.tapir.json.circe._
 
 import product_lots.domain.repository.ProductLotRepository
 import product_lots.application.create_lot._
+import product_lots.application.get_lot._
 
 import shared.responses._
 import shared.mapper.endpoints.Exposer._
@@ -32,3 +33,17 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
     }
   }.expose
 
+  private val getProductLot:PublicEndpoint[Long, ErrorResponse, ResponseGetLot, Any] =
+    endpoint
+      .in("products-lots"/ path[Long]("id"))
+      .get
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[ResponseGetLot])
+      .expose
+
+  private val getProductLotRoute: ZServerEndpoint[Any, Any] = getProductLot.zServerLogic{ id => 
+    GetLotUseCase().execute(RequestGetLot(id)) match {
+      case Some(value) => ZIO.succeed(value)
+      case None => ZIO.fail(ErrorResponse(message = "Can't find product lot")) 
+    }
+  }.expose
