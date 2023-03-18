@@ -1,56 +1,67 @@
 package products
 
-import locations.domain.repository.LocationRepository
-import locations.LocationMockedRepository
 import locations.application.create_location._
-
-import category_products.CategoryProductsMockedRepository 
-import category_products.domain.repository.CategoryProductRepository
-import category_products.application.create_category._
-
-import products.domain.repository.ProductRepository
-import products.domain.entity._
+import locations.application.remove_location._
 import products.application.create_product._
+import products.application.remove_product._
+import category_products.application.create_category._
+import category_products.application.remove_category._
 
-import sttp.tapir.Schema.annotations.description
+import shared.BaseSuite
+import products.domain.entity._
+import munit._
 
-class TestSuite extends munit.FunSuite:
+class TestSuite extends BaseSuite:
 
-  implicit val mockedProductRepo:ProductRepository = ProductsMockedRepository() 
-  implicit val mockedCategoryRepo:CategoryProductRepository = CategoryProductsMockedRepository() 
-  implicit val mockedLocationRepo:LocationRepository = LocationMockedRepository() 
+  val locationName = "TestLocation"
+  val categoryName = "Mocked Category"
+  val productName = "Testing Product"
 
-  test("Create Product along Location with Category") {
-    val location = CreateLocationUseCase().execute(
+  var lastCreatedProduct:Long = -1
+  var lastCreatedLocation:Long = -1
+  var lastCreatedCategory:Long = -1
+  
+  test("Create Location for product") {
+    val response = CreateLocationUseCase().execute(
       RequestCreateLocation(
-        name = "Testing Location",
+        name = locationName,
         description = None,
         img_url = "Imagen"
       )
     )
 
-    val locationId = location match
-      case Some(value) => value._1.id
+    val location = response match
+      case Some(value) => value._1
       case None => throw Exception("Can't create location for product")
+    
+    lastCreatedLocation = location.id
+    assertEquals(location.name, locationName)
+  }
 
-    val category = CreateCategoryUseCase().execute(
+  test("Create Category for Product") {
+    val response = CreateCategoryUseCase().execute(
       RequestCreateCategory(
-        name = "Testing Category",
+        name = categoryName,
         description = None
       )
     )
 
-    val categoryId = category match
-      case Some(value) => value._1.id
-      case None => throw  Exception("Can't create Category")
+    val category = response match
+      case Some(value) => value._1
+      case None => throw Exception("Can't create Category")
 
+    lastCreatedCategory = category.id
+    assertEquals(category.name, categoryName)
+  }
+
+  test("Create Product using Category and Location created") {
     val createdProduct = CreateProductUseCase().execute(
       RequestCreateProduct(
-        name = "Testing Product",
+        name = productName,
         description = Some("Description Test"),
         measureUnit = "Kilo",
-        locationId = locationId,
-        categoryProductId = categoryId
+        locationId = lastCreatedLocation,
+        categoryProductId = lastCreatedCategory
         )
       )
     
@@ -58,6 +69,40 @@ class TestSuite extends munit.FunSuite:
       case Some(value) => value._1
       case None => throw Exception("Can't create Product")
 
-    assertEquals(product.locationId, locationId)
-    assertEquals(product.categoryProductId, categoryId)
+    lastCreatedProduct = product.id
+
+    assertEquals(product.locationId, lastCreatedLocation)
+    assertEquals(product.categoryProductId, lastCreatedCategory)
+    assertEquals(product.name, productName)
+  }
+
+  test("Delete Product") {
+    val removedProduct = RemoveProductUseCase().execute(
+      RequestRemoveProduct(id = lastCreatedProduct)
+    ) match
+      case Some(value) => value._1
+      case None =>  throw Exception("Can't remove product")
+
+    assertEquals(productName, removedProduct.name)
+  }
+
+  test("Delete Location of product deleted") {
+    val removedLocation = RemoveLocationUseCase()
+      .execute(
+        RequestRemoveLocation(lastCreatedLocation)
+      ) match 
+        case Some(value) => value._1
+        case None => throw Exception("Can't remove Location")
+    assertEquals(locationName, removedLocation.name)
+  }
+
+  test("Delete Category of product deleted") {
+    val removedCategory = RemoveCategoryUseCase()
+      .execute(
+        RequestRemoveCategory(lastCreatedCategory)
+      ) match
+        case Some(value) => value._1
+        case None => throw Exception("Can't remove Category")
+
+    assertEquals(categoryName, removedCategory.name)
   }

@@ -1,13 +1,11 @@
 package locations
 
+import shared.BaseSuite
 import locations.application.get_location._
 import locations.application.create_location._
-import locations.domain.repository.LocationRepository
 import locations.domain.entity.Location
 
-class TestSuite extends munit.FunSuite:
-
-  implicit val mockedLocationRepository:LocationRepository = LocationMockedRepository()
+class TestSuite extends BaseSuite:
 
   test("Create location") {
     val obtained = CreateLocationUseCase()
