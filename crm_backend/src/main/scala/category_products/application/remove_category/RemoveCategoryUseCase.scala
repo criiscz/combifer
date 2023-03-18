@@ -11,6 +11,6 @@ extends BaseUseCase[RequestRemoveCategory, ResponseRemoveCategory]:
   override def execute(request: RequestRemoveCategory): Option[ResponseRemoveCategory] =
     val amountOfProductsInCategory = productRepository.getProductsWithCategory(request.id).size
     if(amountOfProductsInCategory > 0) 
-      Some(ResponseRemoveCategory("Can't remove, there are products with this category"))
-    categoryProductRepository.removeCategory(request.id)
-    Some(ResponseRemoveCategory("Completed!"))
+      None
+    val category = categoryProductRepository.removeCategory(request.id)
+    Some(ResponseRemoveCategory(category))
