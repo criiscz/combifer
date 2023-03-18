@@ -6,5 +6,6 @@ case class RequestCreateLot(
   price: Double,
   enterDate: LocalDate,
   emptynessDate: Option[LocalDate],
+  quantity: Option[Long],
   productId: Long,
 )

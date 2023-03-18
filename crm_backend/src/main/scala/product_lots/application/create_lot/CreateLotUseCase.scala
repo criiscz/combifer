@@ -12,6 +12,7 @@ class CreateLotUseCase() (using productLotRepository: ProductLotRepository) exte
         price = request.price,
         enterDate = request.enterDate,
         emptynessDate = request.emptynessDate,
+        quantity = request.quantity.getOrElse(0),
         productId = request.productId
       ))
     Some(

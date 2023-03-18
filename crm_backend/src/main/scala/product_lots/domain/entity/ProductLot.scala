@@ -7,5 +7,6 @@ case class ProductLot(
   price: Double,
   enterDate: LocalDate,
   emptynessDate: Option[LocalDate],
+  quantity: Long,
   productId: Long,
 )
