@@ -1,4 +1,4 @@
-import { Product } from "@/models/Product";
+import {Product, ProductComplete} from "@/models/Product";
 import axios from "axios";
 
 
@@ -56,13 +56,13 @@ export async function updateProduct(authToken: string = "", product: Product, id
   return product === response;
 }
 
-export async function getProduct(authToken: string = "", productId: number | string): Promise<Product> {
-  const response = await fetch(API_URL + `/products/${productId}/`, {
+export async function getProduct(authToken: string = "", productId: number | undefined): Promise<ProductComplete> {
+  const response = await fetch(API_URL + `/product-lots/${productId}/`, {
     method: "GET",
     headers: {
       "Content-Type": "none",
       'Authorization': 'Bearer ' + authToken
     }
   });
-  return await response.json() as Product;
+  return await response.json() as ProductComplete;
 }

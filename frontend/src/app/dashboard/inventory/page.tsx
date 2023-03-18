@@ -43,6 +43,11 @@ export default function InventoryPage() {
 
   const queryProducts = useQuery('products', () => getAllProducts(cookies.get('token')))
 
+  const queryProducLots = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+  const queryProducts = queryProducLots.data?.map((productLot: ProductLot) => {
+    return useQuery('product', () => getProduct(cookies.get('token'), productLot.product_id))
+  })
+
 
 
   // const queryLot = useQuery('productLot', () => getProduct(cookies.get('token'), productSelected.id), {enabled: productSelected !== undefined})
