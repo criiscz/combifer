@@ -7,13 +7,13 @@ import category_products.domain.repository.CategoryProductRepository
 class CreateCategoryUseCase()(using categoryProductRepository: CategoryProductRepository) extends BaseUseCase[RequestCreateCategory, ResponseCreateCategory]:
 
   override def execute(request: RequestCreateCategory): Option[ResponseCreateCategory] =
-    categoryProductRepository.insertCategory(
+    val category = categoryProductRepository.insertCategory(
       CategoryProduct(
         name = request.name,
         description = request.description
       )
     )
     Some(
-      ResponseCreateCategory(completed = true)
+      ResponseCreateCategory(data = category)
     )
 
