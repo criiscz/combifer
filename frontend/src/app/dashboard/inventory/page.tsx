@@ -11,6 +11,7 @@ import Overview from "@/app/dashboard/inventory/components/Overview/Overview";
 import {Product} from "@/models/Product";
 import Button from "@/app/components/Button";
 import {Icon} from "@iconify/react";
+import {ProductLot} from "@/models/ProductLot";
 
 export default function InventoryPage() {
   const cookies = new cookie()
@@ -18,7 +19,32 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [productSelected, setProductSelected] = useState<Product | undefined>(undefined)
 
-  const {data} = useQuery('products', () => getAllProducts(cookies.get('token')))
+  // Structure of the data
+  // ProductLot -> Product -> [Location, Category]
+  // First we get all the product lots
+  // Then we get all the products from the product lots
+  // Then we get all the locations and categories from the products
+  // Then we combine all the data to create the final structure
+
+  // const queryProductLots = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+  // queryProductLots.data?.map((productLot: ProductLot) => {
+  //   const queryProduct = useQuery('product', () => getProduct(cookies.get('token'), productLot.product_id))
+  //   queryProduct.data?.map((product: Product) => {
+  //     const queryLocation = useQuery('location', () => getLocation(cookies.get('token'), product.location_id))
+  //     const queryCategory = useQuery('category', () => getCategory(cookies.get('token'), product.category_id))
+  //   })
+  // })
+  //   return {
+  //     productLot: productLot,
+  //     product: queryProduct.data,
+  //     location: queryLocation.data,
+  //     category: queryCategory.data
+  //   } as ProductResult
+
+  const queryProducts = useQuery('products', () => getAllProducts(cookies.get('token')))
+
+
+
   // const queryLot = useQuery('productLot', () => getProduct(cookies.get('token'), productSelected.id), {enabled: productSelected !== undefined})
 
 
