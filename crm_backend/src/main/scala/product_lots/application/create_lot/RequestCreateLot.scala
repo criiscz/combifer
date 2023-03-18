@@ -1,9 +1,8 @@
-package product_lots.domain.entity
+package product_lots.application.create_lot
 
 import java.time.LocalDate
 
-case class ProductLot(
-  id: Long = -1, 
+case class RequestCreateLot(
   price: Double,
   enterDate: LocalDate,
   emptynessDate: Option[LocalDate],

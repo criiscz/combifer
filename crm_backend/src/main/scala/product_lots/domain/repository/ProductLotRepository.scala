@@ -8,6 +8,6 @@ trait ProductLotRepository:
   def getLotsOfProduct(productId: Long, from:Int, to:Int): List[ProductLot]
   def getTotalAmountOfLots():Long
   def getTotalAmountOfLotsAtProduct(productId:Long):Long
-  def insertLot(lot:ProductLot): Unit
-  def updateLot(lot:ProductLot): Unit
-  def removeLot(id:Long): Unit
+  def insertLot(lot:ProductLot): ProductLot
+  def updateLot(lot:ProductLot): ProductLot
+  def removeLot(id:Long): ProductLot
