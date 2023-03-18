@@ -7,7 +7,7 @@ import shared.application.BaseUseCase
 class CreateProductUseCase()(using productRepository: ProductRepository) extends BaseUseCase[RequestCreateProduct, ResponseCreateProduct]:
 
   override def execute(request: RequestCreateProduct): Option[ResponseCreateProduct] =
-    productRepository.insertProduct(
+    val product = productRepository.insertProduct(
       Product(
         name = request.name,
         description = request.description,
@@ -17,6 +17,6 @@ class CreateProductUseCase()(using productRepository: ProductRepository) extends
       )
     )
     Some(
-      ResponseCreateProduct("Created")
+      ResponseCreateProduct(product)
     ) 
 

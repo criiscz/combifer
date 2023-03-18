@@ -7,6 +7,6 @@ class RemoveProductUseCase()(using productRepository: ProductRepository) extends
 
   override def execute(request: RequestRemoveProduct): Option[ResponseRemoveProduct] = 
     // TODO: Check if the product has been asociated to a lot.
-    productRepository.removeProduct(request.id)
-    Some(ResponseRemoveProduct("created"))
+    val product = productRepository.removeProduct(request.id)
+    Some(ResponseRemoveProduct(product))
 

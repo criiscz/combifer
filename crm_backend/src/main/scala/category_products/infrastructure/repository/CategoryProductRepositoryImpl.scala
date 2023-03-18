@@ -12,12 +12,6 @@ import com.zaxxer.hikari.HikariDataSource
 class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseRepository:
 
   import ctx._
-  implicit inline def myEntitySchemaMeta():SchemaMeta[CategoryProduct] = 
-    schemaMeta[CategoryProduct]("category_products")
-  implicit inline def excludeInsert():InsertMeta[CategoryProduct] = 
-    insertMeta[CategoryProduct](_.id)
-  implicit inline def excludeUpdate():UpdateMeta[CategoryProduct] = 
-    updateMeta[CategoryProduct](_.id)
 
   override def getCategory(id: Long): Option[CategoryProduct] = 
     ctx.run(
@@ -36,22 +30,25 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseR
   override def getTotalAmountOfCategories() = 
     ctx.run(query[CategoryProduct].size)
 
-  override def insertCategory(category:CategoryProduct): Unit = 
+  override def insertCategory(category:CategoryProduct): CategoryProduct = 
     ctx.run(
       query[CategoryProduct]
-        .insertValue( lift(category))
+        .insertValue( lift(category)).returning(r => r)
     )
 
-  override def updateCategory(category:CategoryProduct): Unit = 
+  override def updateCategory(category:CategoryProduct): CategoryProduct  = 
     ctx.run(
       query[CategoryProduct]
       .filter(_.id == lift(category.id))
-      .updateValue(lift(category)))
+      .updateValue(lift(category))
+      .returning(r => r)
+    )
 
-  override def removeCategory(id: Long): Unit =
+  override def removeCategory(id: Long): CategoryProduct  =
     ctx.run(
       query[CategoryProduct]
         .filter(_.id == lift(id))
         .delete
+        .returning(r => r)
     )
 

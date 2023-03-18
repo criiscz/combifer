@@ -1,5 +1,7 @@
 package category_products.application.create_category
 
+import category_products.domain.entity.CategoryProduct
+
 sealed case class ResponseCreateCategory (
-  val completed: Boolean
+  data: CategoryProduct
 )

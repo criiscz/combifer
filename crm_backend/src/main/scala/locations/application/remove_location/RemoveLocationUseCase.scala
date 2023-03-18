@@ -7,5 +7,8 @@ import products.domain.repository.ProductRepository
 class RemoveLocationUseCase()(using locationRepository: LocationRepository, productRepository: ProductRepository) extends BaseUseCase[RequestRemoveLocation, ResponseRemoveLocation]:
 
   override def execute(request: RequestRemoveLocation): Option[ResponseRemoveLocation] =
-    locationRepository.removeLocation(request.id) 
-    Some(ResponseRemoveLocation(data= "Removed"))
+    val amountOfProductsInLocation = productRepository.getProductsWithLocation(request.id).size
+    if(amountOfProductsInLocation > 0)
+      return None
+    val location = locationRepository.removeLocation(request.id) 
+    Some(ResponseRemoveLocation(location))

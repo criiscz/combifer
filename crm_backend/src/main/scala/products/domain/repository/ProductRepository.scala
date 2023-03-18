@@ -8,6 +8,6 @@ trait ProductRepository:
   def getProductsWithLocation(locationId:Long): List[Product]
   def getProducts(from: Int, to:Int):List[Product]
   def getTotalAmountOfProducts(): Long
-  def insertProduct(product: Product): Unit
-  def updateProduct(product:Product):Unit
-  def removeProduct(id: Long):Unit
+  def insertProduct(product: Product): Product
+  def updateProduct(product:Product):Product
+  def removeProduct(id: Long):Product
