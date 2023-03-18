@@ -3,7 +3,7 @@ import styles from './style.module.css'
 import Title from "@/app/dashboard/components/Title/Title";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
 import cookie from "universal-cookie";
-import {useQuery} from "react-query";
+import {useQueries, useQuery} from "react-query";
 import {getAllProducts, getProduct} from "@/api/Products";
 import {useEffect, useState} from "react";
 import ProductList from "@/app/dashboard/inventory/components/ProductList/ProductList";
@@ -16,8 +16,11 @@ export default function InventoryPage() {
   const cookies = new cookie()
 
   const [products, setProducts] = useState<Product[]>([])
+  const [productSelected, setProductSelected] = useState<Product | undefined>(undefined)
 
   const {data} = useQuery('products', () => getAllProducts(cookies.get('token')))
+  // const queryLot = useQuery('productLot', () => getProduct(cookies.get('token'), productSelected.id), {enabled: productSelected !== undefined})
+
 
   useEffect(() => {
     setProducts(data as Product[])
@@ -29,12 +32,16 @@ export default function InventoryPage() {
     else setProducts(data!.filter((product: any) => product.name.toLowerCase().includes(name.toLowerCase())))
   }
 
-  const AddProduct = (product:Product) => {
+  const AddProduct = (product: Product) => {
     // TODO: Add product to the list
   }
 
   const showAddProduct = () => {
 
+  }
+
+  const selectProduct = (product: Product | undefined) => {
+    setProductSelected(product)
   }
 
   return (
@@ -46,9 +53,11 @@ export default function InventoryPage() {
       </section>
       <section className={styles.inventory__body}>
         {
-          products === undefined ? <ProductList products={[]}/> : <ProductList products={products}/>
+          products === undefined ?
+            <ProductList products={[]} productSelected={selectProduct}/> :
+            <ProductList products={products} productSelected={selectProduct}/>
         }
-        <Overview productSelected={[]}/>
+        <Overview productSelected={productSelected!}/>
       </section>
     </div>
   )
