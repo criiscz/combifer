@@ -1,0 +1,219 @@
+/*.dialog__container => principal container white background*/
+.dialog__container {
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 3rem;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.dialog__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dialog__title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #000;
+    font-family: 'Inter', sans-serif;
+}
+
+.dialog__closeButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.5rem;
+}
+
+.dialog__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.dialog__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.dialog__body_group_input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+    gap: 1rem;
+}
+
+.dialog__body_group_input_item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.dialog__body_group_input_item select {
+    width: 100%;
+    border: 1px solid var(--gray-light);
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+    background: inherit;
+    padding: 10px;
+}
+
+.dialog__body_group_input_item select:focus {
+    border: 1px solid var(--yellow-strong);
+}
+
+.dialog__body_group_input_item select option {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.dialog__body_group_input_item label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 5px;
+}
+
+.dialog__body_group_input_item input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--gray-light);
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.dialog__body_group_input_item input:focus {
+    border: 1px solid var(--yellow-strong);
+}
+
+.dialog__body_group_button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem 3rem;
+    background: var(--yellow-strong);
+    font-size: 1.5rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dialog__body_group_button:hover {
+    background: #e7c71f;
+}
+
+.dialog__body_group_button:active {
+    background: #d4b21a;
+}
+
+.dialog__body_title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 20px;
+}
+
+.dialog__body_subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-strong);
+    margin-bottom: 20px;
+}
+
+.dialog__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dialog__footer_button_cancel {
+    background: var(--gray-EE);
+    color: var(--black);
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+}
+
+.dialog__footer_button_cancel:hover {
+    background: #cbc9c9
+}
+
+.dialog__footer_button_cancel:active {
+    background: #b0afaf;
+}
+
+.dialog__footer_button_delete {
+    background: var(--red-strong);
+    color: #fff;
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+}
+
+.dialog__footer_button_delete:hover {
+    background: #e71f1f;
+}
+
+.dialog__footer_button_delete:active {
+    background: #d41a1a;
+}
+
+

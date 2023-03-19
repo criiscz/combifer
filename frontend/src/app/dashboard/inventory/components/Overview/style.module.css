@@ -1,0 +1,201 @@
+.overview__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 2rem;
+    width: 30%;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: 0 15px 23px -18px var(--gray-D9);
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-strong);
+}
+
+.overview__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__title_product {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__title_product_name {
+    font-size: 1.5rem;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+    border-bottom: 2px solid var(--gray-strong);
+    width: fit-content;
+}
+
+.overview__title_product_price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__data_item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid var(--gray-D9);
+    padding: .3rem 0;
+}
+
+.overview__data_item:last-child {
+    border-bottom: none;
+}
+
+.overview__data_item_header {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__data_item_value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__actionButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__actionButtons_button_edit {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(75, 211, 123, 0.2);
+    color: rgb(75, 211, 123);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.overview__actionButtons_button_delete {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(255, 116, 116, 0.2);
+    color: rgb(255, 116, 116);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.overview__actionButtons_button_addStock {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(253, 220, 40, 0.2);
+    color: rgb(253, 220, 40);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.overview__actionButtons_button_addStock:hover {
+    background-color: rgba(253, 220, 40, 0.4);
+}
+
+.overview__actionButtons_button_addStock:active {
+    background-color: rgba(253, 220, 40, 0.6);
+}
+
+.overview__actionButtons_button_edit:hover {
+    background-color: rgba(75, 211, 123, 0.4);
+}
+
+.overview__actionButtons_button_edit:active {
+    background-color: rgba(75, 211, 123, 0.6);
+}
+
+.overview__actionButtons_button_delete:hover {
+    background-color: rgba(255, 116, 116, 0.4);
+}
+
+.overview__actionButtons_button_delete:active {
+    background-color: rgba(255, 116, 116, 0.6);
+}
+
+.overview__total_description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__total_item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid var(--gray-D9);
+    padding: .3rem 0;
+}
+
+.overview__total_item:last-child {
+    border-bottom: none;
+}
+
+.overview__total_item_header {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.overview__total_item_value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}

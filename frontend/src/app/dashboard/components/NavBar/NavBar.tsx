@@ -1,7 +1,7 @@
 'use client'
 import styles from './navbar.module.css'
 import Link from "next/link";
-import React from "react";
+import React, {useCallback} from "react";
 import {Icon} from "@iconify/react";
 import MenuOption from "@/app/dashboard/components/NavBar/MenuOption/MenuOption";
 
@@ -19,6 +19,7 @@ export default function NavBar({name, role, id}: NavBarProps) {
     month: 'long',
     day: 'numeric'
   }))
+  const [active, setActive] = React.useState<boolean[]>([false, false, false, false])
 
   // ------------------  Effects ------------------ //
   React.useEffect(() => {
@@ -33,7 +34,21 @@ export default function NavBar({name, role, id}: NavBarProps) {
     return () => clearInterval(interval)
   });
 
-  // ------------------  Render ------------------ //
+  // ------------------  Functions ------------------ //
+  const handleActive = ((index: number) => {
+    const newActive = [false, false, false, false]
+    newActive[index] = true
+    setActive(newActive)
+  })
+
+  // Maybe this is not the best way to do this, but it works! :D
+  React.useEffect(() => {
+    const href = window.location.href
+    if (href.includes('inventory')) setActive([true, false, false, false])
+    else if (href.includes('sells')) setActive([false, true, false, false])
+    else if (href.includes('reports')) setActive([false, false, true, false])
+    else if (href.includes('settings')) setActive([false, false, false, true])
+  }, [])
 
   return (
     <nav className={styles.navbar}>
@@ -58,24 +73,21 @@ export default function NavBar({name, role, id}: NavBarProps) {
       </div>
       <div className={styles.navbar__links}>
         <ul className={styles.navbar__link_ul}>
-          <li className={styles.navbar__link_1}>
-            <MenuOption icon={"bi:house"} text={'Inventario'} link={'/dashboard/inventory'}/>
-          </li>
-          <li className={styles.navbar__link_1}>
-            <MenuOption icon={"ic:outline-sell"} text={'Ventas'} link={'/dashboard/sells'}/>
-          </li>
-          <li className={styles.navbar__link_1}>
-            <MenuOption icon={"mdi:report-bell-curve"} text={'Reportes'} link={'/dashboard/reports'}/>
-          </li>
-          <li className={styles.navbar__link_1}>
-            <MenuOption icon={'bi:gear'} text={'Configuración'} link={'/dashboard/settings'}/>
-          </li>
+          <MenuOption index={0} icon={"bi:house"} text={'Inventario'} link={'/dashboard/inventory'}
+                      active={active[0]} onClick={handleActive}/>
+          <MenuOption index={1} icon={"ic:outline-sell"} text={'Ventas'} link={'/dashboard/sells'}
+                      active={active[1]} onClick={handleActive}/>
+          <MenuOption index={2} icon={"mdi:report-bell-curve"} text={'Reportes'}
+                      link={'/dashboard/reports'}
+                      active={active[2]} onClick={handleActive}/>
+          <MenuOption index={3} icon={'bi:gear'} text={'Configuración'} link={'/dashboard/settings'}
+                      active={active[3]} onClick={handleActive}/>
         </ul>
       </div>
       <div>
         <div className={styles.navbar__logout}>
           <Icon icon="bi:door-open-fill"/>
-          <Link href={'#'}> Cerrar Sesión </Link>
+          <Link href={'/logout'}> Cerrar Sesión </Link>
         </div>
       </div>
     </nav>
