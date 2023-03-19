@@ -12,12 +12,14 @@ import {Product} from "@/models/Product";
 import Button from "@/app/components/Button";
 import {Icon} from "@iconify/react";
 import {ProductLot} from "@/models/ProductLot";
+import {getAllProductLots} from "@/api/ProductLots";
 
 export default function InventoryPage() {
   const cookies = new cookie()
 
   const [products, setProducts] = useState<Product[]>([])
   const [productSelected, setProductSelected] = useState<Product | undefined>(undefined)
+  const [productLots, setProductLots] = useState<ProductLot[]>([])
 
   // Structure of the data
   // ProductLot -> Product -> [Location, Category]
@@ -41,26 +43,34 @@ export default function InventoryPage() {
   //     category: queryCategory.data
   //   } as ProductResult
 
-  const queryProducts = useQuery('products', () => getAllProducts(cookies.get('token')))
 
-  const queryProducLots = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
-  const queryProducts = queryProducLots.data?.map((productLot: ProductLot) => {
-    return useQuery('product', () => getProduct(cookies.get('token'), productLot.product_id))
-  })
+  const {data} = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setProductLots(data)
+      console.log(data)
+    }
+
+  }, [data])
+
+
+  // const queryProducts = queryProducLots.data.map(async (productLot: ProductLot) => {
+  //   return await getProduct(cookies.get('token'), productLot.product_id)
+  // })
+
+  // const data = queryProducts?.map(async (product: any) => {
+  //   return await product
+  // })
 
 
 
   // const queryLot = useQuery('productLot', () => getProduct(cookies.get('token'), productSelected.id), {enabled: productSelected !== undefined})
 
 
-  useEffect(() => {
-    setProducts(data as Product[])
-  }, [data])
-
-
   const SearchProduct = (name: string) => {
-    if (name === '') setProducts(data as Product[])
-    else setProducts(data!.filter((product: any) => product.name.toLowerCase().includes(name.toLowerCase())))
+    // if (name === '') setProducts(data as Product[])
+    // else setProducts(data!.filter((product: any) => product.name.toLowerCase().includes(name.toLowerCase())))
   }
 
   const AddProduct = (product: Product) => {
