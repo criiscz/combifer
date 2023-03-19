@@ -9,7 +9,7 @@ import {getAllCategories} from "@/api/Categories";
 import {BackResponse} from "@/models/BackResponse";
 import {getAllMeasureUnits} from "@/api/MeasureUnits";
 import {getAllLocations} from "@/api/Locations";
-import {Product, ProductComplete} from "@/models/Product";
+import {Product} from "@/models/Product";
 import {createProduct} from "@/api/Products";
 import {createProductLot} from "@/api/ProductLots";
 import {ProductLot} from "@/models/ProductLot";
@@ -30,11 +30,11 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
     queryFn: () => getAllLocations()
   })
   // ------------------ Mutations ------------------
-  const {mutate: createProductMutation} = useMutation(createProduct)
+  const {mutate: createProductMutation, data: productCreated} = useMutation(createProduct)
   const {mutate: createProductLotMutation} = useMutation(createProductLot)
-
+  // ------------------ States ------------------
   const [createProductFields, setCreateProductFields] = useState<CreateProductFields>()
-
+  // ------------------ Effects ------------------
   useEffect(() => {
     setCreateProductFields({
       ...createProductFields,
@@ -43,27 +43,37 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
       location_id: locations?.data[0].id,
     })
   }, [categories, locations?.data, measureUnits?.data])
-
+  useEffect(() => {
+    if (productCreated) {
+      createProductLotMutation({
+        productId: productCreated.data.id,
+        quantity: createProductFields?.quantity,
+        price: createProductFields?.price,
+        enterDate: createProductFields?.enterDate,
+      } as ProductLot)
+      closeDialog()
+      // TODO: Add a toast to notify the user that the product was created
+      // TODO: Update the product list
+    }
+  }, [productCreated])
+  // ------------------ Functions ------------------
   const handleChange = ({target: {name, value}}: any) => {
     setCreateProductFields({
       ...createProductFields,
       [name]: value
     })
   };
-
-  const handleSubmit = (e : any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault()
-    const product = createProductMutation({
+    createProductMutation({
       name: createProductFields?.name,
-      location_id: createProductFields?.location_id,
-      category_id: createProductFields?.category_id,
-      measure_unit: createProductFields?.measureUnit,
+      locationId: createProductFields?.location_id,
+      categoryProductId: createProductFields?.category_id,
+      measureUnit: createProductFields?.measureUnit,
       description: ""
     } as Product)
-
-    console.log(product)
   }
-
+  // ------------------ Render ------------------
   return (
     <div className={styles.dialog__container}>
       <div className={styles.dialog__header}>
@@ -84,7 +94,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
           <div className={styles.dialog__body_group_input}>
             <div className={styles.dialog__body_group_input_item}>
               <label htmlFor="buy-date">Fecha de Compra</label>
-              <input type="date" id={'buy-date'} name={'buy-date'} onChange={handleChange}
+              <input type="date" id={'buy-date'} name={'enterDate'} onChange={handleChange}
                      required/>
             </div>
             <div className={styles.dialog__body_group_input_item}>
@@ -149,7 +159,7 @@ interface CreateProductDialogProps {
 
 interface CreateProductFields {
   name?: string
-  buyDate?: string
+  enterDate?: string
   category_id?: number
   lot_id?: number
   price?: number

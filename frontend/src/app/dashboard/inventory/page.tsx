@@ -1,16 +1,14 @@
 'use client'
 import styles from './style.module.css'
-import Title from "@/app/dashboard/components/Title/Title";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
 import cookie from "universal-cookie";
-import {useQueries, useQuery} from "react-query";
-import {getAllProducts, getProduct} from "@/api/Products";
+import {useQuery} from "react-query";
+import {getProduct} from "@/api/Products";
 import {useContext, useEffect, useState} from "react";
 import ProductList from "@/app/dashboard/inventory/components/ProductList/ProductList";
 import Overview from "@/app/dashboard/inventory/components/Overview/Overview";
 import {Product, ProductComplete} from "@/models/Product";
 import Button from "@/app/components/Button";
-import {Icon} from "@iconify/react";
 import {ProductLot} from "@/models/ProductLot";
 import {getAllProductLots} from "@/api/ProductLots";
 import ModalContext from "@/context/ModalContext";
@@ -21,9 +19,7 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
   const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
-  const [productLots, setProductLots] = useState<ProductLot[]>([])
-
-  const {open, setOpen, id, setId} = useContext(ModalContext);
+  const { setOpen, id, setId} = useContext(ModalContext);
 
 
   const {data: productsLotData} = useQuery('productLots', () => getAllProductLots(cookies.get('token')))

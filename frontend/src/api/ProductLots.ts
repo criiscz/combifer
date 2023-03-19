@@ -7,8 +7,8 @@ import {BackResponse} from "@/models/BackResponse";
 const API_URL = 'http://3.237.202.227/';
 
 
-export async function getAllProductLots(productId: number | string, page: number = 0, per_page: number = 10): Promise<BackResponse> {
-  const response = await fetch(API_URL + `products-lots?page=${page}&per_page=${per_page}`, {
+export async function getAllProductLots(productId: number | string, page: number = 0, per_page: number = 100): Promise<BackResponse> {
+  const response = await fetch(API_URL + `product-lots?page=${page}&per_page=${per_page}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export async function getAllProductLots(productId: number | string, page: number
 }
 
 export async function createProductLot(productLot: ProductLot): Promise<ProductLot> {
-  const response = await fetch(API_URL + `products-lots`, {
+  const response = await fetch(API_URL + `product-lots`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,4 +26,26 @@ export async function createProductLot(productLot: ProductLot): Promise<ProductL
     body: JSON.stringify(productLot),
   });
   return await response.json() as ProductLot;
+}
+
+export async function deleteProductLot(productLotId: number | undefined): Promise<BackResponse> {
+  const request = await fetch(API_URL + `product-lots/${productLotId}/`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "none",
+    },
+  });
+  return await request.json() as BackResponse;
+}
+
+export async function updateProductLot(productLot: ProductLot, idProductLot: number | undefined): Promise<BackResponse> {
+  const body = JSON.stringify(productLot);
+  const request = await fetch(API_URL + `product-lots/${idProductLot}/`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: body
+  });
+  return await request.json() as BackResponse;
 }
