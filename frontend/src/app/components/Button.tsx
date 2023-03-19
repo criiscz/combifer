@@ -4,7 +4,7 @@ export default function Button({title, onClick, icon}:{title:string, onClick:Fun
     return(
         <div className={styles.button}>
           { icon && <Icon icon={icon} width={20} height={20}/> }
-          <button onClick={onClick()}>{}{title}</button>
+          <button onClick={() => onClick()}>{}{title}</button>
         </div>
     )
 }

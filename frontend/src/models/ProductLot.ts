@@ -2,7 +2,7 @@ import {Product} from "@/models/Product";
 
 export interface ProductLot {
   id: number;
-  product_id?: number;
+  productId?: number;
   price?: number;
   enter_date?: string;
   emptyness_date?: string;

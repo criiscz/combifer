@@ -1,4 +1,4 @@
-import {Product} from "@/models/Product";
+import {Product, ProductComplete} from "@/models/Product";
 import styles from './style.module.css'
 import {Dispatch, SetStateAction} from "react";
 
@@ -11,7 +11,8 @@ export default function Table({
   const selectRow = (e: any) => {
     const row = e.target
     const rowId = row.parentElement?.children[0].innerHTML
-    const product = products.find(product => product.id === rowId)
+    const product = products.find(product => product.lot.id == rowId)
+    console.log("Product selected 2: ", rowId, products)
     productSelected(product)
 
   }
@@ -28,11 +29,11 @@ export default function Table({
             return (
               <div className={styles.table__body_row} key={index}>
                 {/*<input type={'checkbox'} key={index} id={index+''}/>*/}
-                <div className={styles.table__body_row_item}>{product.id}</div>
-                <div className={styles.table__body_row_item}>{product.name}</div>
-                <div className={styles.table__body_row_item}>{product.category_id}</div>
-                <div className={styles.table__body_row_item}>{product.category_id}</div>
-                <div className={styles.table__body_row_item}>{product.category_id}</div>
+                <div className={styles.table__body_row_item}>{product.lot.id}</div>
+                <div className={styles.table__body_row_item}>{product.product.name}</div>
+                <div className={styles.table__body_row_item}>{product.category.name}</div>
+                <div className={styles.table__body_row_item}>{product.lot.price}</div>
+                <div className={styles.table__body_row_item}>{product.lot.quantity}</div>
               </div>
             )
           }
@@ -43,7 +44,7 @@ export default function Table({
 }
 
 interface TableProps {
-  products: Product[],
+  products: ProductComplete[],
   header: string[],
-  productSelected: (product:Product | undefined) => void
+  productSelected: (product:ProductComplete | undefined) => void
 }

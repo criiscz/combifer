@@ -1,4 +1,4 @@
-export default interface Location {
+export interface Location {
   id: number;
   name: string;
   img_url: string;

@@ -1,5 +1,5 @@
 import styles from './style.module.css'
-import {Product} from "@/models/Product";
+import {Product, ProductComplete} from "@/models/Product";
 import Table from "../Table/Table";
 import {Dispatch, SetStateAction} from "react";
 
@@ -13,6 +13,6 @@ export default function ProductList({products, productSelected}: ProductListProp
 }
 
 interface ProductListProps {
-  products: Product[]
-  productSelected: (product: Product | undefined) => void
+  products: ProductComplete[]
+  productSelected: (product: ProductComplete | undefined) => void
 }
