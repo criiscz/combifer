@@ -19,7 +19,9 @@ import sttp.tapir.Endpoint
 import shared.mapper.endpoints.Exposer
 import shared.mapper.open_api.OpenAPIGenerator
 import sttp.tapir.server.ziohttp.ZioHttpServerOptions
-import shared.interceptors.ErrorHandling
+
+import shared.interceptors._
+import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 
 object Main extends ZIOAppDefault with DI:
@@ -32,8 +34,8 @@ object Main extends ZIOAppDefault with DI:
   val serverOptions:ZioHttpServerOptions[Any] =
     ZioHttpServerOptions
       .customiseInterceptors
+      .corsInterceptor(CORSInterceptor.customOrThrow(CorsHandling.config))
       .exceptionHandler(ErrorHandling.exceptionHandler)
-      // .defaultHandlers(ErrorHandling.errorMessageHandler)
       .options
 
   val routes: HttpApp[Any, Throwable] = 

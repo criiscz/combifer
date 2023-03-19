@@ -18,9 +18,6 @@ import org.postgresql.util.PSQLException
 
 object ErrorHandling:
 
-  def errorMessageHandler(m: String): ValuedEndpointOutput[_] =
-    ValuedEndpointOutput(jsonBody[ErrorResponse], ErrorResponse(message = m))
-
   val exceptionHandler: ExceptionHandler[({ type Alias[A] = zio.RIO[Any, A] })#Alias] =
     ExceptionHandler[({ type Alias[A] = zio.RIO[Any, A] })#Alias](ctx =>
       exceptionResponse(ctx)
