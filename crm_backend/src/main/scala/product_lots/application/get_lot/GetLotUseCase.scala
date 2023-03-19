@@ -7,7 +7,7 @@ import locations.domain.repository.LocationRepository
 import products.domain.repository.ProductRepository
 
 class GetLotUseCase() (
-  using productLotRepository:ProductLotRepository,
+  using productLotRepository:ProductLotRepository
 ) extends BaseUseCase[RequestGetLot, ResponseGetLot]:
 
   override def execute(request: RequestGetLot): Option[ResponseGetLot] =
