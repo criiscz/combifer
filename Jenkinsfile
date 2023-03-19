@@ -32,9 +32,9 @@
                    sh 'pwd'
                    // 'ssh -i "back-scala.pem" ec2-user@ec2-100-26-170-8.compute-1.amazonaws.com;cd ~/;java -jar back.jar'
                    //sh 'ssh -i "back-scala.pem" ec2-user@ec2-34-229-72-83.compute-1.amazonaws.com'
-                   sh 'ssh -tt ec2-user@ec2-34-229-72-83.compute-1.amazonaws.com;java -jar back.jar &'
+                   sh 'ssh -tt ec2-user@ec2-34-229-72-83.compute-1.amazonaws.com'
                    sh 'pwd'
-                   //sh 'java -jar back.jar &'
+                   sh 'java -jar back.jar &'
                }
          }
      }
