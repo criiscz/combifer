@@ -9,13 +9,6 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
 
   import ctx._
 
-  implicit val myEntitySchemaMeta:SchemaMeta[Product] = 
-    schemaMeta[Product]("products")
-  implicit val excludeInsert:InsertMeta[Product] =
-    insertMeta[Product](_.id)
-  implicit val excludeUpdate:UpdateMeta[Product] = 
-    updateMeta[Product](_.id)
-
   override def getProduct(id: Long): Option[Product] =
     ctx.run(
       query[Product].filter(_.id == lift(id))

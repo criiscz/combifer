@@ -1,5 +1,7 @@
 package products.application.create_product
 
-case class ResponseCreateProduct(
-  status: String
+import products.domain.entity.Product
+
+sealed case class ResponseCreateProduct(
+  data: Product
 )

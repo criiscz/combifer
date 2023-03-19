@@ -1,12 +1,12 @@
-package product_lots.domain.entity
+package product_lots.application.update_lot
 
 import java.time.LocalDate
 
-case class ProductLot(
-  id: Long = -1, 
+case class RequestUpdateLot (
   price: Double,
   enterDate: LocalDate,
   emptynessDate: Option[LocalDate],
   quantity: Long,
   productId: Long,
 )
+
