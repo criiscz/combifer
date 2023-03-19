@@ -18,6 +18,10 @@ import java.io.IOException
 import sttp.tapir.Endpoint
 import shared.mapper.endpoints.Exposer
 import shared.mapper.open_api.OpenAPIGenerator
+import sttp.tapir.server.ziohttp.ZioHttpServerOptions
+
+import shared.interceptors._
+import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 
 object Main extends ZIOAppDefault with DI:
@@ -26,20 +30,28 @@ object Main extends ZIOAppDefault with DI:
   ProductController()
   LocationController()
   ProductLotController()
-    
+
+  val serverOptions:ZioHttpServerOptions[Any] =
+    ZioHttpServerOptions
+      .customiseInterceptors
+      .corsInterceptor(CORSInterceptor.customOrThrow(CorsHandling.config))
+      .exceptionHandler(ErrorHandling.exceptionHandler)
+      .options
+
   val routes: HttpApp[Any, Throwable] = 
-    ZioHttpInterpreter()
-    .toHttp(
-      Exposer.availableEndpoints.toList ++
-      OpenAPIGenerator().getDocs()
-    )
+    ZioHttpInterpreter(serverOptions)
+      .toHttp(
+        Exposer.availableEndpoints.toList ++
+        OpenAPIGenerator().getDocs()
+      )
 
   override def run: URIO[Any, ExitCode] =
     Server
       .serve(routes.withDefaultErrorResponse)
       .provide(
-        ServerConfig.live(ServerConfig.default.port(8090)),
-        Server.live
-      ).exitCode
+        ServerConfig
+          .live(ServerConfig.default.port(8090)),
+          Server.live
+        ).exitCode
 
 
