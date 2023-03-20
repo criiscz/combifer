@@ -3,13 +3,14 @@ import styles from "./style.module.css";
 import {ProductComplete} from "@/models/Product";
 import {Icon} from "@iconify/react";
 import ModalContext from "@/context/ModalContext";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import ProductContext from "@/context/ProductContext";
+import {render} from "react-dom";
 
 export default function Overview(props: OverviewProps) {
 
   const {open , setOpen, id, setId} = useContext(ModalContext);
-  const {product, setProduct} = useContext(ProductContext);
+  const {product, setProduct, refresh} = useContext(ProductContext);
 
   const openModal = (id:string, product: ProductComplete) => {
     if (setId) {

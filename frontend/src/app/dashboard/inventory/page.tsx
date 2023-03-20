@@ -12,6 +12,7 @@ import Button from "@/app/components/Button";
 import {ProductLot} from "@/models/ProductLot";
 import {getAllProductLots} from "@/api/ProductLots";
 import ModalContext from "@/context/ModalContext";
+import ProductContext from "@/context/ProductContext";
 
 export default function InventoryPage() {
   const cookies = new cookie()
@@ -19,10 +20,11 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
   const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
-  const { setOpen, id, setId} = useContext(ModalContext);
+  const { setOpen, setId} = useContext(ModalContext);
 
 
-  const {data: productsLotData} = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+  const {data: productsLotData, refetch} = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+  const {refresh, setRefresh} = useContext(ProductContext)
 
   useEffect(() => {
     if (productsLotData !== undefined) {
@@ -35,6 +37,14 @@ export default function InventoryPage() {
       })
     }
   }, [productsLotData])
+
+  useEffect(() => {
+    if (refresh) {
+      refetch()
+      setProductSelected(undefined)
+      setRefresh(false)
+    }
+  }, [refresh])
 
 
   const SearchProduct = (name: string) => {
