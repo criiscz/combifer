@@ -18,9 +18,34 @@ import products.application.update_product._
 import products.application.remove_product._
 
 import shared.responses._
+import shared.BaseController
 import shared.mapper.endpoints.Exposer._
+import shared.AuthenticationError
 
 class ProductController()(using productRepository:ProductRepository):
+
+  // sealed trait HelloError
+  // case class AuthenticationHelloError(wrapped: AuthenticationError) extends HelloError
+  // case class NoHelloError(why: String) extends HelloError
+
+  // private val secureGetTest: ZPartialServerEndpoint[Any, AuthenticationToken, User, Unit, HelloError, String, Any] = 
+  //   secureEndpoint.get
+  //   .in("hello")
+  //   .get
+  //   .out(stringBody)
+  //   .mapErrorOut(AuthenticationHelloError.apply)(_.wrapped)
+  //   .errorOutVariant[HelloError](oneOfVariant(stringBody.mapTo[NoHelloError]))
+  //   .exposeSecure
+
+  // private val secureGetTestRoute: ZServerEndpoint[Any, Any] =
+  //   secureGetTest.serverLogic{ user => (salutation:Unit) =>
+  //     ZIO
+  //       .succeed(
+  //         if (user.name == "Gargamel") ZIO.fail(NoHelloError(s"Not saying hello to ${user.name}!"))
+  //         else ZIO.succeed(throw new Exception("asd"))
+  //       )
+  //     .flatten
+  //   }.expose
 
   private val getProduct: PublicEndpoint[Long, ErrorResponse , ResponseGetProduct, Any] = 
     endpoint
