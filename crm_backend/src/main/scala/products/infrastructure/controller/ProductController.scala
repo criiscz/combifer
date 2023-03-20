@@ -84,8 +84,7 @@ class ProductController()(using productRepository:ProductRepository):
     .expose
 
   private val updateProductRoute: ZServerEndpoint[Any, Any] = updateProduct.zServerLogic{ (id:Long, request: RequestUpdateProduct) => 
-    request.id = id
-    UpdateProductUseCase().execute(request) match {
+    UpdateProductUseCase(id).execute(request) match {
       case Some(value) => ZIO.succeed(value)
       case None => ZIO.fail(ErrorResponse(message = "Can't update products")) 
     }

@@ -55,6 +55,7 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
   override def updateLot(lot: ProductLot): ProductLot = 
     ctx.run(
       query[ProductLot]
+      .filter(_.id == lift(lot.id))
       .updateValue(lift(lot))
       .returning(r => r)
     )
