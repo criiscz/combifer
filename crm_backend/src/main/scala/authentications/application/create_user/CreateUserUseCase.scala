@@ -46,3 +46,4 @@ extends BaseUseCase[RequestCreateUser,ResponseCreateUser]:
         email = agent.email
       )
     )
+  end execute

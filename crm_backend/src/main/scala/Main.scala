@@ -55,5 +55,4 @@ object Main extends ZIOAppDefault with DI:
           .live(ServerConfig.default.port(8090)),
           Server.live
         ).exitCode
-
-
+  end run
