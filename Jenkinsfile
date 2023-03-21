@@ -2,11 +2,16 @@
  pipeline {
      agent any
      stages {
-//          stage('Package') {
-//              steps {
-//                  sh 'cd crm_backend;sbt assembly'
-//              }
-//          }
+         stage('Test') {
+             steps {
+                 sh 'cd crm_backend;sbt test'
+             }
+         }
+         stage('Package') {
+             steps {
+                 sh 'cd crm_backend;sbt assembly'
+             }
+         }
 
         stage('Deploy') {
                steps {   
