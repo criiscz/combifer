@@ -2,6 +2,7 @@ package authentications.infrastructure.repository
 
 import authentications.domain.repository.AuthenticationRepository
 import authentications.domain.entity.User
+import agents.domain.entity.Agent
 import shared.BaseRepository
 import io.getquill._
 
@@ -22,3 +23,13 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository with BaseRep
         .insertValue(lift(user))
         .returning(r => r)
     )
+
+  
+  override def getUserByEmail(email:String):Option[User] =
+    val q = quote {
+      for 
+        agent <- query[Agent].filter(_.email == lift(email))
+        user <- query[User].join(_.agentId == agent.idDocument)
+      yield (user)
+    }
+    ctx.run(q).headOption

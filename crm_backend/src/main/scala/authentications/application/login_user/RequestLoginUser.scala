@@ -1,6 +1,6 @@
 package authentications.application.login_user
 
 case class RequestLoginUser (
-  username: String,
+  usernameOrEmail: String,
   password: String
 )
