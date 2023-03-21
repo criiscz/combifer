@@ -12,7 +12,7 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
   override def getAgents(from: Int, to: Int): List[Agent] =
     ctx.run(
       query[Agent]
-        .sortBy(_.id)(Ord.ascNullsLast)
+        .sortBy(_.idDocument)(Ord.ascNullsLast)
         .drop(lift(from))
         .take(lift(to))
     )
@@ -20,7 +20,7 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
   override def removeAgent(id: Long): Agent =
     ctx.run(
       query[Agent]
-        .filter(_.id == lift(id))
+        .filter(_.idDocument == lift(id))
         .delete
         .returning(r => r)
     )
@@ -28,7 +28,7 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
   override def updateAgent(agent: Agent): Agent = 
     ctx.run(
       query[Agent]
-        .filter(_.id == lift(agent.id))
+        .filter(_.idDocument == lift(agent.idDocument))
         .updateValue(lift(agent))
         .returning(r => r)
     )
@@ -43,5 +43,5 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
   override def getAgent(id: Long): Option[Agent] = 
     ctx.run(
       query[Agent]
-      .filter(_.id == lift(id))
+      .filter(_.idDocument == lift(id))
     ).headOption

@@ -6,9 +6,9 @@ import java.time.Clock
 
 class JwtServiceImpl extends JwtService:
 
-  infix val SECRET_KEY = "ArrozConLeche:3"
-  infix val ALGORITHM = JwtAlgorithm.HS256
-  infix val VALID_TIME_DAYS = 2
+  val SECRET_KEY = "ArrozConLeche:3"
+  val ALGORITHM = JwtAlgorithm.HS256
+  val VALID_TIME_DAYS = 2
 
   implicit val clock: Clock = Clock.systemUTC
 

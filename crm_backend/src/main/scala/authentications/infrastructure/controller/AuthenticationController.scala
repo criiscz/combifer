@@ -16,8 +16,16 @@ import shared.mapper.endpoints.Exposer._
 import authentications.domain.service.JwtService
 import sttp.tapir.EndpointIO.annotations.endpointInput
 import authentications.domain.repository.AuthenticationRepository
+import agents.domain.repository.AgentRepository
+import authentications.domain.service.HashService
 
-class AuthenticationController()(using jwtService: JwtService, authenticationRepository: AuthenticationRepository):
+class AuthenticationController()
+(using 
+  jwtService: JwtService, 
+  hashService: HashService,
+  authenticationRepository: AuthenticationRepository, 
+  agentRepository: AgentRepository,
+):
 
   private val loginUser:PublicEndpoint[RequestLoginUser, ErrorResponse,ResponseLoginUser, Any] =
     endpoint

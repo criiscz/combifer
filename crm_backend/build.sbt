@@ -31,7 +31,8 @@ val quillDependencies = Seq(
 )
 
 val authDependencies = Seq(
-  "com.github.jwt-scala" %% "jwt-core" % "9.2.0"
+  "com.github.jwt-scala" %% "jwt-core" % "9.2.0",
+  ("com.github.t3hnar" %% "scala-bcrypt" % "4.3.0").cross(CrossVersion.for3Use2_13)
 )
 
 lazy val root = project

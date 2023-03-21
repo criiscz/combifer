@@ -1,7 +1,7 @@
 package agents.domain.entity
 
 case class Agent (
-  id: Long = -1,
+  idDocument: Long,
   documentType: String,
   personType: String,
   name: String,
