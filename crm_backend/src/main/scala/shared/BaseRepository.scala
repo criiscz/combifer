@@ -7,6 +7,8 @@ import product_lots.domain.entity.ProductLot
 import locations.domain.entity.Location
 import category_products.domain.entity.CategoryProduct
 import products.domain.entity.Product
+import authentications.domain.entity.User
+import agents.domain.entity.Agent
 
 trait BaseRepository:
   val ctx = new PostgresJdbcContext(SnakeCase, "productionDatabase")
@@ -38,3 +40,13 @@ trait BaseRepository:
     insertMeta[Product](_.id)
   implicit val excludeProductUpdate:UpdateMeta[Product] = 
     updateMeta[Product](_.id)
+
+  implicit val userTableName:SchemaMeta[User] = 
+    schemaMeta[User]("users")
+  implicit val excludeUserInsert:InsertMeta[User] =
+    insertMeta[User](_.id)
+  implicit val excludeUserUpdate:UpdateMeta[User] = 
+    updateMeta[User](_.id)
+
+  implicit val agentsTableName:SchemaMeta[Agent] = 
+    schemaMeta[Agent]("agents")
