@@ -1,0 +1,47 @@
+package agents.infrastructure.repository
+
+import agents.domain.repository.AgentRepository
+import agents.domain.entity.Agent
+import io.getquill._
+import shared.BaseRepository
+
+class AgentRepositoryImpl extends AgentRepository with BaseRepository:
+
+  import ctx._
+
+  override def getAgents(from: Int, to: Int): List[Agent] =
+    ctx.run(
+      query[Agent]
+        .sortBy(_.id)(Ord.ascNullsLast)
+        .drop(lift(from))
+        .take(lift(to))
+    )
+
+  override def removeAgent(id: Long): Agent =
+    ctx.run(
+      query[Agent]
+        .filter(_.id == lift(id))
+        .delete
+        .returning(r => r)
+    )
+
+  override def updateAgent(agent: Agent): Agent = 
+    ctx.run(
+      query[Agent]
+        .filter(_.id == lift(agent.id))
+        .updateValue(lift(agent))
+        .returning(r => r)
+    )
+
+  override def insertAgent(agent: Agent): Agent = 
+    ctx.run(
+      query[Agent]
+        .insertValue(lift(agent))
+        .returning(r => r)
+    )
+
+  override def getAgent(id: Long): Option[Agent] = 
+    ctx.run(
+      query[Agent]
+      .filter(_.id == lift(id))
+    ).headOption

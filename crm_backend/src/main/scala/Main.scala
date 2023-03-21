@@ -14,7 +14,7 @@ import products.infrastructure.controller.ProductController
 import locations.infrastructure.controller.LocationController
 import product_lots.infrastructure.controller.ProductLotController
 
-import authentication.infrastructure.controller.AuthenticationController
+import authentications.infrastructure.controller.AuthenticationController
 import java.io.IOException
 import sttp.tapir.Endpoint
 import shared.mapper.endpoints.Exposer
