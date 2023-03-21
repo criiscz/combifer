@@ -1,7 +1,7 @@
 import styles from './style.module.css'
 import {Icon} from "@iconify/react";
 import {Product, ProductComplete} from "@/models/Product";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Category from "@/models/Category";
 import {MeasureUnit} from "@/models/MeasureUnit";
 import {Location} from "@/models/Location";
@@ -13,6 +13,8 @@ import {BackResponse} from "@/models/BackResponse";
 import {updateProduct} from "@/api/Products";
 import {updateProductLot} from "@/api/ProductLots";
 import {ProductLot} from "@/models/ProductLot";
+import ToastContext from "@/context/ToastContext";
+import ProductContext from "@/context/ProductContext";
 
 export default function EditProductDialog({closeDialog, product}: EditProductDialogProps) {
 
@@ -61,6 +63,9 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
       name: product?.product.name,
     })
   }, [product])
+  // ------------------------------ Context ------------------------------
+  const { setToast,  setText} = useContext(ToastContext)
+  const { setRefresh } = useContext(ProductContext)
   // ------------------------------ Functions ------------------------------
   const handleChange = ({target: {name, value}}: any) => {
     setEditProductFields({
@@ -74,6 +79,9 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
     editProductLotMutation()
     editProductMutation()
     closeDialog()
+    setToast(true)
+    setText('Producto editado correctamente')
+    setRefresh(true)
   }
 
   return (
@@ -98,13 +106,13 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
           <div className={styles.dialog__body_group_input}>
             <div className={styles.dialog__body_group_input_item}>
               <label htmlFor="buy-date">Fecha de Compra</label>
-              <input type="date" id={'buy-date'} name={'buy-date'}
+              <input type="date" id={'buy-date'} name={'enterDate'}
                      value={editProductFields?.enterDate} onChange={handleChange}
                      required/>
             </div>
             <div className={styles.dialog__body_group_input_item}>
               <label htmlFor="category">Categoría</label>
-              <select name="category" id="category" onClick={handleChange} required
+              <select name="categoryProductId" id="category" onChange={handleChange} required
                       value={editProductFields?.categoryProductId}
               >
                 {
@@ -124,7 +132,7 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
             </div>
             <div className={styles.dialog__body_group_input_item}>
               <label htmlFor="measure-unit">Unidad de Medida</label>
-              <select name="measure-unit" id="measure-unit" onChange={handleChange} required
+              <select name="measureUnit" id="measure-unit" onChange={handleChange} required
                       value={editProductFields?.measureUnit}
               >
                 {
@@ -138,7 +146,7 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
           <div className={styles.dialog__body_group_input}>
             <div className={styles.dialog__body_group_input_item}>
               <label htmlFor="location">Ubicación</label>
-              <select name="location" id="location" onChange={handleChange} required
+              <select name="locationId" id="location" onChange={handleChange} required
                       value={editProductFields?.locationId}
               >
                 {

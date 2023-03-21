@@ -13,6 +13,9 @@ import {Product} from "@/models/Product";
 import {createProduct} from "@/api/Products";
 import {createProductLot} from "@/api/ProductLots";
 import {ProductLot} from "@/models/ProductLot";
+import ModalContext from "@/context/ModalContext";
+import ToastContext from "@/context/ToastContext";
+import ProductContext from "@/context/ProductContext";
 
 export default function CreateProductDialog({closeDialog}: CreateProductDialogProps) {
 
@@ -29,6 +32,9 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
     queryKey: 'locations',
     queryFn: () => getAllLocations()
   })
+  // ------------------ Contexts -------------------
+  const {setToast, setText} = React.useContext(ToastContext)
+  const { setRefresh } = React.useContext(ProductContext)
   // ------------------ Mutations ------------------
   const {mutate: createProductMutation, data: productCreated} = useMutation(createProduct)
   const {mutate: createProductLotMutation} = useMutation(createProductLot)
@@ -43,6 +49,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
       location_id: locations?.data[0].id,
     })
   }, [categories, locations?.data, measureUnits?.data])
+
   useEffect(() => {
     if (productCreated) {
       createProductLotMutation({
@@ -52,8 +59,9 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
         enterDate: createProductFields?.enterDate,
       } as ProductLot)
       closeDialog()
-      // TODO: Add a toast to notify the user that the product was created
-      // TODO: Update the product list
+      setToast(true)
+      setText('Producto creado correctamente')
+      setRefresh(true)
     }
   }, [productCreated])
   // ------------------ Functions ------------------

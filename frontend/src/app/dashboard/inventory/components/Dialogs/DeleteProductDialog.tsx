@@ -3,8 +3,10 @@ import {Icon} from "@iconify/react";
 import {ProductComplete} from "@/models/Product";
 import {useMutation} from "react-query";
 import {deleteProduct} from "@/api/Products";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {deleteProductLot} from "@/api/ProductLots";
+import ToastContext from "@/context/ToastContext";
+import ProductContext from "@/context/ProductContext";
 
 export default function DeleteProductDialog({closeDialog, product}: DeleteProductDialogProps) {
 
@@ -16,18 +18,22 @@ export default function DeleteProductDialog({closeDialog, product}: DeleteProduc
     if (deletedProductLot) {
       removeProduct(deletedProductLot.data.productId)
       closeDialog()
+      setToast(true)
+      setText('Producto eliminado correctamente')
       refresh()
     }
   }, [deletedProductLot])
+  // ----------------------------- Contexts ----------------------------
+  const {toast, setToast, setText} = useContext(ToastContext)
+  const {setRefresh} = useContext(ProductContext)
   // ----------------------------- Functions --------------------------
   const handleDelete = () => {
     if (product) {
       removeProductLot(product.lot.id)
     }
-    // TODO: Show toast with success message
   }
   const refresh = () => {
-    // TODO: Refresh products
+    setRefresh(true)
   }
   // ----------------------------- Render -----------------------------
   return (
