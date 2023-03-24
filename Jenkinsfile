@@ -14,8 +14,7 @@
          }
 
         stage('Deploy') {
-               steps {   
-                   sh 'pwd'                   
+               steps {                                     
                    sh 'scp -o StrictHostKeyChecking=no crm_backend/back.jar  ec2-user@ec2-34-229-72-83.compute-1.amazonaws.com:~/backjar/back.jar'                   
                }
          }
