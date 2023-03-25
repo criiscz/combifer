@@ -3,26 +3,21 @@ package shared
 import sttp.model.HeaderNames
 import sttp.tapir.server.ziohttp.ZioHttpInterpreter
 import sttp.tapir.ztapir._
-import zio.http.{HttpApp, Server, ServerConfig}
-import zio.{Console, ExitCode, IO, Scope, Task, ZIO, ZIOAppDefault}
+import sttp.tapir.json.circe._
+import io.circe.generic.auto._
+import sttp.tapir.generic.auto._
 
-class BaseController:
+import authentications.domain.error._
+import authentications.domain.entity._
+import authentications.application.authenticate_user._
+import authentications.domain.service.JwtService
 
-  case class User(name: String)
-  case class AuthenticationToken(value: String)
+class BaseController()(using jwtService: JwtService):
 
-  def authenticate(token: AuthenticationToken): IO[AuthenticationError, User] =
-    ZIO.succeed {
-      if (token.value == "berries") ZIO.succeed(User("Papa Smurf"))
-      else if (token.value == "smurf") ZIO.succeed(User("Gargamel"))
-      else ZIO.fail(AuthenticationError(1001))
-    }.flatten
+  private val authUseCase = AuthenticateUserUseCase()
 
-  // defining a base endpoint, which has the authentication logic built-in
-  val secureEndpoint: ZPartialServerEndpoint[Any, AuthenticationToken, User, Unit, AuthenticationError, Unit, Any] =
+  val secureEndpoint: ZPartialServerEndpoint[Any, AuthenticationToken, UserContext, Unit, AuthenticationError, Unit, Any] =
     endpoint
       .securityIn(auth.bearer[String]().mapTo[AuthenticationToken])
-      .errorOut(plainBody[Int].mapTo[AuthenticationError])
-      .zServerSecurityLogic(authenticate)
-
-case class AuthenticationError(code: Int)
+      .errorOut(jsonBody[AuthenticationError])
+      .zServerSecurityLogic(authUseCase.authenticate)

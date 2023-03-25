@@ -3,7 +3,9 @@ package products.application.get_products
 import shared.application.BaseUseCase
 import products.domain.repository.ProductRepository
 
-class GetProductsUseCase()(using productRepository:ProductRepository) extends BaseUseCase[RequestGetProducts, ResponseGetProducts]:
+class GetProductsUseCase()
+(using productRepository:ProductRepository) 
+extends BaseUseCase[RequestGetProducts, ResponseGetProducts]:
 
   override def execute(request: RequestGetProducts): Option[ResponseGetProducts] =
     Some(

@@ -27,8 +27,10 @@ class LoginUserUseCase()
         plainPassword = request.password,
         bcryptedPassword = user.password
       ) match
-          case true => jwtService.encodeUserInfo(user.username, user.id)
-          case false => return None
+          case true => 
+            jwtService.encodeUserInfo(user.getTokenInfo())
+          case false => 
+            return None
     Some(
       ResponseLoginUser(
         accessToken = token,

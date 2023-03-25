@@ -20,15 +20,17 @@ import products.application.remove_product._
 import shared.responses._
 import shared.BaseController
 import shared.mapper.endpoints.Exposer._
-import shared.AuthenticationError
+import authentications.domain.service.JwtService
+import authentications.domain.error.AuthenticationError
+import authentications.domain.entity._
 
-class ProductController()(using productRepository:ProductRepository):
+class ProductController()(using productRepository:ProductRepository, jwtService: JwtService) extends BaseController():
 
   // sealed trait HelloError
   // case class AuthenticationHelloError(wrapped: AuthenticationError) extends HelloError
   // case class NoHelloError(why: String) extends HelloError
 
-  // private val secureGetTest: ZPartialServerEndpoint[Any, AuthenticationToken, User, Unit, HelloError, String, Any] = 
+  // private val secureGetTest: ZPartialServerEndpoint[Any, AuthenticationToken, UserContext, Unit, HelloError, String, Any] = 
   //   secureEndpoint.get
   //   .in("hello")
   //   .get
@@ -41,7 +43,7 @@ class ProductController()(using productRepository:ProductRepository):
   //   secureGetTest.serverLogic{ user => (salutation:Unit) =>
   //     ZIO
   //       .succeed(
-  //         if (user.name == "Gargamel") ZIO.fail(NoHelloError(s"Not saying hello to ${user.name}!"))
+  //         if (user.username == "Gargamel") ZIO.fail(NoHelloError(s"Not saying hello to ${user.username}!"))
   //         else ZIO.succeed(throw new Exception("asd"))
   //       )
   //     .flatten

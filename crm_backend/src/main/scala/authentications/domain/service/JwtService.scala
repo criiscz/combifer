@@ -1,4 +1,8 @@
 package authentications.domain.service
 
+import authentications.domain.entity._
+import scala.util.Try
+
 trait JwtService:
-  def encodeUserInfo(username: String, userId:Long): (String, Int)
+  def encodeUserInfo(tokenInfor:UserContext): (String, Int)
+  def decodeUserInfo(token: AuthenticationToken): Try[UserContext]
