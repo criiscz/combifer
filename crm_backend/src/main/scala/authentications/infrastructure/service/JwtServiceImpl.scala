@@ -12,10 +12,13 @@ class JwtServiceImpl extends JwtService:
 
   implicit val clock: Clock = Clock.systemUTC
 
-  override def encodeUserInfo(username: String, userId:Long): String =
+  override def encodeUserInfo(username: String, userId:Long): (String, Int) =
     val content  = s"""{"id": "${userId}", "user": "${username}"}"""
+    val expireTime = VALID_TIME_DAYS * 86400
     val claim = 
       JwtClaim { content }
       .issuedNow
-      .expiresIn(VALID_TIME_DAYS * 86400)
-    Jwt.encode(claim, SECRET_KEY, ALGORITHM)
+      .expiresIn(expireTime)
+    val token = Jwt.encode(claim, SECRET_KEY, ALGORITHM)
+    (token, expireTime)
+

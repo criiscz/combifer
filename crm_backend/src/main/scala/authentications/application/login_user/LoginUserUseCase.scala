@@ -22,7 +22,7 @@ class LoginUserUseCase()
           case None => return None
           case Some(value) => value
     
-    val token = 
+    val (token, expirationTime) = 
       hashService.areSamePassword(
         plainPassword = request.password,
         bcryptedPassword = user.password
@@ -31,7 +31,8 @@ class LoginUserUseCase()
           case false => return None
     Some(
       ResponseLoginUser(
-        token
+        accessToken = token,
+        expiresIn = expirationTime
       )
     )
   end execute
