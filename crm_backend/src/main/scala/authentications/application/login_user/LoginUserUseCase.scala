@@ -4,11 +4,15 @@ import shared.application.BaseUseCase
 import authentications.domain.service.JwtService
 import authentications.domain.repository.AuthenticationRepository
 import authentications.domain.service.HashService
+import authentications.domain.entity.TokenInfo
+
+import authorizations.domain.repository.AuthorizationRepository
 
 class LoginUserUseCase()
 (using 
   jwtService: JwtService, 
   authenticationRepository:AuthenticationRepository,
+  authorizationRepository: AuthorizationRepository,
   hashService: HashService
 ) extends BaseUseCase[RequestLoginUser, ResponseLoginUser]:
 
@@ -22,15 +26,27 @@ class LoginUserUseCase()
           case None => return None
           case Some(value) => value
     
-    val (token, expirationTime) = 
+    val userContext = 
       hashService.areSamePassword(
         plainPassword = request.password,
         bcryptedPassword = user.password
       ) match
           case true => 
-            jwtService.encodeUserInfo(user.getTokenInfo())
+            user.getTokenInfo()
           case false => 
             return None
+
+    val permissionContext = 
+      authorizationRepository
+        .getPermissionContextOfUser(userContext.id)
+
+    val (token, expirationTime) = 
+      jwtService.encodeUserInfo(
+        TokenInfo(
+          userContext,
+          permissionContext
+        )
+      )
     Some(
       ResponseLoginUser(
         accessToken = token,

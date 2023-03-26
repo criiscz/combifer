@@ -18,12 +18,14 @@ import sttp.tapir.EndpointIO.annotations.endpointInput
 import authentications.domain.repository.AuthenticationRepository
 import agents.domain.repository.AgentRepository
 import authentications.domain.service.HashService
+import authorizations.domain.repository.AuthorizationRepository
 
 class AuthenticationController()
 (using 
   jwtService: JwtService, 
   hashService: HashService,
   authenticationRepository: AuthenticationRepository, 
+  authorizationRepository: AuthorizationRepository,
   agentRepository: AgentRepository,
 ):
 

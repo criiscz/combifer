@@ -1,5 +1,9 @@
 package authentications.application.authenticate_user
 
+import authentications.domain.entity.UserContext
+import authorizations.domain.entity.PermissionContext
+
 case class ResponseAuthenticate(
-  auth: Boolean
+  userContext: UserContext,
+  permissionContext: PermissionContext
 )

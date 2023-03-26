@@ -6,15 +6,17 @@ import scala.util._
 import authentications.domain.error.AuthenticationError
 import authentications.domain.entity._
 import authentications.domain.service.JwtService
+import shared.application.BaseUseCase
 
-class AuthenticateUserUseCase()
-(using jwtService: JwtService):
+class AuthenticateUserUseCase() (using jwtService: JwtService) extends BaseUseCase[RequestAuthenticate, ResponseAuthenticate]:
 
-  def authenticate(token: AuthenticationToken): IO[AuthenticationError, UserContext] =
-    ZIO.succeed {
-      jwtService.decodeUserInfo(token) match
-        case Failure(_) => 
-          ZIO.fail(AuthenticationError(code = 1001))
-        case Success(value) => 
-          ZIO.succeed(value)
-    }.flatten
+  override def execute(request: RequestAuthenticate): Option[ResponseAuthenticate] =
+      Some(jwtService.decodeUserInfo(request.token) match
+        case Failure(_) => None
+        case Success(tokenInfo) => Some(
+          ResponseAuthenticate(
+            userContext = tokenInfo._1,
+            permissionContext = tokenInfo._2
+          )
+        )
+      ).flatten
