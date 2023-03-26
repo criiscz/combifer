@@ -12,7 +12,6 @@ import sttp.tapir.generic.auto._
 import authentications.domain.error._
 import authentications.domain.entity._
 import authentications.application.authenticate_user._
-import authorizations.application.authorize_user._
 import authorizations.domain.entity._
 import authentications.domain.service.JwtService
 
