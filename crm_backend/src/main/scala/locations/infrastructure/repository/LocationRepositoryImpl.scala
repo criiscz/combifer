@@ -11,12 +11,6 @@ import io.getquill._
 class LocationRepositoryImpl extends LocationRepository with BaseRepository:
 
   import ctx._
-  implicit val myEntitySchemaMeta:SchemaMeta[Location] = 
-    schemaMeta[Location]("locations")
-  implicit val excludeInsert:InsertMeta[Location] =
-    insertMeta[Location](_.id)
-  implicit val excludeUpdate:UpdateMeta[Location] = 
-    updateMeta[Location](_.id)
 
   override def getLocation(id: Long): Option[Location] =
     ctx
@@ -33,23 +27,26 @@ class LocationRepositoryImpl extends LocationRepository with BaseRepository:
     }
     ctx.run(q)
 
-  override def insertLocation(location: Location): Unit =
+  override def insertLocation(location: Location): Location =
     ctx.run(
       query[Location]
         .insertValue(lift(location))
+        .returning(r => r)
     )
 
-  override def updateLocation(location: Location): Unit =
+  override def updateLocation(location: Location): Location =
     ctx.run(
       query[Location]
         .filter(_.id == lift(location.id))
         .updateValue(lift(location))
+        .returning(r => r)
     )
-  override def removeLocation(id: Long): Unit =
+  override def removeLocation(id: Long): Location =
     ctx.run(
       query[Location]
         .filter(_.id == lift(id))
         .delete
+        .returning(r => r)
     )
   override def getTotalAmountOfLocations(): Long =
     ctx.run(

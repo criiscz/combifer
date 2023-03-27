@@ -127,6 +127,21 @@
     font-size: 1.2rem;
 }
 
+.navbar__link_1_active {
+    display: flex;
+    flex-direction: row;
+    justify-content: normal;
+    gap: 1rem;
+    align-items: center;
+    height: 3rem;
+    padding: 0 5rem;
+    width: 100%;
+    color: var(--yellow-strong);
+    font-family: 'Inter', sans-serif;
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
 .navbar__link_1:hover {
     color: #383838;
     outline: none;

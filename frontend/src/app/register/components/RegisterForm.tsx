@@ -1,7 +1,7 @@
 'use client'
 import styles from './registerForm.module.css'
 import React, {FormEvent, useState} from "react";
-import RegisterContext from "@/app/helpers/store";
+import ModalContext from "@/context/ModalContext";
 
 export default function RegisterForm() {
   // ---------------- State ----------------
@@ -10,7 +10,7 @@ export default function RegisterForm() {
   const [registerFields, setRegisterFields] = useState<RegisterFields>();
   // ---------------------------------------
   // useContext
-  const {setOpen} = React.useContext(RegisterContext)
+  const {setOpen} = React.useContext(ModalContext)
 
   const documentTypes = [
     {
@@ -65,7 +65,7 @@ export default function RegisterForm() {
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.form_row}>
         <div>
-          <label htmlFor="name">Nombre</label>
+          <label htmlFor="name" >Nombre</label>
           <input type="text" name="name" id="name" required onChange={handleChange}
                  placeholder={'Escribe tu nombre'}/>
         </div>

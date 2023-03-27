@@ -9,13 +9,6 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
 
   import ctx._
 
-  implicit val myEntitySchemaMeta:SchemaMeta[Product] = 
-    schemaMeta[Product]("products")
-  implicit val excludeInsert:InsertMeta[Product] =
-    insertMeta[Product](_.id)
-  implicit val excludeUpdate:UpdateMeta[Product] = 
-    updateMeta[Product](_.id)
-
   override def getProduct(id: Long): Option[Product] =
     ctx.run(
       query[Product].filter(_.id == lift(id))
@@ -38,23 +31,27 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
   override def getTotalAmountOfProducts():Long = 
     ctx.run(query[Product].size)
 
-  override def insertProduct(product:Product):Unit =
+  override def insertProduct(product:Product):Product =
     ctx.run(
-      query[Product].insertValue(lift(product))
+      query[Product]
+        .insertValue(lift(product))
+        .returning(r => r)
     )
 
-  override def updateProduct(product:Product):Unit =
+  override def updateProduct(product:Product):Product =
     ctx.run(
       query[Product]
         .filter(_.id == lift(product.id))
         .updateValue(lift(product))
+        .returning(r => r)
     )
 
-  override def removeProduct(id: Long): Unit = 
+  override def removeProduct(id: Long): Product = 
     ctx.run(
       query[Product]
         .filter(_.id == lift(id))
         .delete
+        .returning(r => r)
     )
 
   override def getProductsWithLocation(locationId: Long): List[Product] =

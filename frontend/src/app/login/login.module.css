@@ -1,5 +1,5 @@
 .body {
-    background-color: var(--yellow-login);
+    background-color: var(--yellow-strong);
     height: 100%;
     width: 100%;
     display: flex;
@@ -10,7 +10,7 @@
 .box {
     background-color: #000;
     padding: 10px 20px;
-    color: var(--yellow-login);
+    color: var(--yellow-strong);
 }
 
 .logo {
@@ -41,7 +41,7 @@
     font-size: 4rem;
     background: black;
     width: 30rem;
-    color: var(--yellow-login);
+    color: var(--yellow-strong);
     text-align: center;
     letter-spacing: 10px;
 }
@@ -164,5 +164,5 @@
     justify-items: center;
     align-items: center;
     height: 100vh;
-    background: var(--yellow-login);
+    background: var(--yellow-strong);
 }

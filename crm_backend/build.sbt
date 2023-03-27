@@ -20,15 +20,20 @@ val tapirDependencies = Seq(
 )
 
 val testingDependencies = Seq(
-  "org.scalameta" %% "munit" % "0.7.29" % Test 
+  "org.scalameta" %% "munit" % "0.7.29" % Test,
+  "com.h2database" % "h2" % "2.1.214" % Test
 )
 
 val quillDependencies = Seq(
   "io.getquill" %% "quill-jdbc-zio" % "4.6.0.1",
-  "org.postgresql" % "postgresql" % "42.5.4"
+  "org.postgresql" % "postgresql" % "42.5.4",
+  "org.slf4j" % "slf4j-nop" % "1.7.32",
 )
 
-
+val authDependencies = Seq(
+  "com.github.jwt-scala" %% "jwt-core" % "9.2.0",
+  ("com.github.t3hnar" %% "scala-bcrypt" % "4.3.0").cross(CrossVersion.for3Use2_13)
+)
 
 lazy val root = project
 .in(file("."))
@@ -40,6 +45,7 @@ lazy val root = project
     libraryDependencies ++= zioDependencies,
     libraryDependencies ++= quillDependencies,
     libraryDependencies ++= tapirDependencies,
+    libraryDependencies ++= authDependencies,
     libraryDependencies ++= testingDependencies,
   )
 

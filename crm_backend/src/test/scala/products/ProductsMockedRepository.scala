@@ -1,0 +1,5 @@
+package products
+
+import products.infrastructure.repository.ProductRepositoryImpl
+
+class ProductsMockedRepository extends ProductRepositoryImpl

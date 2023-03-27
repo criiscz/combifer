@@ -1,0 +1,7 @@
+package product_lots
+import product_lots.infrastructure.repository.ProductLotRepositoryImpl
+import shared.BaseRepository
+
+class ProductLotMockedRepository extends ProductLotRepositoryImpl{
+
+}
