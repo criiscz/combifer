@@ -10,13 +10,11 @@ import shared.application.BaseUseCase
 
 class AuthenticateUserUseCase() (using jwtService: JwtService) extends BaseUseCase[RequestAuthenticate, ResponseAuthenticate]:
 
-  override def execute(request: RequestAuthenticate): Option[ResponseAuthenticate] =
-      Some(jwtService.decodeUserInfo(request.token) match
-        case Failure(_) => None
-        case Success(tokenInfo) => Some(
-          ResponseAuthenticate(
-            userContext = tokenInfo._1,
-            permissionContext = tokenInfo._2
-          )
-        )
-      ).flatten
+  override def execute(request: RequestAuthenticate) =
+    jwtService.decodeUserInfo(request.token) match
+      case Failure(exception) => ZIO.fail(exception)
+      case Success(tokenInfo) => 
+        ZIO.succeed(ResponseAuthenticate(
+          userContext = tokenInfo._1,
+          permissionContext = tokenInfo._2
+        ))

@@ -58,10 +58,9 @@ class ProductController()(using productRepository:ProductRepository, jwtService:
     .expose
 
   private val getProductRoute: ZServerEndpoint[Any, Any] = getProduct.zServerLogic { (id:Long) =>
-    GetProductUseCase().execute(RequestGetProduct(id)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message="Product not found"))
-    }
+    GetProductUseCase()
+      .execute(RequestGetProduct(id))
+      .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 
   private val createProduct:PublicEndpoint[RequestCreateProduct, ErrorResponse,ResponseCreateProduct, Any] =
@@ -75,10 +74,9 @@ class ProductController()(using productRepository:ProductRepository, jwtService:
 
 
   private val createProductRoute: ZServerEndpoint[Any, Any] = createProduct.zServerLogic{ request => 
-    CreateProductUseCase().execute(request) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't create product")) 
-    }
+    CreateProductUseCase()
+      .execute(request)
+      .mapError(e => ErrorResponse(message="Can't create product"))
   }.expose
 
 
@@ -94,10 +92,9 @@ class ProductController()(using productRepository:ProductRepository, jwtService:
 
 
   private val getProductsRoute: ZServerEndpoint[Any, Any] = getProducts.zServerLogic{ (page:Int, perPage: Int) => 
-    GetProductsUseCase().execute(RequestGetProducts(page, perPage)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't find products")) 
-    }
+    GetProductsUseCase()
+      .execute(RequestGetProducts(page, perPage))
+      .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 
 
@@ -111,10 +108,9 @@ class ProductController()(using productRepository:ProductRepository, jwtService:
     .expose
 
   private val updateProductRoute: ZServerEndpoint[Any, Any] = updateProduct.zServerLogic{ (id:Long, request: RequestUpdateProduct) => 
-    UpdateProductUseCase(id).execute(request) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't update products")) 
-    }
+    UpdateProductUseCase(id)
+      .execute(request) 
+      .mapError(e => ErrorResponse(message="Can't update product"))
   }.expose
 
   private val removeProduct: PublicEndpoint[Long, ErrorResponse , ResponseRemoveProduct, Any] = 
@@ -126,9 +122,7 @@ class ProductController()(using productRepository:ProductRepository, jwtService:
     .expose
   
   private val removeProductRoute: ZServerEndpoint[Any, Any] = removeProduct.zServerLogic{ (id:Long) => 
-    RemoveProductUseCase().execute(RequestRemoveProduct(id)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't remove products!")) 
-    }
+    RemoveProductUseCase()
+      .execute(RequestRemoveProduct(id)) 
+      .mapError(e => ErrorResponse(message="Can't remove product"))
   }.expose
-

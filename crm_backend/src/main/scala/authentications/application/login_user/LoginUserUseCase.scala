@@ -7,6 +7,7 @@ import authentications.domain.service.HashService
 import authentications.domain.entity.TokenInfo
 
 import authorizations.domain.repository.AuthorizationRepository
+import zio.ZIO
 
 class LoginUserUseCase()
 (using 
@@ -16,14 +17,14 @@ class LoginUserUseCase()
   hashService: HashService
 ) extends BaseUseCase[RequestLoginUser, ResponseLoginUser]:
 
-  override def execute(request: RequestLoginUser): Option[ResponseLoginUser] = 
+  override def execute(request: RequestLoginUser) = 
     val user = 
       authenticationRepository
         .getUserByUsername(request.usernameOrEmail)
         .orElse(
           authenticationRepository.getUserByEmail(request.usernameOrEmail)
         ) match
-          case None => return None
+          case None => return ZIO.fail(new Throwable())
           case Some(value) => value
     
     val userContext = 
@@ -32,9 +33,9 @@ class LoginUserUseCase()
         bcryptedPassword = user.password
       ) match
           case true => 
-            user.getTokenInfo()
+            user.getUserContext()
           case false => 
-            return None
+            return ZIO.fail(new Throwable())
 
     val permissionContext = 
       authorizationRepository
@@ -47,7 +48,7 @@ class LoginUserUseCase()
           permissionContext
         )
       )
-    Some(
+    ZIO.succeed(
       ResponseLoginUser(
         accessToken = token,
         expiresIn = expirationTime

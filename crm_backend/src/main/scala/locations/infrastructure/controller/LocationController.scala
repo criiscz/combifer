@@ -33,10 +33,9 @@ class LocationController() (using locationRepository:LocationRepository, product
       .expose
 
   private val createLocationRoute: ZServerEndpoint[Any, Any] = createLocation.zServerLogic{request =>
-    CreateLocationUseCase().execute(request) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't create Location"))
-    }
+    CreateLocationUseCase()
+      .execute(request) 
+      .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 
   private val getAllLocations:PublicEndpoint[(Int, Int), ErrorResponse, PaginatedResponse[Location], Any] =
@@ -56,10 +55,8 @@ class LocationController() (using locationRepository:LocationRepository, product
         params._1,
         params._2
       )
-    ) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't get all locations"))
-    }
+    ) 
+    .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 
   private val getLocation: PublicEndpoint[Long, ErrorResponse, ResponseGetLocation, Any] = 
@@ -71,10 +68,9 @@ class LocationController() (using locationRepository:LocationRepository, product
       .expose
 
   private val getLocationRoute: ZServerEndpoint[Any,Any] = getLocation.zServerLogic{id =>
-    GetLocationUseCase().execute(RequestGetLocation(id)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't find location"))
-    }
+    GetLocationUseCase()
+      .execute(RequestGetLocation(id)) 
+      .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 
   private val updateLocation: PublicEndpoint[(Long, RequestUpdateLocation), ErrorResponse, ResponseUpdateLocation, Any] = 
@@ -87,10 +83,9 @@ class LocationController() (using locationRepository:LocationRepository, product
       .expose
     
   private val updateLocationRoute: ZServerEndpoint[Any,Any] = updateLocation.zServerLogic{(id:Long, data: RequestUpdateLocation) =>
-    UpdateLocationUseCase(id).execute(data) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't update location"))
-    }
+    UpdateLocationUseCase(id)
+      .execute(data) 
+      .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 
   private val removeLocation: PublicEndpoint[Long, ErrorResponse, ResponseRemoveLocation, Any] =
@@ -102,9 +97,8 @@ class LocationController() (using locationRepository:LocationRepository, product
       .expose
 
   private val removeLocationRoute: ZServerEndpoint[Any,Any] = removeLocation.zServerLogic{id =>
-    RemoveLocationUseCase().execute(RequestRemoveLocation(id)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can' remove location"))
-    }
+    RemoveLocationUseCase()
+      .execute(RequestRemoveLocation(id))
+      .mapError(e => ErrorResponse(message="Can't get product"))
   }.expose
 

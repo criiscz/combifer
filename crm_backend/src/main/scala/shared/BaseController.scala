@@ -27,6 +27,6 @@ class BaseController()(using jwtService: JwtService):
 
   private def securityLayer(token: AuthenticationToken): IO[AuthenticationError, (UserContext, PermissionContext)] =
     (for 
-      userAndPermission <- ZIO.fromOption(authenticateUseCase.execute(RequestAuthenticate(token)))
+      userAndPermission <- authenticateUseCase.execute(RequestAuthenticate(token))
     yield (userAndPermission.userContext, userAndPermission.permissionContext))
       .mapError(e => AuthenticationError(code = 1001))

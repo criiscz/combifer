@@ -39,9 +39,9 @@ class AuthenticationController()
     .expose
 
   private val loginUserRoute: ZServerEndpoint[Any, Any] = loginUser.zServerLogic { request =>
-    LoginUserUseCase().execute(request) match 
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Failed Login"))
+    LoginUserUseCase()
+      .execute(request) 
+      .mapError(e => ErrorResponse(message="Can't create user"))
   }.expose
 
   private val createUser: PublicEndpoint[RequestCreateUser, ErrorResponse, ResponseCreateUser, Any] =
@@ -54,7 +54,7 @@ class AuthenticationController()
       .expose
 
   private val createUserRoute:ZServerEndpoint[Any, Any] = createUser.zServerLogic { request => 
-      CreateUserUseCase().execute(request) match
-        case Some(value) => ZIO.succeed(value)
-        case None => ZIO.fail(ErrorResponse(message = "Failed User Created"))
+      CreateUserUseCase()
+        .execute(request) 
+        .mapError(e => ErrorResponse(message="Can't create user"))
   }.expose

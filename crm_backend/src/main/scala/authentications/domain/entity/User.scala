@@ -7,7 +7,7 @@ case class User (
   description: Option[String],
   agentId: Long
 ){
-  def getTokenInfo():UserContext =
+  def getUserContext():UserContext =
     UserContext(
       id = id, 
       username = username, 

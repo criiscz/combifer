@@ -3,9 +3,13 @@ package locations.application.create_location
 import locations.domain.repository.LocationRepository
 import locations.domain.entity.Location
 import shared.application.BaseUseCase
+import zio.ZIO
 
-class CreateLocationUseCase()(using locationRepository:LocationRepository) extends BaseUseCase[RequestCreateLocation, ResponseCreateLocation]:
-  override def execute(request: RequestCreateLocation): Option[ResponseCreateLocation] =
+class CreateLocationUseCase()
+(using locationRepository:LocationRepository) 
+extends BaseUseCase[RequestCreateLocation, ResponseCreateLocation]:
+
+  override def execute(request: RequestCreateLocation) =
     val location = locationRepository.insertLocation(
       Location(
         name = request.name,
@@ -13,6 +17,6 @@ class CreateLocationUseCase()(using locationRepository:LocationRepository) exten
         img_url = request.img_url
       )
     )
-    Some(
+    ZIO.succeed(
       ResponseCreateLocation(data = location)
     )

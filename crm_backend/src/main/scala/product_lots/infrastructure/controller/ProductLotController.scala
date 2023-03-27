@@ -32,10 +32,9 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
       .expose
   
   private val createProductLotRoute: ZServerEndpoint[Any, Any] = createProductLot.zServerLogic{ request => 
-    CreateLotUseCase().execute(request) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't create product lot")) 
-    }
+    CreateLotUseCase()
+      .execute(request) 
+      .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
 
   private val getProductLot:PublicEndpoint[Long, ErrorResponse, ResponseGetLot, Any] =
@@ -47,10 +46,9 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
       .expose
 
   private val getProductLotRoute: ZServerEndpoint[Any, Any] = getProductLot.zServerLogic{ id => 
-    GetLotUseCase().execute(RequestGetLot(id)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't find product lot")) 
-    }
+    GetLotUseCase()
+      .execute(RequestGetLot(id)) 
+      .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
 
   private val getProductLots:PublicEndpoint[(Int, Int), ErrorResponse, PaginatedResponse[ProductLot], Any] =
@@ -63,10 +61,9 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
       .expose
   
   private val getProductLotsRoute: ZServerEndpoint[Any, Any] = getProductLots.zServerLogic{ (page, perPage) => 
-    GetLotsUseCase().execute(RequestGetLots(page, perPage)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't list products")) 
-    }
+    GetLotsUseCase()
+      .execute(RequestGetLots(page, perPage)) 
+      .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
 
   private val updateProductLot: PublicEndpoint[(Long, RequestUpdateLot), ErrorResponse , ResponseUpdateLot, Any] = 
@@ -79,10 +76,9 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
     .expose
 
   private val updateProductLotRoute: ZServerEndpoint[Any, Any] = updateProductLot.zServerLogic{ (id, request) => 
-    UpdateLotUseCase(id).execute(request) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't update product")) 
-    }
+    UpdateLotUseCase(id)
+      .execute(request) 
+      .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
 
   private val removeProductLot:PublicEndpoint[Long, ErrorResponse, ResponseRemoveLot, Any] = 
@@ -94,8 +90,7 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
     .expose
 
   private val removeProductLotRoute:ZServerEndpoint[Any, Any] = removeProductLot.zServerLogic{ id => 
-    RemoveLotUseCase().execute(RequestRemoveLot(id)) match {
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Can't update product")) 
-    }
+    RemoveLotUseCase()
+      .execute(RequestRemoveLot(id)) 
+      .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
