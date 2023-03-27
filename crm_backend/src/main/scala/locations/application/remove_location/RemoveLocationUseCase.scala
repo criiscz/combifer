@@ -3,12 +3,15 @@ package locations.application.remove_location
 import shared.application.BaseUseCase
 import locations.domain.repository.LocationRepository
 import products.domain.repository.ProductRepository
+import zio.ZIO
 
-class RemoveLocationUseCase()(using locationRepository: LocationRepository, productRepository: ProductRepository) extends BaseUseCase[RequestRemoveLocation, ResponseRemoveLocation]:
+class RemoveLocationUseCase()
+(using locationRepository: LocationRepository, productRepository: ProductRepository)  
+extends BaseUseCase[RequestRemoveLocation, ResponseRemoveLocation]:
 
-  override def execute(request: RequestRemoveLocation): Option[ResponseRemoveLocation] =
+  override def execute(request: RequestRemoveLocation) =
     val amountOfProductsInLocation = productRepository.getProductsWithLocation(request.id).size
     if(amountOfProductsInLocation > 0)
-      return None
+      ZIO.fail(new Throwable())
     val location = locationRepository.removeLocation(request.id) 
-    Some(ResponseRemoveLocation(location))
+    ZIO.succeed(ResponseRemoveLocation(location))

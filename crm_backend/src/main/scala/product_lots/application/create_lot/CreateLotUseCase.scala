@@ -3,10 +3,13 @@ package product_lots.application.create_lot
 import shared.application.BaseUseCase
 import product_lots.domain.repository.ProductLotRepository
 import product_lots.domain.entity.ProductLot
+import zio.ZIO
 
-class CreateLotUseCase() (using productLotRepository: ProductLotRepository) extends BaseUseCase[RequestCreateLot, ResponseCreateLot]:
+class CreateLotUseCase() 
+(using productLotRepository: ProductLotRepository) 
+extends BaseUseCase[RequestCreateLot, ResponseCreateLot]:
 
-  override def execute(request: RequestCreateLot): Option[ResponseCreateLot] = 
+  override def execute(request: RequestCreateLot) = 
     val response = productLotRepository.insertLot(
       ProductLot(
         price = request.price,
@@ -15,7 +18,7 @@ class CreateLotUseCase() (using productLotRepository: ProductLotRepository) exte
         quantity = request.quantity.getOrElse(0),
         productId = request.productId
       ))
-    Some(
+    ZIO.succeed (
       ResponseCreateLot(data = response)
     )
 

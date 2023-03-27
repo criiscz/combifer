@@ -1,28 +1,32 @@
 package shared
 
+import zio._
+import scala.util._
 import sttp.model.HeaderNames
 import sttp.tapir.server.ziohttp.ZioHttpInterpreter
 import sttp.tapir.ztapir._
-import zio.http.{HttpApp, Server, ServerConfig}
-import zio.{Console, ExitCode, IO, Scope, Task, ZIO, ZIOAppDefault}
+import sttp.tapir.json.circe._
+import io.circe.generic.auto._
+import sttp.tapir.generic.auto._
 
-class BaseController:
+import authentications.domain.error._
+import authentications.domain.entity._
+import authentications.application.authenticate_user._
+import authorizations.domain.entity._
+import authentications.domain.service.JwtService
 
-  case class User(name: String)
-  case class AuthenticationToken(value: String)
+class BaseController()(using jwtService: JwtService):
 
-  def authenticate(token: AuthenticationToken): IO[AuthenticationError, User] =
-    ZIO.succeed {
-      if (token.value == "berries") ZIO.succeed(User("Papa Smurf"))
-      else if (token.value == "smurf") ZIO.succeed(User("Gargamel"))
-      else ZIO.fail(AuthenticationError(1001))
-    }.flatten
+  private val authenticateUseCase = AuthenticateUserUseCase()
 
-  // defining a base endpoint, which has the authentication logic built-in
-  val secureEndpoint: ZPartialServerEndpoint[Any, AuthenticationToken, User, Unit, AuthenticationError, Unit, Any] =
+  val secureEndpoint: ZPartialServerEndpoint[Any, AuthenticationToken, (UserContext, PermissionContext), Unit, AuthenticationError, Unit, Any] =
     endpoint
       .securityIn(auth.bearer[String]().mapTo[AuthenticationToken])
-      .errorOut(plainBody[Int].mapTo[AuthenticationError])
-      .zServerSecurityLogic(authenticate)
+      .errorOut(jsonBody[AuthenticationError])
+      .zServerSecurityLogic(securityLayer)
 
-case class AuthenticationError(code: Int)
+  private def securityLayer(token: AuthenticationToken): IO[AuthenticationError, (UserContext, PermissionContext)] =
+    (for 
+      userAndPermission <- authenticateUseCase.execute(RequestAuthenticate(token))
+    yield (userAndPermission.userContext, userAndPermission.permissionContext))
+      .mapError(e => AuthenticationError(code = 1001))
