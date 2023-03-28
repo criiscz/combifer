@@ -1,28 +1,27 @@
 package category_products
 
+import zio._
+import zio.test._
+import zio.test.Assertion._
+
 import shared.BaseSuite
-import  category_products.application.create_category._
-import  category_products.application.get_category._
-class TestSuite extends BaseSuite {
+import category_products.application.create_category._
+import category_products.application.get_category._
 
-  test("Get Category-product") {
-    val categoryProductCreated = CreateCategoryUseCase()
-      .execute(RequestCreateCategory(name = "CategoriaXYZ", description = Some("material flexible")))
-      .get
-      .data
-      .id
-    val categoryProductObtained = GetCategoryUseCase()
-      .execute(request =  categoryProductCreated).get.data.name
-      val nameCategoryExpected = "CategoriaXYZ"
-      assertEquals(categoryProductObtained, nameCategoryExpected)
-  }
+object TestSuite extends BaseSuite {
+  val categoryName = "CategoriaXYZ"
 
-  test("Create Category-product") {
-    val categoryProductCreated = CreateCategoryUseCase()
-      .execute(RequestCreateCategory(name = "CategoriaA", description = Some("material tipo pesado")))
-      .get
-      .data
-      .name
-    assertEquals(categoryProductCreated, "CategoriaA")
-  }
+  override def spec = suite("Categories Suite")(
+    test("Get Category"){
+      for
+        createdCategory <- CreateCategoryUseCase().execute(RequestCreateCategory(name = categoryName, description = Some("material flexible")))
+        obtainedCategory <- GetCategoryUseCase().execute(request = createdCategory.data.id)
+      yield assertTrue(createdCategory.data.name == obtainedCategory.data.name)
+    },
+    test("Create Category"){
+      for
+        createdCategory <- CreateCategoryUseCase().execute(RequestCreateCategory(name = categoryName, description = Some("material tipo pesado")))
+      yield assertTrue(createdCategory.data.name == categoryName)
+    }
+  )@@ TestAspect.sequential @@ TestAspect.timed
 }

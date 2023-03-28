@@ -1,30 +1,28 @@
 package locations
 
+import zio._
+import zio.test._
+import zio.test.Assertion._
+
 import shared.BaseSuite
 import locations.application.get_location._
 import locations.application.create_location._
 import locations.domain.entity.Location
 
-class TestSuite extends BaseSuite:
+object TestSuite extends BaseSuite:
 
-  test("Create location") {
-    val obtained = CreateLocationUseCase()
-      .execute(RequestCreateLocation(name = "Location 123", description = Some("nice"), img_url= "Img Url"))
-      .get
-      .data
-      .name
-      assertEquals(obtained, "Location 123")
-  }
+  val locationName = "LocationXYZ"
 
-  test("Get Location") {
-    val locationCreated = CreateLocationUseCase()
-      .execute(RequestCreateLocation(name = "TestingLocation321", description = Some("nice"), img_url= "Img Url"))
-      .get
-      .data
-      .id
-
-    val obtained = GetLocationUseCase()
-      .execute(RequestGetLocation(id = locationCreated)).get.data.name
-    val expected = "TestingLocation321"
-    assertEquals(obtained, expected)
-  }
+  override def spec = suite("Locations Suite")(
+    test("Create Location"){
+      for
+        createdLocation <- CreateLocationUseCase().execute(RequestCreateLocation(name = locationName, description = Some("nice"), img_url= "Img Url"))
+      yield assertTrue(createdLocation.data.name == locationName)
+    },
+    test("Get Location"){
+      for
+        createdLocation <- CreateLocationUseCase().execute(RequestCreateLocation(name = locationName, description = Some("nice"), img_url= "Img Url"))
+        obtainedLocation <- GetLocationUseCase().execute(RequestGetLocation(id = createdLocation.data.id))
+      yield assertTrue(createdLocation.data.name == obtainedLocation.data.name)
+    }
+  )@@ TestAspect.sequential @@ TestAspect.timed
