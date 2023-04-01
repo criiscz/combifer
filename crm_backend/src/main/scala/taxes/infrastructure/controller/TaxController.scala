@@ -1,14 +1,12 @@
 package taxes.infrastructure.controller
 
-import zio._
-import shared.BaseController
-import scala.util._
-import sttp.model.HeaderNames
-import sttp.tapir.server.ziohttp.ZioHttpInterpreter
-import sttp.tapir.ztapir._
-import sttp.tapir.json.circe._
 import io.circe.generic.auto._
 import sttp.tapir.generic.auto._
+import sttp.tapir.ztapir._
+import sttp.tapir.Endpoint
+import sttp.tapir.PublicEndpoint
+import sttp.tapir.json.circe._
+import zio._
 
 import authentications.domain.service.JwtService
 import authentications.domain.entity._
@@ -16,25 +14,34 @@ import authorizations.domain.entity._
 import authentications.domain.error._
 import shared.mapper.endpoints.Exposer._
 import taxes.domain.entity.Tax
-import shared.responses.ErrorResponse
-import shared.responses.AuthenticationErrorResponse
-import shared.responses.ApplicationError
+import shared.responses._
+import taxes.application.get_taxes._
+import taxes.domain.repository.TaxRepository
+import shared.BaseController
 
 class TaxController()
-(using jwtService: JwtService) 
+(using 
+  jwtService: JwtService, 
+  taxRepository:TaxRepository)
 extends BaseController:
 
-  private val getTax: ZPartialServerEndpoint[Any, AuthenticationToken, (UserContext, PermissionContext), Unit, ApplicationError, Tax, Any] = 
+  private val getTaxes: ZPartialServerEndpoint[Any, AuthenticationToken, (UserContext, PermissionContext), (Int, Int), ApplicationError, PaginatedResponse[Tax], Any] = 
     secureEndpoint
     .get
-    .in("tax")
+    .in("taxes")
     .get
-    .out(jsonBody[Tax])
+    .in(
+      query[Int]("page").and(query[Int]("per_page"))
+    )
     .errorOutVariant[ApplicationError](oneOfVariant(jsonBody[ErrorResponse]))
+    .out(jsonBody[PaginatedResponse[Tax]])
     .exposeSecure
 
   private val getTaxRoute: ZServerEndpoint[Any, Any] =
-    getTax.serverLogic{ (user:UserContext, permission:PermissionContext) => _ =>
-      ZIO.succeed(Tax(name = "", description = None, value = 0.3))
+    getTaxes.serverLogic{ (user:UserContext, permission:PermissionContext) => (page:Int, perPage:Int)=>
+      GetTaxesUseCase().execute(
+        RequestGetTaxes(page, perPage) 
+      )
+      .mapError(e => ErrorResponse(message="Can't get taxes"))
     }.expose
 

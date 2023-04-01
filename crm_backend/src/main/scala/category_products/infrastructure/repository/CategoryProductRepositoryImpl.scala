@@ -22,8 +22,8 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseR
     val q = quote {
       query[CategoryProduct]
         .sortBy(p => p.id)(Ord.ascNullsLast)
-        .drop(lift(from))
         .take(lift(to))
+        .drop(lift(from))
     }
     ctx.run(q)
 

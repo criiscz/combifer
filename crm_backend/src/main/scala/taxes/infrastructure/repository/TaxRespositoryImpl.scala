@@ -23,8 +23,8 @@ class TaxRespositoryImpl extends TaxRepository with BaseRepository:
     ctx.run(
       query[Tax]
         .sortBy(x => x.id)(Ord.ascNullsLast)
-        .drop(lift(from))
         .take(lift(to))
+        .drop(lift(from))
     )
     
   override def getTotalAmountOfTaxes(): Long = 

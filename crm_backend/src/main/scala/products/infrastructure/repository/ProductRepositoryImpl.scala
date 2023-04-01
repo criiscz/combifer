@@ -24,8 +24,8 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
     ctx.run(
       query[Product]
         .sortBy(_.id)(Ord.ascNullsLast)
-        .drop(lift(from))
         .take(lift(to))
+        .drop(lift(from))
     )
 
   override def getTotalAmountOfProducts():Long = 

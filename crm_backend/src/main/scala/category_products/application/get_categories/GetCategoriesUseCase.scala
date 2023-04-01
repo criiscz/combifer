@@ -10,10 +10,9 @@ extends BaseUseCase[RequestGetCategories, ResponseGetCategories]:
 
   override def execute(request: RequestGetCategories) = 
     ZIO.succeed(
-      ResponseGetCategories(
-        data = categoryProductRepository.getCategories(request.page, request.perPage),
-        request = request,
-        total = categoryProductRepository.getTotalAmountOfCategories(),
-      )
-    )
+      for
+        categories <- ZIO.succeed(categoryProductRepository.getCategories(request.from, request.to))
+        total <- ZIO.succeed(categoryProductRepository.getTotalAmountOfCategories())
+      yield( ResponseGetCategories(data = categories,request=request, total = total) )
+    ).flatten
 
