@@ -1,6 +1,8 @@
 package products.application.get_products
 
+import shared.requests.PaginatedRequest
+
 case class RequestGetProducts(
-  val page: Int,
-  val perPage: Int
-)
+  page: Int,
+  perPage: Int
+) extends PaginatedRequest(page, perPage)

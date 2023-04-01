@@ -10,10 +10,9 @@ extends BaseUseCase[RequestGetProducts, ResponseGetProducts]:
 
   override def execute(request: RequestGetProducts) =
     ZIO.succeed(
-      ResponseGetProducts(
-        data = productRepository.getProducts(request.page, request.perPage),
-        request = request,
-        total = productRepository.getTotalAmountOfProducts()
-      )
-    )
+      for 
+        products <- ZIO.succeed(productRepository.getProducts(request.from, request.to))
+        total <- ZIO.succeed(productRepository.getTotalAmountOfProducts())
+      yield( ResponseGetProducts( data = products, request = request, total = total) )
+    ).flatten
 

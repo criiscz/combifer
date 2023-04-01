@@ -11,9 +11,8 @@ extends BaseUseCase[RequestGetLocations, ResponseGetLocations]:
 
   override def execute(request: RequestGetLocations) =
     ZIO.succeed(
-      ResponseGetLocations(
-        data = locationRepository.getLocations(request.page,request.perPage),
-        request = request,
-        total = locationRepository.getTotalAmountOfLocations()
-      )
-    )
+      for 
+        locations <- ZIO.succeed(locationRepository.getLocations(request.from,request.to))
+        total <- ZIO.succeed(locationRepository.getTotalAmountOfLocations())
+      yield( ResponseGetLocations(data = locations, request = request, total = total) )
+    ).flatten

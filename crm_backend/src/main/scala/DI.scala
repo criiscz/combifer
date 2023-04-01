@@ -16,8 +16,11 @@ import authentications.domain.service.HashService
 import authentications.infrastructure.service.HashServiceImpl
 import authorizations.infrastructure.repository.AuthorizationRepositoryImpl
 import authorizations.domain.repository.AuthorizationRepository
+import taxes.infrastructure.repository.TaxRespositoryImpl
+import taxes.domain.repository.TaxRepository
 
 trait DI:
+  given jwtService: JwtService = new JwtServiceImpl()
   given categoryProductRepository: CategoryProductRepository = new CategoryProductRepositoryImpl()
   given productRepository: ProductRepository = new ProductRepositoryImpl()
   given locationRepository: LocationRepository = new LocationRepositoryImpl()
@@ -25,6 +28,6 @@ trait DI:
   given authenticationRepository: AuthenticationRepository = new AuthenticationRepositoryImpl()
   given authorizationRepository: AuthorizationRepository = new AuthorizationRepositoryImpl()
   given agentRepository: AgentRepository = new AgentRepositoryImpl()
-  given jwtService: JwtService = new JwtServiceImpl()
+  given taxRepository: TaxRepository = new TaxRespositoryImpl()
   given hashService: HashService = new HashServiceImpl()
 

@@ -1,8 +1,8 @@
-package locations.application.get_locations
+package taxes.application.get_taxes
 
 import shared.requests.PaginatedRequest
 
-case class RequestGetLocations(
+case class RequestGetTaxes (
   page: Int,
   perPage: Int
 ) extends PaginatedRequest(page, perPage)

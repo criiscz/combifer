@@ -17,9 +17,9 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
   override def getLots(from: Int, to: Int): List[ProductLot] =
      ctx.run(
        query[ProductLot]
-       .sortBy(_.id)(Ord.ascNullsLast)
-        .drop(lift(from))
+        .sortBy(_.id)(Ord.ascNullsLast)
         .take(lift(to))
+        .drop(lift(from))
      )
 
   override def getTotalAmountOfLots(): Long = 

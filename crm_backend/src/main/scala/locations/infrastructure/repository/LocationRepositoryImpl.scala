@@ -22,8 +22,8 @@ class LocationRepositoryImpl extends LocationRepository with BaseRepository:
     val q = quote{
       query[Location]
         .sortBy(x => x.id)(Ord.ascNullsLast)
-        .drop(lift(from))
         .take(lift(to))
+        .drop(lift(from))
     }
     ctx.run(q)
 
