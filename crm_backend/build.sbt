@@ -6,10 +6,16 @@ libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "apispec-model" %
 val zioVersion = "2.0.10"
 val zioHttpVersion = "0.0.4"
 val tapirVersion = "1.2.10"
+val sparkVersion = "3.3.2"
+
+val sparkDependencies = Seq(
+  ("org.apache.spark" %% "spark-core" % sparkVersion).cross(CrossVersion.for3Use2_13),
+  ("org.apache.spark" %% "spark-sql" % sparkVersion).cross(CrossVersion.for3Use2_13)
+)
 
 val zioDependencies = Seq(
   "dev.zio" %% "zio" % zioVersion,
-  "dev.zio" %% "zio-http" % zioHttpVersion
+  "dev.zio" %% "zio-http" % zioHttpVersion,
 )
 
 val tapirDependencies = Seq(
@@ -47,6 +53,7 @@ lazy val root = project
     libraryDependencies ++= quillDependencies,
     libraryDependencies ++= tapirDependencies,
     libraryDependencies ++= authDependencies,
+    libraryDependencies ++= sparkDependencies,
     libraryDependencies ++= testingDependencies,
   )
 
