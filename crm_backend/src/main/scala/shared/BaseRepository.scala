@@ -10,6 +10,7 @@ import products.domain.entity.Product
 import authentications.domain.entity.User
 import agents.domain.entity.Agent
 import taxes.domain.entity.Tax
+import sale_products.domain.entity.SaleProduct
 
 trait BaseRepository:
   val ctx = new PostgresJdbcContext(SnakeCase, "productionDatabase")
@@ -58,3 +59,10 @@ trait BaseRepository:
     insertMeta[Tax](_.id)
   implicit val excludeTaxUpdate:UpdateMeta[Tax] = 
     updateMeta[Tax](_.id)
+
+  implicit val saleProductTableName:SchemaMeta[SaleProduct] = 
+    schemaMeta[SaleProduct]("sale_products")
+  implicit val saleProductInsert:InsertMeta[SaleProduct] =
+    insertMeta[SaleProduct](_.id)
+  implicit val saleProductUpdate:UpdateMeta[SaleProduct] = 
+    updateMeta[SaleProduct](_.id)
