@@ -52,6 +52,15 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
       .filter(_.id == lift(id))
     ).headOption
 
+  override def getLotWithProduct(id: Long): Option[(ProductLot,Product)] = 
+    val q = quote {
+      for {
+        lot <- query[ProductLot].filter(_.id == lift(id))
+        product <- query[Product].join(_.id == lot.productId)
+      } yield (lot,product)
+    }
+    ctx.run(q).headOption
+
   override def updateLot(lot: ProductLot): ProductLot = 
     ctx.run(
       query[ProductLot]

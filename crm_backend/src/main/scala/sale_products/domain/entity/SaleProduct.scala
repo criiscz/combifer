@@ -1,11 +1,11 @@
 package sale_products.domain.entity
 
 case class SaleProduct (
-  id: Long,
+  id: Long = -1,
   productQuantity: Double,
   productDiscount: Float,
   productMeasureUnit: String,
-  productUnitPrice: Float,
+  productUnitPrice: Double,
   productName: String, 
   productDescription: Option[String],
   saleId: Long,
