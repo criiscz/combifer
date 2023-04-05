@@ -3,13 +3,19 @@ val scala3Version = "3.2.2"
 libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "openapi-model" % "early-semver"
 libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "apispec-model" % "early-semver"
 
-val zioVersion = "2.0.9"
+val zioVersion = "2.0.10"
 val zioHttpVersion = "0.0.4"
 val tapirVersion = "1.2.10"
+val sparkVersion = "3.3.2"
+
+val sparkDependencies = Seq(
+  ("org.apache.spark" %% "spark-core" % sparkVersion).cross(CrossVersion.for3Use2_13),
+  ("org.apache.spark" %% "spark-sql" % sparkVersion).cross(CrossVersion.for3Use2_13)
+)
 
 val zioDependencies = Seq(
   "dev.zio" %% "zio" % zioVersion,
-  "dev.zio" %% "zio-http" % zioHttpVersion
+  "dev.zio" %% "zio-http" % zioHttpVersion,
 )
 
 val tapirDependencies = Seq(
@@ -20,8 +26,9 @@ val tapirDependencies = Seq(
 )
 
 val testingDependencies = Seq(
-  "org.scalameta" %% "munit" % "0.7.29" % Test,
-  "com.h2database" % "h2" % "2.1.214" % Test
+  "dev.zio" %% "zio-test"          % zioVersion % Test,
+  "dev.zio" %% "zio-test-sbt"      % zioVersion % Test,
+  "dev.zio" %% "zio-test-magnolia" % zioVersion % Test
 )
 
 val quillDependencies = Seq(
@@ -46,8 +53,11 @@ lazy val root = project
     libraryDependencies ++= quillDependencies,
     libraryDependencies ++= tapirDependencies,
     libraryDependencies ++= authDependencies,
+    libraryDependencies ++= sparkDependencies,
     libraryDependencies ++= testingDependencies,
   )
+
+testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", "maven", "org.webjars", "swagger-ui", "pom.properties") =>

@@ -26,29 +26,6 @@ import authentications.domain.entity._
 
 class ProductController()(using productRepository:ProductRepository, jwtService: JwtService) extends BaseController():
 
-  // sealed trait HelloError
-  // case class AuthenticationHelloError(wrapped: AuthenticationError) extends HelloError
-  // case class NoHelloError(why: String) extends HelloError
-
-  // private val secureGetTest: ZPartialServerEndpoint[Any, AuthenticationToken, UserContext, Unit, HelloError, String, Any] = 
-  //   secureEndpoint.get
-  //   .in("hello")
-  //   .get
-  //   .out(stringBody)
-  //   .mapErrorOut(AuthenticationHelloError.apply)(_.wrapped)
-  //   .errorOutVariant[HelloError](oneOfVariant(stringBody.mapTo[NoHelloError]))
-  //   .exposeSecure
-
-  // private val secureGetTestRoute: ZServerEndpoint[Any, Any] =
-  //   secureGetTest.serverLogic{ user => (salutation:Unit) =>
-  //     ZIO
-  //       .succeed(
-  //         if (user.username == "Gargamel") ZIO.fail(NoHelloError(s"Not saying hello to ${user.username}!"))
-  //         else ZIO.succeed(throw new Exception("asd"))
-  //       )
-  //     .flatten
-  //   }.expose
-
   private val getProduct: PublicEndpoint[Long, ErrorResponse , ResponseGetProduct, Any] = 
     endpoint
     .in("products" / path[Long]("id"))

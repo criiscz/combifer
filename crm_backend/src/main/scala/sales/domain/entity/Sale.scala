@@ -3,8 +3,9 @@ package sales.domain.entity
 import java.time.LocalDate
 
 case class Sale (
-  id: Long, 
-  creationDate: LocalDate,
+  id: Long = -1, 
+  creationDate: LocalDate = LocalDate.now(),
   description: Option[String],
-  agentId: Long
+  clientId: Long,
+  employeeId: Long
 )

@@ -7,6 +7,7 @@ import products.domain.entity.Product
 
 trait ProductLotRepository:
   def getLot(id: Long): Option[ProductLot]
+  def getLotWithProduct(id: Long): Option[(ProductLot,Product)]
   def getLotInventory(id:Long): Option[(ProductLot, Product, CategoryProduct, Location)]
   def getLots(from:Int, to:Int): List[ProductLot]
   def getLotsOfProduct(productId: Long, from:Int, to:Int): List[ProductLot]
