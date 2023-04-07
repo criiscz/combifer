@@ -52,11 +52,13 @@ object Main extends ZIOAppDefault with DI:
       )
 
   override def run: URIO[Any, ExitCode] =
-    Server
-      .serve(routes.withDefaultErrorResponse)
-      .provide(
-        ServerConfig
-          .live(ServerConfig.default.port(8090)),
-          Server.live
-        ).exitCode
+    for
+      server <- Server
+        .serve(routes.withDefaultErrorResponse)
+        .provide(
+          ServerConfig
+            .live(ServerConfig.default.port(8090)),
+            Server.live
+          ).exitCode
+    yield(server)
   end run

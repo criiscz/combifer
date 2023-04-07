@@ -10,12 +10,17 @@ val sparkVersion = "3.3.2"
 
 val sparkDependencies = Seq(
   ("org.apache.spark" %% "spark-core" % sparkVersion),
-  ("org.apache.spark" %% "spark-mllib" % sparkVersion)
+  ("org.apache.spark" %% "spark-mllib" % sparkVersion),
+  ("org.apache.spark" %% "spark-sql" % sparkVersion)
 )
 .map(
   _.exclude("org.scala-lang.modules","scala-collection-compat_2.13")
   .exclude("org.typelevel", "cats-kernel_2.13")
   .cross(CrossVersion.for3Use2_13)
+) 
+
+val sparkCompatDependencies = Seq(
+  "io.github.vincenzobaz" %% "spark-scala3" % "0.1.5"
 )
 
 val zioDependencies = Seq(
@@ -33,7 +38,8 @@ val tapirDependencies = Seq(
 val testingDependencies = Seq(
   "dev.zio" %% "zio-test"          % zioVersion % Test,
   "dev.zio" %% "zio-test-sbt"      % zioVersion % Test,
-  "dev.zio" %% "zio-test-magnolia" % zioVersion % Test
+  "dev.zio" %% "zio-test-magnolia" % zioVersion % Test,
+  ("io.github.etspaceman" %% "scalacheck-faker" % "7.0.0").cross(CrossVersion.for3Use2_13)
 )
 
 val quillDependencies = Seq(
@@ -58,6 +64,7 @@ lazy val root = project
     libraryDependencies ++= tapirDependencies,
     libraryDependencies ++= authDependencies,
     libraryDependencies ++= sparkDependencies,
+    libraryDependencies ++= sparkCompatDependencies,
     libraryDependencies ++= testingDependencies,
   )
 

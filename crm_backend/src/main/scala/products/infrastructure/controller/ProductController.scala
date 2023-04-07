@@ -24,7 +24,9 @@ import authentications.domain.service.JwtService
 import authentications.domain.error.AuthenticationError
 import authentications.domain.entity._
 
-class ProductController()(using productRepository:ProductRepository, jwtService: JwtService) extends BaseController():
+class ProductController()
+(using productRepository:ProductRepository, jwtService: JwtService) 
+extends BaseController():
 
   private val getProduct: PublicEndpoint[Long, ErrorResponse , ResponseGetProduct, Any] = 
     endpoint
