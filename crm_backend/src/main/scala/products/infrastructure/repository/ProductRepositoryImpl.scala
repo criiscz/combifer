@@ -14,10 +14,12 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
       query[Product].filter(_.id == lift(id))
     ).headOption
 
-  override def getProductsWithCategory(categoryId: Long): List[Product] = 
+  override def getProductsWithCategory(categoryId: Long, from: Int, to:Int): List[Product] = 
     ctx.run(
       query[Product]
         .filter(_.categoryProductId == lift(categoryId))
+        .take(lift(to))
+        .drop(lift(from))
     )
 
   override def getProducts(from: Int, to: Int):List[Product] = 
@@ -54,8 +56,10 @@ class ProductRepositoryImpl extends ProductRepository with BaseRepository:
         .returning(r => r)
     )
 
-  override def getProductsWithLocation(locationId: Long): List[Product] =
+  override def getProductsWithLocation(locationId: Long, from: Int, to:Int): List[Product] =
     ctx.run(
       query[Product]
         .filter(_.locationId == lift(locationId))
+        .take(lift(to))
+        .drop(lift(from))
       )
