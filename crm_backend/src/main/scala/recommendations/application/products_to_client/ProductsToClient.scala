@@ -1,11 +1,23 @@
 package recommendations.application.products_to_client
 
-import shared.application.BaseUseCase
 import zio._
+import org.apache.spark.sql._
 
-class ProductsToClient extends BaseUseCase[RequestProductsToClient, ResponseProductsToClient]:
+import shared.application.BaseUseCase
+import recommendations.domain.repository.RecommendationProductRepository
+import recommendations.domain.service.SparkService
+
+class ProductsToClient()
+(using
+  recommendationProductRepository: RecommendationProductRepository,
+  sparkService: SparkService
+)
+extends BaseUseCase[RequestProductsToClient, ResponseProductsToClient]:
 
   override def execute(request: RequestProductsToClient): Task[ResponseProductsToClient] = 
     ZIO.succeed{
+
+      val productHistoryOfClients = recommendationProductRepository.getProductsBoughtByClient()
+     
       ResponseProductsToClient(true)
     } 

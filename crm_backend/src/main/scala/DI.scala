@@ -22,6 +22,10 @@ import sale_products.domain.repository.SaleProductRepository
 import sale_products.infrastructure.repository.SaleProductRepositoryImpl
 import sales.domain.repository.SaleRepository
 import sales.infrastructure.repository.SaleRepositoryImpl
+import recommendations.domain.service.SparkService
+import recommendations.infrastructure.service.SparkServiceImpl
+import recommendations.domain.repository.RecommendationProductRepository
+import recommendations.infrastructure.repository.RecommendationProductRepositoryImpl
 
 trait DI:
   given jwtService: JwtService = new JwtServiceImpl()
@@ -36,4 +40,5 @@ trait DI:
   given saleProductRepository: SaleProductRepository = new SaleProductRepositoryImpl()
   given saleRepository: SaleRepository = new SaleRepositoryImpl()
   given hashService: HashService = new HashServiceImpl()
-
+  given sparkService: SparkService = new SparkServiceImpl()
+  given recommendationRepository: RecommendationProductRepository = new RecommendationProductRepositoryImpl()
