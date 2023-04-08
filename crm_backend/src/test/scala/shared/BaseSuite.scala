@@ -12,6 +12,8 @@ import product_lots.domain.repository.ProductLotRepository
 import product_lots.ProductLotMockedRepository
 import sales.SalesMockedRepository
 import sales.domain.repository.SaleRepository
+import taxes.TaxesMockedRepository
+import taxes.domain.repository.TaxRepository
 import zio.Scope
 import zio.test.Spec
 import zio.test.TestEnvironment
@@ -25,3 +27,4 @@ class BaseSuite extends ZIOSpecDefault:
   implicit val mockedLocationRepo:LocationRepository = LocationMockedRepository()
   implicit val mockedProductLotRepo:ProductLotRepository = ProductLotMockedRepository()
   implicit val mockedSalesRepo:SaleRepository = SalesMockedRepository()
+  implicit val mockedTaxRepo:TaxRepository = TaxesMockedRepository()
