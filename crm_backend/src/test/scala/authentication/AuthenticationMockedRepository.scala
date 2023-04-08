@@ -1,0 +1,5 @@
+package authentication
+
+import authentications.infrastructure.repository.AuthenticationRepositoryImpl
+
+class AuthenticationMockedRepository extends AuthenticationRepositoryImpl

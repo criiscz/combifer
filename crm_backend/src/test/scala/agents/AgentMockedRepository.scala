@@ -1,0 +1,5 @@
+package agents
+
+import agents.infrastructure.repository.AgentRepositoryImpl
+
+class AgentMockedRepository extends AgentRepositoryImpl
