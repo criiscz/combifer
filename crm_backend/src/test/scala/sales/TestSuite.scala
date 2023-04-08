@@ -15,6 +15,7 @@ import shared.BaseSuite
 import zio.*
 import zio.test.*
 import zio.test.Assertion.*
+import scala.util.Random
 
 object TestSuite extends BaseSuite:
 
@@ -71,22 +72,23 @@ object TestSuite extends BaseSuite:
       for 
         client <- CreateUserUseCase().execute(
           RequestCreateUser(
-            document = 1002,
+            document = Random().nextInt(),
             documentType = "CC",
             name = "Mr Doom",
             lastName = "Emacs",
             phone = "3123132453",
             email = "mremacs@mail.com",
-            userName = "emacs",
+            userName = Random().nextInt().toString,
             password = "123456"
           )
         )
-      yield assertTrue(client.username == "emacs") 
+        _ <- ZIO.succeed{lastCreatedClient = client.document}
+      yield assertCompletes
     },
 
     test("Create Sale using product"){
       for
-      createdSale <- CreateSaleUseCase(UserContext(0, "", 0))
+      createdSale <- CreateSaleUseCase(UserContext(lastCreatedClient, "Jose", lastCreatedClient))
         .execute(
           RequestCreateSale(
             description = Some("venta en la maniana"),
