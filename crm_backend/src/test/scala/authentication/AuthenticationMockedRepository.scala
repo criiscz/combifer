@@ -1,5 +1,6 @@
 package authentication
 
 import authentications.infrastructure.repository.AuthenticationRepositoryImpl
+import shared.BaseMockedRepository
 
-class AuthenticationMockedRepository extends AuthenticationRepositoryImpl
+class AuthenticationMockedRepository extends AuthenticationRepositoryImpl with BaseMockedRepository

@@ -16,8 +16,12 @@ import orders.domain.entity.Order
 import order_products.domain.entity.OrderProduct
 import recommendations.domain.entity.RecommendationProduct
 
+object BaseRepository:
+  lazy val postgresConnection = new PostgresJdbcContext(SnakeCase, "productionDatabase")
+
 trait BaseRepository:
-  val ctx = new PostgresJdbcContext(SnakeCase, "productionDatabase")
+
+  val ctx = BaseRepository.postgresConnection 
 
   implicit val productLotTableName:SchemaMeta[ProductLot] = 
     schemaMeta[ProductLot]("product_lots")

@@ -37,7 +37,7 @@ object Main extends ZIOAppDefault with DI:
   ProductLotController()
   TaxController()
   SalesController()
-  RecommendationController()
+  // RecommendationController()
 
   val serverOptions:ZioHttpServerOptions[Any] =
     ZioHttpServerOptions
@@ -54,13 +54,11 @@ object Main extends ZIOAppDefault with DI:
       )
 
   override def run: URIO[Any, ExitCode] =
-    for
-      server <- Server
-        .serve(routes.withDefaultErrorResponse)
-        .provide(
-          ServerConfig
-            .live(ServerConfig.default.port(8090)),
-            Server.live
-          ).exitCode
-    yield(server)
+    Server
+      .serve(routes.withDefaultErrorResponse)
+      .provide(
+        ServerConfig
+          .live(ServerConfig.default.port(8090)),
+          Server.live
+        ).exitCode
   end run

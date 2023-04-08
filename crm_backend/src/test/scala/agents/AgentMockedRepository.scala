@@ -1,5 +1,6 @@
 package agents
 
 import agents.infrastructure.repository.AgentRepositoryImpl
+import shared.BaseMockedRepository
 
-class AgentMockedRepository extends AgentRepositoryImpl
+class AgentMockedRepository extends AgentRepositoryImpl with BaseMockedRepository
