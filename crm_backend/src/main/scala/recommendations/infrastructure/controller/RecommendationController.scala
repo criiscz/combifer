@@ -13,9 +13,10 @@ import authentications.domain.service.JwtService
 import shared.responses.ErrorResponse
 import shared.mapper.endpoints.Exposer._
 import recommendations.application.get_product_for_client._
-import recommendations.application.products_to_client.ProductsToClient
 import recommendations.domain.repository.RecommendationProductRepository
 import recommendations.domain.service.SparkService
+
+import recommendations.application.products_to_client._
 
 class RecommendationController()
 (using jwtService: JwtService,
@@ -24,18 +25,19 @@ class RecommendationController()
 )
 extends BaseController():
 
-  private val getProductRecommendationToClient: PublicEndpoint[Long, ErrorResponse , ResponseGetProductForClient, Any] = 
+  private val getProductRecommendationToClient: PublicEndpoint[Long, ErrorResponse, ResponseProductsToClient, Any] = 
     endpoint
     .in("recommendation_product" / path[Long]("id"))
     .get
     .errorOut(jsonBody[ErrorResponse])
-    .out(jsonBody[ResponseGetProductForClient])
+    .out(jsonBody[ResponseProductsToClient])
     .expose
 
   private val getProductRecommendatonToClientRoute: ZServerEndpoint[Any, Any] = 
     getProductRecommendationToClient.zServerLogic { (id:Long) =>
-      ProductsToClient().execute(null)
-      ZIO.fail(ErrorResponse(message = "xd"))
+      ProductsToClient()
+        .execute(RequestProductsToClient("nice"))
+        .mapError(e => ErrorResponse(message="Cant recommend!"))
       // GetProductForClient()
       //   .execute(request)
       //   .mapError(e => ErrorResponse(message="Can't get recommendation"))

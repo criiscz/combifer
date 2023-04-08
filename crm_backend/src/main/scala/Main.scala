@@ -37,7 +37,7 @@ object Main extends ZIOAppDefault with DI:
   ProductLotController()
   TaxController()
   SalesController()
-  // RecommendationController()
+  RecommendationController()
 
   val serverOptions:ZioHttpServerOptions[Any] =
     ZioHttpServerOptions
