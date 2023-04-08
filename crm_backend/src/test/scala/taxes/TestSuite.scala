@@ -36,7 +36,7 @@ object TestSuite extends BaseSuite {
         )
         _ <- ZIO.succeed{lastCreatedTax = createdTax.data.id}
       yield assertTrue(createdTax.data.name.equals(taxName))
-    }
+    },
 
     test("Remove Tax") {
       for

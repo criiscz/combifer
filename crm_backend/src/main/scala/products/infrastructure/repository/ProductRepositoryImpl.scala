@@ -4,6 +4,9 @@ import products.domain.repository.ProductRepository
 import products.domain.entity.Product
 import shared.BaseRepository
 import io.getquill._
+import sales.domain.entity.Sale
+import sale_products.domain.entity.SaleProduct
+import product_lots.domain.entity.ProductLot
 
 class ProductRepositoryImpl extends ProductRepository with BaseRepository:
 
