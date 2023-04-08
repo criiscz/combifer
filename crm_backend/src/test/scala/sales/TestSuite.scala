@@ -6,7 +6,7 @@ import category_products.application.remove_category.*
 import locations.application.create_location.*
 import locations.application.remove_location.*
 import products.application.create_product.*
-import products.application.remove_product.*
+import products.application.remove_product.{RemoveProductUseCase, *}
 import products.domain.entity.*
 import sales.application.create_sale.{CreateSaleUseCase, RequestCreateSale}
 import shared.BaseSuite
@@ -66,7 +66,8 @@ object TestSuite extends BaseSuite:
     },
 
     test("Create client for sale"){
-        createdClient <- CreateUserUseCase().execute(
+      val createdClient = for {
+        client <- CreateUserUseCase().execute(
           RequestCreateUser(
             document = 1002,
             documentType = "CC",
@@ -76,9 +77,10 @@ object TestSuite extends BaseSuite:
             email = "mremacs@mail.com",
             userName = "emacs",
             password = "123456"
-            )
           )
-        _ <- ZIO.succeed{lastCreatedClient = createdClient.document}
+        )
+      }yield client
+        //_ <- ZIO.succeed{lastCreatedClient = createdClient.}
        assertTrue(createdClient.document == 1002)
     },
     //-----end creation product -------//
@@ -89,21 +91,22 @@ object TestSuite extends BaseSuite:
             RequestCreateSale(
               description = Some("venta en la maniana"),
               clientId = lastCreatedClient,
-              products = null
+              products = products
             )
           )
       yield assertTrue(true)
     },
-    test("Delete Product"){
-      for
-        removedProduct <- RemoveProductUseCase()
-          .execute(
-            RequestRemoveProduct(
-              id = lastCreatedProduct
-            )
-          )
-      yield assertTrue(removedProduct.data.id == lastCreatedProduct)
-    },
+    //***
+    test("Remove list of products using location and category created above") {
+      val removedProductList = for {
+        p <- products
+        removedProduct <- RemoveProductUseCase().execute(
+        RequestRemoveProduct(
+          p.id
+        )
+      )} yield removedProduct.data
+      assertTrue(removedProductList.forall(p => productNames.contains(p.name)))
+    },//***
 
     test("Delete Location of Product Deleted"){
       for
