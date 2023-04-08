@@ -27,7 +27,7 @@ object TestSuite extends BaseSuite:
   var lastCreatedLocation:Long = -1
   var lastCreatedCategory:Long = -1
   var lastCreatedClient:Long = -1
-  override def spec = suite("Products Suite")(
+  override def spec = suite("Sales Suite")(
 
     test("Create Category-product for Product"){
       for
