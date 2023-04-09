@@ -2,12 +2,15 @@
 import styles from './registerForm.module.css'
 import React, {FormEvent, useState} from "react";
 import ModalContext from "@/context/ModalContext";
+import {register} from "@/api/Login";
+import {useRouter} from "next/navigation";
 
 export default function RegisterForm() {
   // ---------------- State ----------------
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [registerFields, setRegisterFields] = useState<RegisterFields>();
+  const [error, setError] = useState<boolean>(false);
   // ---------------------------------------
   // useContext
   const {setOpen} = React.useContext(ModalContext)
@@ -34,6 +37,8 @@ export default function RegisterForm() {
       name: 'NIT',
     }]
 
+  const router = useRouter();
+
   const handleChange = ({target: {name, value}}: any) => setRegisterFields({
     ...registerFields,
     [name]: value
@@ -41,35 +46,49 @@ export default function RegisterForm() {
   // TODO: Improve this code to handle errors and use the real login api.
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    checkFields();
-    setOpen(true);
-    // if username is not available
-    // TODO: setErrorMessage('El nombre de usuario no esta disponible')
-    // await register(registerFields).then(
-    //   () => {
-    //     router.push('/dashboard')
-    //   }
-    // ).catch(
-    //   () => {
-    //   }
-    // )
+    const error = checkFields()
+    setTimeout(async () => {
+      if (error) return
+      setOpen(true)
+      await register({
+        name: registerFields!.name,
+        lastName: registerFields!.surname,
+        documentType: registerFields!.typeDocument,
+        email: registerFields!.email,
+        password: registerFields!.password,
+        document: registerFields!.document,
+        phone: registerFields!.phone,
+        userName: registerFields!.username,
+      }).then((res: { status: number; json: () => any; }) => {
+        if (res.status === 200) return res.json()
+        else setErrorMessage('Ha ocurrido un error, por favor intente de nuevo')
+      }).then(() => {
+        router.push('/login')
+      }).catch(() => {
+        setErrorMessage('Ha ocurrido un error, por favor intente de nuevo')
+      })
+    }, 5000)
   }
 
+
   const checkFields = () => {
+    setError(false);
     if (registerFields?.password !== registerFields?.confirmPassword) {
+      setError(true);
       setPasswordError(true);
       setErrorMessage('Las contraseñas no coinciden')
-      setTimeout(() => {
+      setTimeout(async () => {
         setPasswordError(false)
       }, 5000)
     }
+    return error
   }
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.form_row}>
         <div>
-          <label htmlFor="name" >Nombre</label>
+          <label htmlFor="name">Nombre</label>
           <input type="text" name="name" id="name" required onChange={handleChange}
                  placeholder={'Escribe tu nombre'}/>
         </div>

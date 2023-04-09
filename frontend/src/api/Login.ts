@@ -1,6 +1,8 @@
+import {User} from "@/models/User";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-export default async function login(username?: string, password?: string) {
-  return fetch(API_URL+'/login', {
+export async function login(username?: string, password?: string) {
+  return fetch(API_URL+'login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -10,5 +12,15 @@ export default async function login(username?: string, password?: string) {
         password
       }
     )
+  })
+}
+
+export async function register(userData: User) {
+  return fetch(API_URL+'signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userData)
   })
 }

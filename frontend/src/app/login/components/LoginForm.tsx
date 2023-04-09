@@ -1,37 +1,48 @@
 'use client'
 import styles from '../login.module.css'
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useMemo, useState} from "react";
 import {useRouter} from 'next/navigation';
-import login from "@/api/Login";
+import {login} from "@/api/Login";
+import Cookies from "universal-cookie"
+
 
 export default function LoginForm() {
+
+  // ----------------------------- Hooks ----------------------------- //
   const router = useRouter();
-
   const [error, setError] = useState(false);
-
-
+  const cookies = useMemo(() => new Cookies(), []);
   const [credentials, setCredentials] = useState<LoginCredentials>();
+  // ----------------------------- Effects ----------------------------- //
+  useEffect(() => {
+    if (cookies.get('userToken')) router.push('/dashboard')
+  }, [cookies, router])
+  // ----------------------------- Functions ----------------------------- //
   const handleChange = ({target: {name, value}}: any) => setCredentials({
     ...credentials,
     [name]: value
   });
-  // TODO: Improve this code to handle errors and use the real login api.
+  function showErrorLoginMessage() {
+    setError(true);
+    setTimeout(() => {
+      setError(false)
+    }, 3000)
+  }
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await login(credentials?.username, credentials?.password).then(
-      (res) => {
-        console.log(res)
+    await login(credentials?.username, credentials?.password).then((res: { status: number; json: () => any; }) => {
+      if (res.status === 200) return res.json()
+      showErrorLoginMessage();
+    }).then((data: { accessToken: any; expiresIn: number; }) => {
+        cookies.set('userToken', data.accessToken, {
+          path: '/',
+          expires: new Date(Date.now() + data.expiresIn)
+        });
         router.push('/dashboard')
       }
-    ).catch(
-      () => {
-        setError(true);
-        setTimeout(() => {
-          setError(false)
-        }, 3000)
-      })
-    // await login(credentials?.username, credentials?.password);
+    ).catch(() => showErrorLoginMessage())
   }
+  // ----------------------------- Render ----------------------------- //
   return (
     <form onSubmit={handleSubmit} className={styles.form_form}>
       <label className={styles.form_label} htmlFor="username">Username</label>

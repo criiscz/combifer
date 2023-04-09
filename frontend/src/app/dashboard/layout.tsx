@@ -2,7 +2,7 @@
 import NavBar from "@/app/dashboard/components/NavBar/NavBar";
 import styles from './style.module.css'
 import ModalContext from "@/context/ModalContext";
-import React from "react";
+import React, {useEffect, useMemo} from "react";
 import Modal from "@/app/components/Modal/Modal";
 import CreateProductDialog from "@/app/dashboard/inventory/components/Dialogs/CreateProductDialog";
 import EditProductDialog from "@/app/dashboard/inventory/components/Dialogs/EditProductDialog";
@@ -11,6 +11,8 @@ import ProductContext from "@/context/ProductContext";
 import ToastContext from "@/context/ToastContext";
 import {ProductComplete} from "@/models/Product";
 import Toast from "@/app/components/Toast/Toast";
+import {useRouter} from "next/navigation";
+import Cookies from "universal-cookie";
 
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
