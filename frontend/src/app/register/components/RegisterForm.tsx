@@ -49,6 +49,10 @@ export default function RegisterForm() {
     //   () => {
     //     router.push('/dashboard')
     //   }
+    // ).catch(
+    //   () => {
+    //   }
+    // )
   }
 
   const checkFields = () => {
