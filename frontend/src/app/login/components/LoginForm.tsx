@@ -36,7 +36,7 @@ export default function LoginForm() {
     }).then((data: { accessToken: any; expiresIn: number; }) => {
         cookies.set('userToken', data.accessToken, {
           path: '/',
-          expires: new Date(Date.now() + data.expiresIn)
+          expires: new Date(Date.now() + data.expiresIn*1000)
         });
         router.push('/dashboard')
       }

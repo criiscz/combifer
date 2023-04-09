@@ -48,7 +48,7 @@
 }
 
 .addProductCart__footer_button_cancel {
-    background: var(--gray-EE);
+    background: var(--gray-D9);
     color: var(--black);
     padding: 1rem 3rem;
     border: none;
@@ -70,7 +70,7 @@
 }
 
 .addProductCart__footer_button_add {
-    background: var(--red-strong);
+    background: var(--green-light);
     color: #fff;
     padding: 1rem 3rem;
     border: none;

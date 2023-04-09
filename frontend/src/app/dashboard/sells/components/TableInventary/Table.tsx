@@ -8,36 +8,35 @@ export default function Table({
                                 productSelected
                               }: TableProps) {
 
-    const [selectedProducts , setSelectedProducts ] = useState<ProductComplete[]>([])
-    const [inputValue, setInputValue] = useState('');
+  const [selectedProducts, setSelectedProducts] = useState<ProductCompleteQ[]>([])
+  const [inputValue, setInputValue] = useState('');
 
-    const selectRow = (e: any) => {
-        const row = e.target
-        const rowId = row.parentElement?.children[1].innerHTML
-        const product = products.find(product => product.lot.id == rowId)
-        const isChecked = e.target.checked
-        // @ts-ignore
-            if (isChecked) {
-                // @ts-ignore
-                setSelectedProducts([...selectedProducts, product])
-            } else {
-                // @ts-ignore
-                setSelectedProducts(selectedProducts.filter(p => p.lot.id !== product.lot.id))
-            }
-        // @ts-ignore
-
-        productSelected(isChecked ? product : undefined)
-    }
-
+  const selectRow = (e: any) => {
+    const row = e.target
+    const rowId = row.parentElement?.children[1].innerHTML
+    const product = products.find(product => product.lot.id == rowId)
+    const isChecked = e.target.checked
     // @ts-ignore
-    productSelected(selectedProducts);
-
-    const handleInputChange = (e : any) => {
-        setInputValue(e.target.value)
-        console.log(e.target.value)
+    if (isChecked) {
+      // @ts-ignore
+      setSelectedProducts([...selectedProducts, {product}])
+    } else {
+      setSelectedProducts(selectedProducts.filter(p => p.lot.id !== product?.lot.id))
     }
+    // @ts-ignore
 
-    return (
+    productSelected(isChecked ? product : undefined)
+  }
+
+  // @ts-ignore
+  productSelected(selectedProducts);
+
+  const handleInputChange = (e: any) => {
+    setInputValue(e.target.value)
+    console.log(e.target.value)
+  }
+
+  return (
     <div className={styles.table__container}>
       <div className={styles.table__header}>
         {header.map((item, index) => {
@@ -48,13 +47,14 @@ export default function Table({
         {products.map((product, index) => {
             return (
               <div className={styles.table__body_row} key={index}>
-                {<input type={'checkbox'} id ={`checkbox-${product.lot.id}`} onClick={selectRow}/>}
+                {<input type={'checkbox'} id={`checkbox-${product.lot.id}`} onClick={selectRow}/>}
                 <div className={styles.table__body_row_item}>{product.lot.id}</div>
                 <div className={styles.table__body_row_item}>{product.product.name}</div>
                 <div className={styles.table__body_row_item}>{product.category.name}</div>
                 <div className={styles.table__body_row_item}>{product.lot.price}</div>
-                  <div className={styles.table__body_row_item}>{product.lot.quantity}</div>
-                  <input className={styles.table__body_row_item}  type={'number'} onChange={handleInputChange} />
+                <div className={styles.table__body_row_item}>{product.lot.quantity}</div>
+                <input className={styles.table__body_row_item} type={'number'}
+                       max={product.lot.quantity} onChange={handleInputChange}/>
               </div>
             )
           }
@@ -65,7 +65,24 @@ export default function Table({
 }
 
 interface TableProps {
-    products: ProductComplete[],
-    header: string[],
-    productSelected: (product:ProductComplete [] | undefined) => void
+  products: ProductComplete[],
+  header: string[],
+  productSelected: (product: ProductComplete [] | undefined) => void
+}
+
+interface ProductCompleteQ {
+  lot: {
+    id: number,
+    price: number,
+    quantity: number
+  },
+  product: {
+    id: number,
+    name: string
+  },
+  category: {
+    id: number,
+    name: string
+  },
+  selectedQuantity: number
 }
