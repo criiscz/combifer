@@ -2,7 +2,7 @@ import {ProductLot} from "@/models/ProductLot";
 import {BackResponse} from "@/models/BackResponse";
 import {MeasureUnit} from "@/models/MeasureUnit";
 
-// get API_URL from .env file
+// get API_URL from .env.local file
 // const API_URL = 'https://618d4d14fe09aa001744068b.mockapi.io/';
 // const API_URL = 'http://localhost:8090/';
 const API_URL = 'http://3.237.202.227:8090/';
