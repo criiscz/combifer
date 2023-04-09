@@ -1,6 +1,6 @@
-import {Product, ProductComplete} from "@/models/Product";
+import {ProductComplete} from "@/models/Product";
 import styles from './style.module.css'
-import {Dispatch, SetStateAction} from "react";
+import {useState} from "react";
 
 export default function Table({
                                 products,
@@ -8,32 +8,53 @@ export default function Table({
                                 productSelected
                               }: TableProps) {
 
-  const selectRow = (e: any) => {
-    const row = e.target
-    const rowId = row.parentElement?.children[0].innerHTML
-    const product = products.find(product => product.lot.id == rowId)
-    console.log("Product selected 2: ", rowId, products)
-    productSelected(product)
+    const [selectedProducts , setSelectedProducts ] = useState<ProductComplete[]>([])
+    const [inputValue, setInputValue] = useState('');
 
-  }
+    const selectRow = (e: any) => {
+        const row = e.target
+        const rowId = row.parentElement?.children[1].innerHTML
+        const product = products.find(product => product.lot.id == rowId)
+        const isChecked = e.target.checked
+        // @ts-ignore
+            if (isChecked) {
+                // @ts-ignore
+                setSelectedProducts([...selectedProducts, product])
+            } else {
+                // @ts-ignore
+                setSelectedProducts(selectedProducts.filter(p => p.lot.id !== product.lot.id))
+            }
+        // @ts-ignore
 
-  return (
+        productSelected(isChecked ? product : undefined)
+    }
+
+    // @ts-ignore
+    productSelected(selectedProducts);
+
+    const handleInputChange = (e : any) => {
+        setInputValue(e.target.value)
+        console.log(e.target.value)
+    }
+
+    return (
     <div className={styles.table__container}>
       <div className={styles.table__header}>
         {header.map((item, index) => {
           return <div className={styles.table__header_item} key={index}>{item}</div>
         })}
       </div>
-      <div className={styles.table__body} onClick={selectRow}>
+      <div className={styles.table__body}>
         {products.map((product, index) => {
             return (
               <div className={styles.table__body_row} key={index}>
-                {/*<input type={'checkbox'} key={index} id={index+''}/>*/}
+                {<input type={'checkbox'} id ={`checkbox-${product.lot.id}`} onClick={selectRow}/>}
                 <div className={styles.table__body_row_item}>{product.lot.id}</div>
                 <div className={styles.table__body_row_item}>{product.product.name}</div>
                 <div className={styles.table__body_row_item}>{product.category.name}</div>
                 <div className={styles.table__body_row_item}>{product.lot.price}</div>
-                <div className={styles.table__body_row_item}>{product.lot.quantity}</div>
+                  <div className={styles.table__body_row_item}>{product.lot.quantity}</div>
+                  <input className={styles.table__body_row_item}  type={'number'} onChange={handleInputChange} />
               </div>
             )
           }
@@ -44,7 +65,7 @@ export default function Table({
 }
 
 interface TableProps {
-  products: ProductComplete[],
-  header: string[],
-  productSelected: (product:ProductComplete | undefined) => void
+    products: ProductComplete[],
+    header: string[],
+    productSelected: (product:ProductComplete [] | undefined) => void
 }

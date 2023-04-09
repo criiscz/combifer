@@ -20,7 +20,7 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
   const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
-  const { setOpen, setId} = useContext(ModalContext);
+  const {setOpen, setId} = useContext(ModalContext);
   const [update , setUpdate] = useState(false)
 
 
