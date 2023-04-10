@@ -22,7 +22,7 @@ import taxes.application.update_tax._
 import taxes.domain.repository.TaxRepository
 import shared.BaseController
 
-class TaxController()
+class TaxController
 (using 
   jwtService: JwtService, 
   taxRepository:TaxRepository)
@@ -75,7 +75,7 @@ extends BaseController:
     createTax.serverLogic{ (user:UserContext, permission:PermissionContext) => request =>
       CreateTaxUseCase().execute(
         request
-      ).mapError(e => ErrorResponse(message="Can't remove tax"))
+      ).mapError(e => ErrorResponse(message="Can't create tax"))
     }.expose
 
   private val updateTax = 

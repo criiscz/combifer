@@ -15,9 +15,10 @@ class ProductsToClient()
 extends BaseUseCase[RequestProductsToClient, ResponseProductsToClient]:
 
   override def execute(request: RequestProductsToClient): Task[ResponseProductsToClient] = 
-    ZIO.succeed{
-
+    ZIO.succeed {
       val productHistoryOfClients = recommendationProductRepository.getProductsBoughtByClient()
-     
-      ResponseProductsToClient(true)
+      val dataframe = sparkService.generateDataFrame(productHistoryOfClients)
+      sparkService.traitALSModel(dataframe)
+
+      ResponseProductsToClient(productHistoryOfClients)
     } 

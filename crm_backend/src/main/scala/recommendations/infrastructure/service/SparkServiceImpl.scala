@@ -6,10 +6,13 @@ import recommendations.domain.entity.RatingProductClient
 import org.apache.spark.sql._
 import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.recommendation.ALS
+import org.apache.log4j._
+
 
 class SparkServiceImpl extends SparkService:
+  // Logger.getLogger("org").setLevel(Level.OFF) 
 
-  override val spark: SparkSession = 
+  val spark: SparkSession = 
     SparkSession
     .builder
     .appName("Smart Inventory")
@@ -34,6 +37,7 @@ class SparkServiceImpl extends SparkService:
     val Array(training, test) = dataframe.randomSplit(Array(0.8, 0.2))
     training.show()
     test.show()
+
     val als = new ALS()
       .setMaxIter(5)
       .setRegParam(0.01)
