@@ -16,12 +16,11 @@ export default function Table({
     const rowId = row.parentElement?.children[1].innerHTML
     const product = products.find(product => product.lot.id == rowId)
     const isChecked = e.target.checked
-    // @ts-ignore
     if (isChecked) {
       // @ts-ignore
       setSelectedProducts([...selectedProducts, {product}])
     } else {
-      setSelectedProducts(selectedProducts.filter(p => p.lot.id !== product?.lot.id))
+      setSelectedProducts(selectedProducts.filter(p => product?.lot.id !== product?.lot.id))
     }
     // @ts-ignore
 
@@ -67,7 +66,7 @@ export default function Table({
 interface TableProps {
   products: ProductComplete[],
   header: string[],
-  productSelected: (product: ProductComplete [] | undefined) => void
+  productSelected: (product: ProductCompleteQ [] | undefined) => void
 }
 
 interface ProductCompleteQ {
