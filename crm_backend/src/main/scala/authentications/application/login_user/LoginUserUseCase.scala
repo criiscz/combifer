@@ -51,7 +51,7 @@ class LoginUserUseCase()
     ZIO.succeed(
       ResponseLoginUser(
         accessToken = token,
-        expiresIn = expirationTime
+        expiresIn = expirationTime, 
       )
     )
   end execute
