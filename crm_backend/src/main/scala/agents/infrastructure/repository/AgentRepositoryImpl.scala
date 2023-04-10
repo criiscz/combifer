@@ -45,3 +45,8 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
       query[Agent]
       .filter(_.idDocument == lift(id))
     ).headOption
+
+  override def getTotalAmountOfAgents():Long = 
+    ctx.run(
+      query[Agent].size
+    )
