@@ -18,7 +18,7 @@ export default function Table({
     const isChecked = e.target.checked
     if (isChecked) {
       // @ts-ignore
-      setSelectedProducts([...selectedProducts, {product}])
+      setSelectedProducts([...selectedProducts, {...product, quantity: inputValue}])
     } else {
       setSelectedProducts(selectedProducts.filter(p => product?.lot.id !== product?.lot.id))
     }
