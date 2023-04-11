@@ -64,14 +64,14 @@ export default function AddProductCartDialog({
     }
   }
 
-  const selectProducts = (product: ProductComplete [] | undefined) => {
+  const selectProducts = (product: ProductComplete[] | undefined) => {
     setProductSelected(product)
     console.log("Product selected: ", product)
   }
 
   const fillCar = () => {
     closeDialog()
-    // productsCar(productSelected)
+    console.log("ADD car: ", productSelected)
   }
 
   return (
