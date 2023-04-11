@@ -7,7 +7,6 @@ import shared.BaseRepository
 import zio._
 import scala.quoted.Quotes
 import io.getquill._
-import com.zaxxer.hikari.HikariDataSource
 
 class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseRepository:
 

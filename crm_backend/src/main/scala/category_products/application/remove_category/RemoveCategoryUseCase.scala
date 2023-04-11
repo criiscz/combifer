@@ -10,7 +10,10 @@ class RemoveCategoryUseCase ()
 extends BaseUseCase[RequestRemoveCategory, ResponseRemoveCategory]:
 
   override def execute(request: RequestRemoveCategory) =
-    val amountOfProductsInCategory = productRepository.getProductsWithCategory(request.id).size
+    val amountOfProductsInCategory = 
+      productRepository
+        .getProductsWithCategory(request.id)
+        .size
     if(amountOfProductsInCategory > 0) 
       ZIO.fail(new Throwable())
     val category = categoryProductRepository.removeCategory(request.id)

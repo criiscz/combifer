@@ -12,9 +12,18 @@ import agents.domain.entity.Agent
 import taxes.domain.entity.Tax
 import sale_products.domain.entity.SaleProduct
 import sales.domain.entity.Sale
+import orders.domain.entity.Order
+import order_products.domain.entity.OrderProduct
+import recommendations.domain.entity.RecommendationProduct
+import authorizations.domain.entity.Role
+import authentications.domain.entity.UserRole
+
+object BaseRepository:
+  lazy val postgresConnection = new PostgresJdbcContext(SnakeCase, "productionDatabase")
 
 trait BaseRepository:
-  val ctx = new PostgresJdbcContext(SnakeCase, "productionDatabase")
+
+  val ctx = BaseRepository.postgresConnection 
 
   implicit val productLotTableName:SchemaMeta[ProductLot] = 
     schemaMeta[ProductLot]("product_lots")
@@ -74,3 +83,34 @@ trait BaseRepository:
     insertMeta[Sale](_.id)
   implicit val saleUpdate:UpdateMeta[Sale] = 
     updateMeta[Sale](_.id)
+
+  implicit val orderTableName:SchemaMeta[Order] = 
+    schemaMeta[Order]("orders")
+  implicit val ordersInsert:InsertMeta[Order] =
+    insertMeta[Order](_.id)
+  implicit val orderUpdate:UpdateMeta[Order] = 
+    updateMeta[Order](_.id)
+
+  implicit val orderProductTableName:SchemaMeta[OrderProduct] = 
+    schemaMeta[OrderProduct]("order_products")
+  implicit val ordersProductInsert:InsertMeta[OrderProduct] =
+    insertMeta[OrderProduct](_.id)
+  implicit val orderProductUpdate:UpdateMeta[OrderProduct] = 
+    updateMeta[OrderProduct](_.id)
+
+  implicit val recommendationProductTableName:SchemaMeta[RecommendationProduct] = 
+    schemaMeta[RecommendationProduct]("recommendation_products")
+  implicit val recommendationProductInsert:InsertMeta[RecommendationProduct] =
+    insertMeta[RecommendationProduct](_.id)
+  implicit val recommendationProductUpdate:UpdateMeta[RecommendationProduct] = 
+    updateMeta[RecommendationProduct](_.id)
+
+  implicit val roleTableName:SchemaMeta[Role] = 
+    schemaMeta[Role]("roles")
+  implicit val roleInsert:InsertMeta[Role] =
+    insertMeta[Role](_.id)
+  implicit val roleUpdate:UpdateMeta[Role] = 
+    updateMeta[Role](_.id)
+
+  implicit val userRoleTableName:SchemaMeta[UserRole] = 
+    schemaMeta[UserRole]("user_roles")

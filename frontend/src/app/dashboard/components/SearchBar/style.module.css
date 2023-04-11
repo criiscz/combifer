@@ -6,7 +6,7 @@
     background-color: var(--white);
     box-shadow: 0 15px 23px -18px rgba(0, 0, 0, 0.2);
     border-radius: .5rem;
-    width: 80%;
+    width: 100%;
     color: var(--gray-strong);
 }
 

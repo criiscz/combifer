@@ -25,6 +25,8 @@ import shared.interceptors._
 import sttp.tapir.server.interceptor.cors.CORSInterceptor
 import taxes.infrastructure.controller.TaxController
 import sales.infrastructure.controller.SalesController
+import recommendations.infrastructure.controller.RecommendationController
+import agents.infrastructure.controller.ClientController
 
 
 object Main extends ZIOAppDefault with DI:
@@ -36,6 +38,8 @@ object Main extends ZIOAppDefault with DI:
   ProductLotController()
   TaxController()
   SalesController()
+  ClientController()
+  RecommendationController()
 
   val serverOptions:ZioHttpServerOptions[Any] =
     ZioHttpServerOptions
