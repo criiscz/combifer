@@ -6,11 +6,8 @@ import recommendations.domain.entity.RatingProductClient
 import org.apache.spark.sql._
 import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.recommendation.ALS
-import org.apache.log4j._
-
 
 class SparkServiceImpl extends SparkService:
-  // Logger.getLogger("org").setLevel(Level.OFF) 
 
   val spark: SparkSession = 
     SparkSession

@@ -20,7 +20,9 @@ val sparkDependencies = Seq(
 ) 
 
 val sparkCompatDependencies = Seq(
-  "io.github.vincenzobaz" %% "spark-scala3" % "0.1.5"
+  "io.github.vincenzobaz" %% "spark-scala3" % "0.1.5",
+  "org.apache.logging.log4j" % "log4j-core" % "2.20.0",
+  "org.apache.logging.log4j" % "log4j-to-slf4j" % "2.20.0"
 )
 
 val zioDependencies = Seq(
@@ -75,7 +77,7 @@ assemblyMergeStrategy in assembly := {
     MergeStrategy.singleOrError
   case PathList("META-INF", "resources", "webjars", "swagger-ui", xs@_*) =>
     MergeStrategy.first
-  case PathList("META-INF", _*) => MergeStrategy.discard
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
   case _                        => MergeStrategy.first
 }
 assemblyJarName in assembly := "back.jar"
