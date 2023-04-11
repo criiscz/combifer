@@ -42,7 +42,7 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
       productId: product!.product.id,
     } as ProductLot, product!.lot.id),
   })
-  const {mutate: editProductMutation} = useMutation({
+  const {mutate: editProductMutation ,data:editedProduct} = useMutation({
     mutationFn: () => updateProduct({
       name: editProductFields?.name,
       measureUnit: editProductFields?.measureUnit,
@@ -63,9 +63,23 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
       name: product?.product.name,
     })
   }, [product])
+
+
   // ------------------------------ Context ------------------------------
   const { setToast,  setText} = useContext(ToastContext)
   const { setRefresh } = useContext(ProductContext)
+
+  useEffect(() => {
+    if (editedProduct) {
+      editProductLotMutation()
+      closeDialog()
+      setToast(true)
+      setText('Producto editado correctamente')
+      setTimeout(() => {
+        setRefresh(true)
+      }, 1000)
+    }
+  }, [editedProduct])
   // ------------------------------ Functions ------------------------------
   const handleChange = ({target: {name, value}}: any) => {
     setEditProductFields({
@@ -76,12 +90,7 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
   };
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    editProductLotMutation()
     editProductMutation()
-    closeDialog()
-    setToast(true)
-    setText('Producto editado correctamente')
-    setRefresh(true)
   }
 
   return (

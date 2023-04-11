@@ -1,0 +1,21 @@
+.productList__container {
+    display: flex;
+    flex-direction: column;
+    height: 55vh;
+    padding: 2rem;
+    background-color: var(--white);
+    box-shadow: 0 23px 15px -18px rgba(0, 0, 0, 0.1);
+    border-radius: .5rem;
+    width: 100%;
+}
+
+.productList__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}

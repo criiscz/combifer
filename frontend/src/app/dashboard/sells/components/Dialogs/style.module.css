@@ -1,0 +1,92 @@
+.AddProductCart__container {
+    background-color: var(--gray-EE);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+
+.AddProductCart__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 100%;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.addProductCart__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.addProductCart__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    gap: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.addProductCart__footer_button_cancel {
+    background: var(--gray-D9);
+    color: var(--black);
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+}
+
+.addProductCart__footer_button_cancel:hover {
+    background: #cbc9c9
+}
+
+.addProductCart__footer_button_cancel:active {
+    background: #b0afaf;
+}
+
+.addProductCart__footer_button_add {
+    background: var(--green-light);
+    color: #fff;
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+}
+
+.addProductCart__footer_button_delete:hover {
+    background: #e71f1f;
+}
+
+.addProductCart__footer_button_delete:active {
+    background: #d41a1a;
+}
