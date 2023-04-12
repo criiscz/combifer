@@ -9,5 +9,6 @@ case class OrderProductInformation (
   quantity: Int,
   unitPrice: Float,
   name: String,
-  isNewLot: Boolean
+  lotId: Option[Long],
+  productId: Long
 )

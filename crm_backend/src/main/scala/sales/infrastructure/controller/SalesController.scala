@@ -2,8 +2,6 @@ package sales.infrastructure.controller
 
 import zio._
 import scala.util._
-import sttp.model.HeaderNames
-import sttp.tapir.server.ziohttp.ZioHttpInterpreter
 import sttp.tapir.ztapir._
 import sttp.tapir.json.circe._
 import io.circe.generic.auto._
@@ -38,7 +36,7 @@ extends BaseController:
     .out(jsonBody[ResponseCreateSale])
     .exposeSecure
 
-  private val getTaxRoute: ZServerEndpoint[Any, Any] =
+  private val createSaleRote: ZServerEndpoint[Any, Any] =
     createSale.serverLogic{ (user:UserContext, permission:PermissionContext) => request =>
       CreateSaleUseCase(user).execute(
         request
