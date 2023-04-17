@@ -13,7 +13,6 @@ import {Product} from "@/models/Product";
 import {createProduct} from "@/api/Products";
 import {createProductLot} from "@/api/ProductLots";
 import {ProductLot} from "@/models/ProductLot";
-import ModalContext from "@/context/ModalContext";
 import ToastContext from "@/context/ToastContext";
 import ProductContext from "@/context/ProductContext";
 
@@ -34,7 +33,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
   })
   // ------------------ Contexts -------------------
   const {setToast, setText} = React.useContext(ToastContext)
-  const { setRefresh } = React.useContext(ProductContext)
+  const {setRefresh} = React.useContext(ProductContext)
   // ------------------ Mutations ------------------
   const {mutate: createProductMutation, data: productCreated} = useMutation(createProduct)
   const {mutate: createProductLotMutation} = useMutation(createProductLot)
@@ -48,7 +47,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
       measureUnit: measureUnits?.data[0],
       location_id: locations?.data[0].id,
     })
-  }, [categories, locations?.data, measureUnits?.data])
+  }, [categories, createProductFields, locations?.data, measureUnits?.data])
 
   useEffect(() => {
     if (productCreated) {
@@ -109,7 +108,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
               <label htmlFor="category">Categoría</label>
               <select name="category_id" id="category" onClick={handleChange} required>
                 {
-                  categories && categories!.data.map((category: Category) => (
+                  categories && categories.data.map((category: Category) => (
                     <option value={category.id} key={category.id}>{category.name}</option>
                   ))}
               </select>
@@ -131,7 +130,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
               <label htmlFor="measure-unit">Unidad de Medición</label>
               <select name="measure-unit" id="measure-unit" onChange={handleChange} required>
                 {
-                  measureUnits && measureUnits!.data.map((unit: MeasureUnit) => (
+                  measureUnits && measureUnits.data.map((unit: MeasureUnit) => (
                     <option value={unit.length} key={
                       unit
                     }>{unit}</option>
@@ -143,7 +142,7 @@ export default function CreateProductDialog({closeDialog}: CreateProductDialogPr
               <label htmlFor="location">Ubicación</label>
               <select name="location_id" id="location" onChange={handleChange} required>
                 {
-                  locations && locations!.data.map((location: Location) => (
+                  locations && locations.data.map((location: Location) => (
                     <option value={location.id} key={location.id}>{location.name}</option>
                   ))
                 }

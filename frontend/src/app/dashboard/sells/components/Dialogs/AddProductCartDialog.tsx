@@ -1,5 +1,5 @@
 import styles from './style.module.css'
-import {ProductComplete} from "@/models/Product";
+import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import {useContext, useEffect, useState} from "react";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
 import ProductList from "@/app/dashboard/sells/components/ProductList/ProductList";
@@ -18,7 +18,7 @@ export default function AddProductCartDialog({
 
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
-  const [productSelected, setProductSelected] = useState<ProductComplete [] | undefined>(undefined)
+  const [productSelected, setProductSelected] = useState<ProductCompleteQ[] | undefined>(undefined)
   const [update, setUpdate] = useState(false)
 
 
@@ -26,7 +26,11 @@ export default function AddProductCartDialog({
     data: productsLotData,
     refetch
   } = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
-  const {refresh, setRefresh} = useContext(ProductContext)
+  const {
+    refresh,
+    setRefresh,
+    setProducts: setProductsSel
+  } = useContext(ProductContext)
 
   useEffect(() => {
     if (productsLotData !== undefined) {
@@ -64,8 +68,9 @@ export default function AddProductCartDialog({
     }
   }
 
-  const selectProducts = (product: ProductComplete[] | undefined) => {
+  const selectProducts = (product: ProductCompleteQ[] | undefined) => {
     setProductSelected(product)
+    setProductsSel(product)
     console.log("Product selected: ", product)
   }
 
@@ -103,6 +108,6 @@ export default function AddProductCartDialog({
 
 interface AddProductCartDialogProps {
   closeDialog: () => void
-  productsCar?: (product: ProductComplete[] | undefined) => void
+  productsCar?: (product: ProductCompleteQ[] | undefined) => void
 }
 

@@ -1,5 +1,5 @@
 import styles from './style.module.css'
-import {ProductComplete} from "@/models/Product";
+import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import Table from "../TableInventary/Table";
 
 export default function ProductList({products, productSelected}: ProductListProps) {
@@ -13,5 +13,5 @@ export default function ProductList({products, productSelected}: ProductListProp
 
 interface ProductListProps {
   products: ProductComplete[]
-  productSelected: (product: ProductComplete[] | undefined) => void
+  productSelected: (product: ProductCompleteQ[] | undefined) => void
 }

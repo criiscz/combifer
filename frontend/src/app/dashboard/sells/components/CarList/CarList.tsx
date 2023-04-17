@@ -1,7 +1,6 @@
 import styles from './style.module.css'
-import {Product, ProductComplete} from "@/models/Product";
+import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import Table from "../Table/Table";
-import {Dispatch, SetStateAction} from "react";
 
 export default function CarList({products, productSelected}: ProductListProps) {
     return (
@@ -14,5 +13,5 @@ export default function CarList({products, productSelected}: ProductListProps) {
 
 interface ProductListProps {
     products: ProductComplete[]
-    productSelected: (product: ProductComplete | undefined) => void
+    productSelected: (product: ProductCompleteQ | undefined) => void
 }
