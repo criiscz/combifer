@@ -20,7 +20,8 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
   const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
-  const { setOpen, setId} = useContext(ModalContext);
+  const {setOpen, setId} = useContext(ModalContext);
+  const [update , setUpdate] = useState(false)
 
 
   const {data: productsLotData, refetch} = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
@@ -28,6 +29,7 @@ export default function InventoryPage() {
 
   useEffect(() => {
     if (productsLotData !== undefined) {
+      console.log('Entro a refrescar')
       const products = productsLotData.data.map(async (productLot: ProductLot) => {
         return await getProduct(productLot.id)
       })
@@ -35,14 +37,18 @@ export default function InventoryPage() {
         setProducts(products as ProductComplete[])
         setProductsFiltered(products as ProductComplete[])
       })
+      setUpdate(false)
     }
-  }, [productsLotData])
+  }, [productsLotData, refetch, update])
 
   useEffect(() => {
     if (refresh) {
       refetch()
       setProductSelected(undefined)
       setRefresh(false)
+      setTimeout(() => {
+        setUpdate(true)
+      }, 1000)
     }
   }, [refresh])
 
