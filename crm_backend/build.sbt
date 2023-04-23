@@ -30,6 +30,11 @@ val quillDependencies = Seq(
   "org.slf4j" % "slf4j-nop" % "1.7.32",
 )
 
+val authDependencies = Seq(
+  "com.github.jwt-scala" %% "jwt-core" % "9.2.0",
+  ("com.github.t3hnar" %% "scala-bcrypt" % "4.3.0").cross(CrossVersion.for3Use2_13)
+)
+
 lazy val root = project
 .in(file("."))
 .settings(
@@ -40,6 +45,7 @@ lazy val root = project
     libraryDependencies ++= zioDependencies,
     libraryDependencies ++= quillDependencies,
     libraryDependencies ++= tapirDependencies,
+    libraryDependencies ++= authDependencies,
     libraryDependencies ++= testingDependencies,
   )
 

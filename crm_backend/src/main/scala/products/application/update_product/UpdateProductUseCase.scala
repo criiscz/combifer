@@ -4,11 +4,12 @@ import shared.application.BaseUseCase
 import products.domain.repository.ProductRepository
 import products.domain.entity.Product
 
-class UpdateProductUseCase()(using productRepository: ProductRepository) extends BaseUseCase[RequestUpdateProduct, ResponseUpdateProduct]:
+class UpdateProductUseCase(productId:Long)(using productRepository: ProductRepository) extends BaseUseCase[RequestUpdateProduct, ResponseUpdateProduct]:
 
   override def execute(request: RequestUpdateProduct): Option[ResponseUpdateProduct] = 
     productRepository.updateProduct(
       Product(
+        id = productId,
         name = request.name,
         description = request.description,
         measureUnit = request.measureUnit,

@@ -14,6 +14,7 @@ import products.infrastructure.controller.ProductController
 import locations.infrastructure.controller.LocationController
 import product_lots.infrastructure.controller.ProductLotController
 
+import authentications.infrastructure.controller.AuthenticationController
 import java.io.IOException
 import sttp.tapir.Endpoint
 import shared.mapper.endpoints.Exposer
@@ -26,6 +27,7 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 object Main extends ZIOAppDefault with DI:
 
+  AuthenticationController()
   CategoryProductController()
   ProductController()
   LocationController()
@@ -41,7 +43,7 @@ object Main extends ZIOAppDefault with DI:
   val routes: HttpApp[Any, Throwable] = 
     ZioHttpInterpreter(serverOptions)
       .toHttp(
-        Exposer.availableEndpoints.toList ++
+        Exposer.availableEndpoints.toList ++ 
         OpenAPIGenerator().getDocs()
       )
 
@@ -53,5 +55,4 @@ object Main extends ZIOAppDefault with DI:
           .live(ServerConfig.default.port(8090)),
           Server.live
         ).exitCode
-
-
+  end run

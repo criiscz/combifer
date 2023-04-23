@@ -6,6 +6,4 @@ case class RequestUpdateProduct(
   measureUnit: String,
   locationId: Long,
   categoryProductId: Long
-){
-  var id: Long = -1
-}
+)

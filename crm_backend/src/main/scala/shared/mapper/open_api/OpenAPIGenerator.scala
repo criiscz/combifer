@@ -11,6 +11,7 @@ class OpenAPIGenerator:
     SwaggerInterpreter.apply()
       .fromEndpoints[Task](
         Exposer.availableRoutes.toList,
+        // Exposer.availableSecuredRoutes.toList.map(_.endpoint),
         "Combifer",
         "1.0"
       )
