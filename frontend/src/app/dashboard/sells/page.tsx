@@ -19,7 +19,7 @@ export default function SellPage(){
                         <CarList products={productsList || []}/>
                     </div>
                     <div className={styles.sells__bill} >
-                        <Bill/>
+                        <Bill products={productsList || []}/>
                     </div>
                 </section>
         </div>

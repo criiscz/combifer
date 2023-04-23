@@ -7,7 +7,9 @@ type ProductContextType = {
   refresh: boolean,
   setRefresh: (state:boolean) => void,
   products: ProductComplete[] | ProductCompleteQ[] | undefined,
-  setProducts: React.Dispatch<React.SetStateAction<ProductComplete[]| ProductCompleteQ[] | undefined>>
+  setProducts: React.Dispatch<React.SetStateAction<ProductComplete[]| ProductCompleteQ[] | undefined>>,
+  productsSelected: ProductComplete[] | ProductCompleteQ[],
+  setProductsSelected: React.Dispatch<React.SetStateAction<ProductComplete[]| ProductCompleteQ[]>>
 }
 
 const productContexState = {
@@ -16,7 +18,9 @@ const productContexState = {
   refresh: false,
   setRefresh: (state:boolean) => {},
   products: undefined,
-  setProducts: () => {}
+  setProducts: () => {},
+  productsSelected: [],
+  setProductsSelected: () => {}
 }
 
 const ProductContext = React.createContext<ProductContextType>(productContexState)

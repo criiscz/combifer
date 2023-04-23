@@ -23,8 +23,8 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
 
   // const [products, setProducts] = useState<ProductComplete[]>([])
   // const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
-  // const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
-  const [productsSelected, setProductsSelected] = useState<ProductComplete[] | ProductCompleteQ[] | undefined>(undefined)
+  const [productSelected, setProductSelected] = useState<ProductComplete[] | ProductCompleteQ[]  >([])
+  const [productsSelected, setProductsSelected] = useState<ProductComplete[] | ProductCompleteQ[] | undefined >([])
 
   const productContext = useMemo(() => ({
     product,
@@ -32,14 +32,18 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     refresh,
     setRefresh,
     products: productsSelected,
-    setProducts: setProductsSelected
-  }), [product, productsSelected, refresh])
+    setProducts: setProductsSelected,
+    productsSelected: productSelected,
+    setProductsSelected: setProductSelected
+  }), [product, productSelected, productsSelected, refresh])
+
   const toastContext = useMemo(() => ({
     toast,
     setToast,
     text: toastText,
     setText: setToastText
   }), [toast, toastText])
+
   const modalContext = useMemo(() => ({
     open,
     setOpen,
@@ -65,14 +69,14 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
               }
             </Modal>
             <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
-            <body className={styles.container}>
+            <div className={styles.container}>
               <aside className={styles.asideNavBar}>
                 <NavBar name={'Juan Peréz'} role={'Administrador'}/>
               </aside>
               <main className={styles.body}>
                 {children}
               </main>
-            </body>
+            </div>
           </ModalContext.Provider>
         </ProductContext.Provider>
       </ToastContext.Provider>

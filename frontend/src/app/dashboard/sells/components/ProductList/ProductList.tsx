@@ -6,7 +6,8 @@ export default function ProductList({products, productSelected}: ProductListProp
   return (
     <div className={styles.productList__container}>
       <h1 className={styles.productList__title}>Lista De Productos</h1>
-      <Table products={products} header={['Id', 'Nombre', 'Categoría', 'Precio', 'Cantidad Disponible','Cantidad']} productSelected={productSelected}/>
+      <Table products={products} header={['Id', 'Nombre', 'Categoría', 'Precio', 'Cantidad' +
+      ' Disponible','Cantidad']} productSelected={productSelected}/>
     </div>
   )
 }

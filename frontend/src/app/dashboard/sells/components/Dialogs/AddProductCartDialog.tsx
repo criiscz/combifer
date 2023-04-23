@@ -1,6 +1,6 @@
 import styles from './style.module.css'
 import {ProductComplete, ProductCompleteQ} from "@/models/Product";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
 import ProductList from "@/app/dashboard/sells/components/ProductList/ProductList";
 import {useQuery} from "react-query";
@@ -17,7 +17,6 @@ export default function AddProductCartDialog({
 
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
-  const [productSelected, setProductSelected] = useState<ProductCompleteQ[] | undefined>(undefined)
   const [update, setUpdate] = useState(false)
 
 
@@ -25,10 +24,13 @@ export default function AddProductCartDialog({
     data: productsLotData,
     refetch
   } = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+
   const {
     refresh,
     setRefresh,
-    setProducts: setProductsSel
+    setProducts: setProductsSel,
+    productsSelected,
+    setProductsSelected
   } = useContext(ProductContext)
 
   useEffect(() => {
@@ -48,13 +50,13 @@ export default function AddProductCartDialog({
   useEffect(() => {
     if (refresh) {
       refetch()
-      setProductSelected(undefined)
+      setProductsSelected(undefined)
       setRefresh(false)
       setTimeout(() => {
         setUpdate(true)
       }, 1000)
     }
-  }, [refresh])
+  }, [refetch, refresh, setProductsSelected, setRefresh])
 
 
   const SearchProduct = (name: string) => {
@@ -67,15 +69,20 @@ export default function AddProductCartDialog({
     }
   }
 
-  const selectProducts = (product: ProductCompleteQ[] | undefined) => {
-    setProductSelected(product)
+  const selectProducts = useCallback((product: ProductCompleteQ[] | undefined) => {
+    setProductsSelected(product)
     setProductsSel(product)
-    console.log("Product selected: ", product)
-  }
+    console.log("Product selected: (DIALOG)", product)
+  }, [setProductsSelected, setProductsSel])
+  // const selectProducts = (product: ProductCompleteQ[] | undefined) => {
+  //   setProductsSelected(product)
+  //   setProductsSel(product)
+  //   console.log("Product selected: (DIALOG)", product)
+  // }
 
   const fillCar = () => {
     closeDialog()
-    console.log("ADD car: ", productSelected)
+    console.log("ADD car: ", productsSelected)
   }
 
   return (
