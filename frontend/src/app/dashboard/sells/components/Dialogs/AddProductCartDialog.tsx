@@ -12,7 +12,6 @@ import cookie from "universal-cookie";
 
 export default function AddProductCartDialog({
                                                closeDialog,
-                                               productsCar
                                              }: AddProductCartDialogProps) {
   const cookies = new cookie()
 

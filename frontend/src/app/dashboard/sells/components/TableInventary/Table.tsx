@@ -2,6 +2,7 @@ import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import styles from './style.module.css'
 import {useState} from "react";
 
+
 export default function Table({
                                 products,
                                 header,
@@ -38,10 +39,15 @@ export default function Table({
   const handleInputChange = (e: any, id: number) => {
     if (inputValue.find(i => i.id == id)) {
       setInputValue(inputValue.map(i => i.id == id ? {...i, value: e.target.value} : i))
+
     } else {
       setInputValue([...inputValue, {id: id, value: e.target.value}])
     }
   }
+
+
+
+
 
   return (
     <div className={styles.table__container}>
