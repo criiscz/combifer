@@ -10,6 +10,7 @@ import zio._
 
 import authentications.application.login_user._
 import authentications.application.create_user._
+import authentications.application.get_session_information._
 
 import shared.responses.ErrorResponse
 import shared.mapper.endpoints.Exposer._
@@ -18,14 +19,20 @@ import sttp.tapir.EndpointIO.annotations.endpointInput
 import authentications.domain.repository.AuthenticationRepository
 import agents.domain.repository.AgentRepository
 import authentications.domain.service.HashService
+import authorizations.domain.repository.AuthorizationRepository
+import shared.BaseController
+import shared.responses.ApplicationError
+import authorizations.domain.entity.PermissionContext
+import authentications.domain.entity.UserContext
 
 class AuthenticationController()
 (using 
   jwtService: JwtService, 
   hashService: HashService,
   authenticationRepository: AuthenticationRepository, 
+  authorizationRepository: AuthorizationRepository,
   agentRepository: AgentRepository,
-):
+)extends BaseController:
 
   private val loginUser:PublicEndpoint[RequestLoginUser, ErrorResponse,ResponseLoginUser, Any] =
     endpoint
@@ -37,9 +44,9 @@ class AuthenticationController()
     .expose
 
   private val loginUserRoute: ZServerEndpoint[Any, Any] = loginUser.zServerLogic { request =>
-    LoginUserUseCase().execute(request) match 
-      case Some(value) => ZIO.succeed(value)
-      case None => ZIO.fail(ErrorResponse(message = "Failed Login"))
+    LoginUserUseCase()
+      .execute(request) 
+      .mapError(e => ErrorResponse(message="Can't Login"))
   }.expose
 
   private val createUser: PublicEndpoint[RequestCreateUser, ErrorResponse, ResponseCreateUser, Any] =
@@ -52,7 +59,24 @@ class AuthenticationController()
       .expose
 
   private val createUserRoute:ZServerEndpoint[Any, Any] = createUser.zServerLogic { request => 
-      CreateUserUseCase().execute(request) match
-        case Some(value) => ZIO.succeed(value)
-        case None => ZIO.fail(ErrorResponse(message = "Failed User Created"))
+      CreateUserUseCase()
+        .execute(request) 
+        .mapError(e => ErrorResponse(message="Can't create user"))
   }.expose
+
+  private val getSessionInformation = 
+    secureEndpoint
+    .in("session-info")
+    .get
+    .errorOutVariant[ApplicationError](oneOfVariant(jsonBody[ErrorResponse]))
+    .out(jsonBody[ResponseGetSessionInformation])
+    .exposeSecure
+
+  private val getSessionInformationRoute:ZServerEndpoint[Any, Any] = 
+    getSessionInformation.serverLogic{ (user:UserContext, permission:PermissionContext) => _ =>
+      GetSessionInformationUseCase().execute(
+        RequestGetSessionInformation(user, permission) 
+      )
+      .mapError(e => ErrorResponse(message="Can't get current session information"))
+    }.expose
+

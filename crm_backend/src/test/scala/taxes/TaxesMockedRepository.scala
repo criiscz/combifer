@@ -1,0 +1,6 @@
+package taxes
+
+import taxes.infrastructure.repository.TaxRespositoryImpl
+import shared.BaseMockedRepository
+
+class TaxesMockedRepository extends TaxRespositoryImpl with BaseMockedRepository

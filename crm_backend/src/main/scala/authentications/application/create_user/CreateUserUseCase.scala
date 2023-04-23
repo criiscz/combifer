@@ -6,6 +6,7 @@ import authentications.domain.entity.User
 import agents.domain.repository.AgentRepository
 import agents.domain.entity.Agent
 import authentications.domain.service.HashService
+import zio.ZIO
 
 class CreateUserUseCase()
 (using 
@@ -15,9 +16,9 @@ class CreateUserUseCase()
 ) 
 extends BaseUseCase[RequestCreateUser,ResponseCreateUser]:
 
-  override def execute(request: RequestCreateUser): Option[ResponseCreateUser] = 
+  override def execute(request: RequestCreateUser) = 
     val encryptedPassword = hashService.hashPassword(request.password) match
-      case None => return None
+      case None => return ZIO.fail(new Throwable())
       case Some(value) => value
     
     val agent = agentRepository.insertAgent(
@@ -39,7 +40,7 @@ extends BaseUseCase[RequestCreateUser,ResponseCreateUser]:
         agentId = agent.idDocument
       )
     )
-    Some(
+    ZIO.succeed(
       ResponseCreateUser(
         username = user.username,
         document = agent.idDocument,

@@ -13,8 +13,8 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
     ctx.run(
       query[Agent]
         .sortBy(_.idDocument)(Ord.ascNullsLast)
-        .drop(lift(from))
         .take(lift(to))
+        .drop(lift(from))
     )
 
   override def removeAgent(id: Long): Agent =
@@ -45,3 +45,8 @@ class AgentRepositoryImpl extends AgentRepository with BaseRepository:
       query[Agent]
       .filter(_.idDocument == lift(id))
     ).headOption
+
+  override def getTotalAmountOfAgents():Long = 
+    ctx.run(
+      query[Agent].size
+    )

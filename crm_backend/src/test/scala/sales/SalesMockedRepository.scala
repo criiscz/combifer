@@ -1,0 +1,6 @@
+package sales
+
+import sales.infrastructure.repository.SaleRepositoryImpl
+import shared.BaseMockedRepository
+
+class SalesMockedRepository extends SaleRepositoryImpl with BaseMockedRepository

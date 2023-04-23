@@ -3,13 +3,31 @@ val scala3Version = "3.2.2"
 libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "openapi-model" % "early-semver"
 libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "apispec-model" % "early-semver"
 
-val zioVersion = "2.0.9"
+val zioVersion = "2.0.10"
 val zioHttpVersion = "0.0.4"
 val tapirVersion = "1.2.10"
+val sparkVersion = "3.3.2"
+
+val sparkDependencies = Seq(
+  ("org.apache.spark" %% "spark-core" % sparkVersion),
+  ("org.apache.spark" %% "spark-mllib" % sparkVersion),
+  ("org.apache.spark" %% "spark-sql" % sparkVersion)
+)
+.map(
+  _.exclude("org.scala-lang.modules","scala-collection-compat_2.13")
+  .exclude("org.typelevel", "cats-kernel_2.13")
+  .cross(CrossVersion.for3Use2_13)
+) 
+
+val sparkCompatDependencies = Seq(
+  "io.github.vincenzobaz" %% "spark-scala3" % "0.1.5",
+  "org.apache.logging.log4j" % "log4j-core" % "2.20.0",
+  "org.apache.logging.log4j" % "log4j-to-slf4j" % "2.20.0"
+)
 
 val zioDependencies = Seq(
   "dev.zio" %% "zio" % zioVersion,
-  "dev.zio" %% "zio-http" % zioHttpVersion
+  "dev.zio" %% "zio-http" % zioHttpVersion,
 )
 
 val tapirDependencies = Seq(
@@ -20,14 +38,15 @@ val tapirDependencies = Seq(
 )
 
 val testingDependencies = Seq(
-  "org.scalameta" %% "munit" % "0.7.29" % Test,
-  "com.h2database" % "h2" % "2.1.214" % Test
+  "dev.zio" %% "zio-test"          % zioVersion % Test,
+  "dev.zio" %% "zio-test-sbt"      % zioVersion % Test,
+  "dev.zio" %% "zio-test-magnolia" % zioVersion % Test,
+  ("io.github.etspaceman" %% "scalacheck-faker" % "7.0.0").cross(CrossVersion.for3Use2_13)
 )
 
 val quillDependencies = Seq(
   "io.getquill" %% "quill-jdbc-zio" % "4.6.0.1",
   "org.postgresql" % "postgresql" % "42.5.4",
-  "org.slf4j" % "slf4j-nop" % "1.7.32",
 )
 
 val authDependencies = Seq(
@@ -46,15 +65,19 @@ lazy val root = project
     libraryDependencies ++= quillDependencies,
     libraryDependencies ++= tapirDependencies,
     libraryDependencies ++= authDependencies,
+    libraryDependencies ++= sparkDependencies,
+    libraryDependencies ++= sparkCompatDependencies,
     libraryDependencies ++= testingDependencies,
   )
+
+testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", "maven", "org.webjars", "swagger-ui", "pom.properties") =>
     MergeStrategy.singleOrError
   case PathList("META-INF", "resources", "webjars", "swagger-ui", xs@_*) =>
     MergeStrategy.first
-  case PathList("META-INF", _*) => MergeStrategy.discard
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
   case _                        => MergeStrategy.first
 }
 assemblyJarName in assembly := "back.jar"

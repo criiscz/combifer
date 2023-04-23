@@ -7,7 +7,6 @@ import shared.BaseRepository
 import zio._
 import scala.quoted.Quotes
 import io.getquill._
-import com.zaxxer.hikari.HikariDataSource
 
 class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseRepository:
 
@@ -22,8 +21,8 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository with BaseR
     val q = quote {
       query[CategoryProduct]
         .sortBy(p => p.id)(Ord.ascNullsLast)
-        .drop(lift(from))
         .take(lift(to))
+        .drop(lift(from))
     }
     ctx.run(q)
 

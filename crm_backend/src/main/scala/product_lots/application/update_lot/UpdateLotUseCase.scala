@@ -3,10 +3,13 @@ package product_lots.application.update_lot
 import shared.application.BaseUseCase
 import product_lots.domain.repository.ProductLotRepository
 import product_lots.domain.entity.ProductLot
+import zio.ZIO
 
-class UpdateLotUseCase(productId: Long)(using productLotRepository: ProductLotRepository) extends BaseUseCase[RequestUpdateLot, ResponseUpdateLot]:
+class UpdateLotUseCase(productId: Long)
+(using productLotRepository: ProductLotRepository) 
+extends BaseUseCase[RequestUpdateLot, ResponseUpdateLot]:
 
-  override def execute(request: RequestUpdateLot): Option[ResponseUpdateLot] =
+  override def execute(request: RequestUpdateLot) =
     val updatedLot = productLotRepository.updateLot(
       ProductLot(
         id = productId,
@@ -17,5 +20,5 @@ class UpdateLotUseCase(productId: Long)(using productLotRepository: ProductLotRe
         productId = request.productId,
       )
     )
-    Some(ResponseUpdateLot(updatedLot))
+    ZIO.succeed(ResponseUpdateLot(updatedLot))
     

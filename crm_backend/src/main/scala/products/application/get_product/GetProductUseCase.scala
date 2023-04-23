@@ -2,11 +2,14 @@ package products.application.get_product
 
 import shared.application.BaseUseCase
 import products.domain.repository.ProductRepository
+import zio.ZIO
 
-class GetProductUseCase()(using productRepository:ProductRepository) extends BaseUseCase[RequestGetProduct, ResponseGetProduct]:
+class GetProductUseCase()
+(using productRepository:ProductRepository) 
+extends BaseUseCase[RequestGetProduct, ResponseGetProduct]:
 
-  override def execute(request: RequestGetProduct): Option[ResponseGetProduct] =
+  override def execute(request: RequestGetProduct) =
     productRepository.getProduct(request.id) match {
-      case Some(value) => Some(ResponseGetProduct(value))
-      case None => None
+      case Some(value) => ZIO.succeed(ResponseGetProduct(value))
+      case None => ZIO.fail(new Throwable())
     }

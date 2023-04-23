@@ -1,5 +1,9 @@
 package product_lots
 
+import zio._
+import zio.test._
+import zio.test.Assertion._
+
 import shared.{BaseRepository, BaseSuite}
 import product_lots.application.create_lot.CreateLotUseCase
 import product_lots.application.create_lot.RequestCreateLot
@@ -25,9 +29,9 @@ import category_products.application.remove_category.RequestRemoveCategory
 
 import java.time.LocalDate
 
-class TestSuite extends BaseSuite:
+object TestSuite extends BaseSuite:
   val locationName = "Location ABC"
-  val CategoryProductName = "Categoria A"
+  val categoryProductName = "Categoria A"
   val productName = "Tornillo A"
 
   var lastCreatedProduct: Long = -1
@@ -35,115 +39,90 @@ class TestSuite extends BaseSuite:
   var lastCreatedCategoryProduct: Long = -1
   var lastCreatedProductLot: Long = -1
 
-  test("Create category-product for product"){
-    val categoryProductCreated = CreateCategoryUseCase()
-      .execute(
-        RequestCreateCategory(
-          name = CategoryProductName,
-          description = Some("material tipo liviano")
-        )
-      )
-    val categoryProduct = categoryProductCreated match
-      case Some(value) => value._1
-      case None => throw Exception("Can't create Category")
+  override def spec = suite("Product Lots Suite")(
 
-    lastCreatedCategoryProduct = categoryProduct.id
-    assertEquals(categoryProduct.name, CategoryProductName)
-  }
+    test("Create category-product for product"){
+      for
+        createdCategory <- CreateCategoryUseCase()
+          .execute(
+            RequestCreateCategory(name = categoryProductName, description = Some("material tipo liviano"))
+          )
+        _ <- ZIO.succeed{lastCreatedCategoryProduct = createdCategory.data.id}
+      yield assertTrue(createdCategory.data.name == categoryProductName)
+    },
 
-  test("Create location for product"){
-    val locationCreated = CreateLocationUseCase()
-      .execute(
-        RequestCreateLocation(
-          name = locationName,
-          description = Some("Pasillo 2 cajon C"),
-          null)
-      )
-    val location = locationCreated match
-      case Some(value) => value._1
-      case None => throw  Exception("Can't create location")
+    test("Create location for product"){
+      for
+        createdLocation <- CreateLocationUseCase()
+          .execute(
+            RequestCreateLocation( name = locationName, description = Some("Pasillo 2 cajon C"), null)
+          )
+        _ <- ZIO.succeed{lastCreatedLocation = createdLocation.data.id}
+      yield assertTrue(createdLocation.data.name == locationName)
+    },
 
-    lastCreatedLocation = location.id
-    assertEquals(location.name, locationName)
-  }
+    test("Create product for product-lot"){
+      for
+        createdProduct <- CreateProductUseCase()
+          .execute(
+            RequestCreateProduct(
+              name = productName,
+              description = Some("3 pulgadas"),
+              measureUnit = "pulgadas",
+              locationId = lastCreatedLocation,
+              categoryProductId = lastCreatedCategoryProduct
+            )
+          )
+        _ <- ZIO.succeed{lastCreatedProduct = createdProduct.data.id}
+      yield assertTrue(createdProduct.data.name == productName)
+    },
+    
+    test("Create product-lots using product, category product and location created above"){
+      for
+        createdLot <- CreateLotUseCase()
+          .execute(
+            RequestCreateLot(
+              price = 1.000,
+              LocalDate.now(),
+              None,
+              Some(100),
+              lastCreatedProduct)
+            )
+        _ <- ZIO.succeed{lastCreatedProductLot = createdLot.data.id}
+      yield assertTrue(createdLot.data.productId == lastCreatedProduct)
+    },
 
-  test(name = "Create product for product-lot"){
-    val productCreated = CreateProductUseCase()
-      .execute(
-        RequestCreateProduct(
-          name = productName,
-          description = Some("3 pulgadas"),
-          measureUnit = "pulgadas",
-          locationId = lastCreatedLocation,
-          categoryProductId = lastCreatedCategoryProduct
-        )
-      )
-    val product = productCreated match
-      case Some(value) => value._1
-      case None => throw Exception("Can't create product")
+    test("Delete Product-lot"){
+      for
+        removedLot <- RemoveLotUseCase()
+          .execute(RequestRemoveLot( id = lastCreatedProductLot))
+      yield assertTrue(removedLot.data.id == lastCreatedProductLot)
+    },
 
-    lastCreatedProduct = product.id
-    assertEquals(product.name,productName)
-  }
+    test("Delete Product"){
+      for
+        removedProduct <- RemoveProductUseCase()
+          .execute(
+            RequestRemoveProduct(
+              id = lastCreatedProduct
+            )
+          )
+      yield assertTrue(removedProduct.data.id == lastCreatedProduct)
+    },
 
-  test("Create product-lots using product, category product and location created above"){
-    val productLotObtained = CreateLotUseCase()
-      .execute(
-        RequestCreateLot(
-          price = 1.000,
-          LocalDate.now(),
-          None,
-          Some(100),
-          lastCreatedProduct)
-      )
-    val productLot = productLotObtained match
-      case Some(value) => value._1
-      case None => throw Exception("Can't create product-lot")
-    lastCreatedProductLot = productLot.id
-    assertEquals(productLotObtained.get.data.productId, lastCreatedProduct)
-  }
+    test("Delete Location of Product Deleted"){
+      for
+        removedLocation <- RemoveLocationUseCase()
+          .execute( RequestRemoveLocation(lastCreatedLocation))
+      yield assertTrue(removedLocation.data.id == lastCreatedLocation)
+    },
 
-  test("Delete product-lot"){
-    val removedProductLot = RemoveLotUseCase()
-      .execute(
-        RequestRemoveLot(
-          id = lastCreatedProductLot
-        )
-      )match
-        case Some(value) => value._1
-        case None => throw Exception("Can't remove product-lot")
-
-    assertEquals(removedProductLot.id, lastCreatedProductLot)
-  }
-
-  test("Delete product") {
-    val removedProduct = RemoveProductUseCase()
-      .execute(
-        RequestRemoveProduct(
-          id = lastCreatedProduct
-        )
-      )match
-        case Some(value) => value._1
-        case None => throw Exception("Can't remove product")
-    assertEquals(removedProduct.id, lastCreatedProduct)
-  }
-
-  test("Delete Location of product deleted") {
-    val removedLocation = RemoveLocationUseCase()
-      .execute(
-        RequestRemoveLocation(lastCreatedLocation)
-      ) match
-      case Some(value) => value._1
-      case None => throw Exception("Can't remove Location")
-    assertEquals(removedLocation.id, lastCreatedLocation)
-  }
-
-  test("Delete Category of product deleted") {
-    val removedCategory = RemoveCategoryUseCase()
-      .execute(
-        RequestRemoveCategory(lastCreatedCategoryProduct)
-      ) match
-      case Some(value) => value._1
-      case None => throw Exception("Can't remove Category")
-    assertEquals(removedCategory.id, lastCreatedCategoryProduct)
-  }
+    test("Delete Category of product deleted"){
+      for
+        removedCategory <- RemoveCategoryUseCase()
+          .execute(
+            RequestRemoveCategory(lastCreatedCategoryProduct)
+          )
+      yield assertTrue(removedCategory.data.id == lastCreatedCategoryProduct)
+    },
+  )@@ TestAspect.sequential @@ TestAspect.timed

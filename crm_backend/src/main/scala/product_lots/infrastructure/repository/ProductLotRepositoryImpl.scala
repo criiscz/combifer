@@ -17,9 +17,9 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
   override def getLots(from: Int, to: Int): List[ProductLot] =
      ctx.run(
        query[ProductLot]
-       .sortBy(_.id)(Ord.ascNullsLast)
-        .drop(lift(from))
+        .sortBy(_.id)(Ord.ascNullsLast)
         .take(lift(to))
+        .drop(lift(from))
      )
 
   override def getTotalAmountOfLots(): Long = 
@@ -51,6 +51,15 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
       query[ProductLot]
       .filter(_.id == lift(id))
     ).headOption
+
+  override def getLotWithProduct(id: Long): Option[(ProductLot,Product)] = 
+    val q = quote {
+      for {
+        lot <- query[ProductLot].filter(_.id == lift(id))
+        product <- query[Product].join(_.id == lot.productId)
+      } yield (lot,product)
+    }
+    ctx.run(q).headOption
 
   override def updateLot(lot: ProductLot): ProductLot = 
     ctx.run(
