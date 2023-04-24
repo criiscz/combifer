@@ -14,7 +14,7 @@ export default function CarList({products}: BillProps) {
 
 
   const {setOpen, setId} = useContext(ModalContext);
-  const { data } = useQuery('iva', () => getIVA(cookies.get('userToken')))
+  const {data} = useQuery('iva', () => getIVA(cookies.get('userToken')))
 
   const openModal = (id: string) => {
     if (setId) {
@@ -23,26 +23,22 @@ export default function CarList({products}: BillProps) {
     setOpen(true)
   }
 
-  // useEffect(() => {
-  //
-  // }
-
   const calculateIVA = (price: number) => {
     if (data === undefined) return 0
     return price * data.data[0].value
   }
   const getTotal = () => {
     let total = 0
-    products.forEach((product ) => {
+    products.forEach((product) => {
       if (product.quantity === undefined) return
-      total += product.quantity * (product.lot.price! - calculateIVA(product.lot.price!) )
+      total += product.quantity * (product.lot.price! - calculateIVA(product.lot.price!))
     })
     return parseFloat(total.toFixed(2))
   }
 
   const getTotalIVA = () => {
     let total = 0
-    products.forEach((product ) => {
+    products.forEach((product) => {
       if (product.quantity === undefined) return
       total += product.quantity * calculateIVA(product.lot.price!)
     })
@@ -51,7 +47,7 @@ export default function CarList({products}: BillProps) {
 
   const getTotalPrice = () => {
     let total = 0
-    products.forEach((product ) => {
+    products.forEach((product) => {
       if (product.quantity === undefined) return
       total += product.quantity * product.lot.price!
     })
@@ -91,11 +87,17 @@ export default function CarList({products}: BillProps) {
           </div>
         </div>
         <div className={styles.bill__actionButtons}>
-          <button title={'Comprar'}
+          <button title={'Abrir Carrito'}
                   className={styles.bill__actionButtons_button_buy}
                   onClick={() => openModal('buy-bill')}
           >
             <Icon icon={'icons8:buy'}/>
+          </button>
+          <button title={'Crear Factura'}
+                  className={styles.bill__actionButtons_button_create_bill}
+                  onClick={() => openModal('create-bill')}
+          >
+            <Icon icon={'ri:add-line'}/>
           </button>
           <button title={'Editar Precio'}
                   className={styles.bill__actionButtons_button_edit}

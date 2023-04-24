@@ -50,13 +50,17 @@ export default function AddProductCartDialog({
   useEffect(() => {
     if (refresh) {
       refetch()
-      setProductsSelected(undefined)
+      setProductsSelected(undefined!)
       setRefresh(false)
       setTimeout(() => {
         setUpdate(true)
       }, 1000)
     }
   }, [refetch, refresh, setProductsSelected, setRefresh])
+
+  useEffect(() => {
+    document.getElementById('searchbar')?.focus()
+  }, [])
 
 
   const SearchProduct = (name: string) => {
@@ -70,15 +74,10 @@ export default function AddProductCartDialog({
   }
 
   const selectProducts = useCallback((product: ProductCompleteQ[] | undefined) => {
-    setProductsSelected(product)
+    setProductsSelected(product!)
     setProductsSel(product)
     console.log("Product selected: (DIALOG)", product)
   }, [setProductsSelected, setProductsSel])
-  // const selectProducts = (product: ProductCompleteQ[] | undefined) => {
-  //   setProductsSelected(product)
-  //   setProductsSel(product)
-  //   console.log("Product selected: (DIALOG)", product)
-  // }
 
   const fillCar = () => {
     closeDialog()
@@ -88,7 +87,7 @@ export default function AddProductCartDialog({
   return (
     <div className={styles.AddProductCart__container}>
       <div className={styles.AddProductCart__header}>
-        <SearchBar onSubmit={SearchProduct}/>
+        <SearchBar onSubmit={SearchProduct} id={"searchbar"}/>
       </div>
       <div className={styles.ddProductCart__body}>
         {

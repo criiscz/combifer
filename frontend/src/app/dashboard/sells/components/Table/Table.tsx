@@ -15,12 +15,10 @@ export default function Table({products, header}: TableProps) {
 
 
   const handleDelete = (id: number) => {
-    console.log("Entra a eliminar el producto: ", id)
     const updateProducts = products.filter((products) => products.lot.id !== id)
     setProductsSelected(updateProducts)
     setProductsSel(updateProducts)
-    console.log("los productos restantes son: ", updateProducts)
-  } //NO SE ELIMINAN DEL PROPS PRODUCTO, SE VUELVE A ACTUALIZAR
+  }
 
   return (
     <div className={styles.table__container}>
@@ -43,7 +41,7 @@ export default function Table({products, header}: TableProps) {
                 <div className={styles.table__body_row_item}>
                   <button className={styles.table__body_row_item_button}
                           onClick={() => handleDelete(product.lot.id as number)}>
-                    <Icon icon={'mdi:alpha-x-circle-outline'}></Icon>
+                    <Icon icon={'ri:close-line'}></Icon>
                   </button>
                 </div>
               </div>

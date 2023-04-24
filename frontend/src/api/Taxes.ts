@@ -1,7 +1,7 @@
 import {BackResponse} from "@/models/BackResponse";
 import {Tax} from "@/models/Tax";
 
-const API_URL = 'http://3.237.202.227:8090/';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getIVA(token: string, page: number = 0, per_page: number = 1): Promise<BackResponse> {
   const response = await fetch(API_URL + `taxes?page=${page}&per_page=${per_page}`, {

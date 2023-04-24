@@ -12,6 +12,9 @@ import ToastContext from "@/context/ToastContext";
 import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import Toast from "@/app/components/Toast/Toast";
 import AddProductCartDialog from "@/app/dashboard/sells/components/Dialogs/AddProductCartDialog";
+import ClientContext from "@/context/ClientContext";
+import {Client} from "@/models/Client";
+import CreateNewSellDialog from "./sells/components/Dialogs/CreateNewSellDialog";
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
@@ -20,11 +23,13 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   const [toast, setToast] = React.useState(false)
   const [toastText, setToastText] = React.useState('')
   const [refresh, setRefresh] = React.useState(false)
+  const [selectedClient, setSelectedClient] = React.useState<Client>()
+  const [clients, setClients] = React.useState<Client[]|undefined>([])
 
   // const [products, setProducts] = useState<ProductComplete[]>([])
   // const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
-  const [productSelected, setProductSelected] = useState<ProductComplete[] | ProductCompleteQ[]  >([])
-  const [productsSelected, setProductsSelected] = useState<ProductComplete[] | ProductCompleteQ[] | undefined >([])
+  const [productSelected, setProductSelected] = useState<ProductComplete[] | ProductCompleteQ[]>([])
+  const [productsSelected, setProductsSelected] = useState<ProductComplete[] | ProductCompleteQ[] | undefined>([])
 
   const productContext = useMemo(() => ({
     product,
@@ -51,9 +56,18 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     setId
   }), [open, id])
 
+  const clientContext = useMemo(() => ({
+    selectedClient,
+    setSelectedClient,
+    clients,
+    setClients
+  }), [selectedClient, clients])
+
+
   return (
     <div>
       <ToastContext.Provider value={toastContext}>
+        <ClientContext.Provider value={clientContext}>
         <ProductContext.Provider value={productContext}>
           <ModalContext.Provider value={modalContext}>
             <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
@@ -65,7 +79,10 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                 id === 'delete-product' &&
                 <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
                 id === 'buy-bill' &&
-                <AddProductCartDialog closeDialog={() => setOpen(false)}/>
+                <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
+                id === 'create-bill' &&
+                <CreateNewSellDialog closeDialog={() => setOpen(false)}/>
+
               }
             </Modal>
             <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
@@ -79,6 +96,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
             </div>
           </ModalContext.Provider>
         </ProductContext.Provider>
+        </ClientContext.Provider>
       </ToastContext.Provider>
     </div>
   )

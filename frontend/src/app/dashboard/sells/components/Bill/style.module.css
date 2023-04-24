@@ -9,6 +9,7 @@
     box-shadow: 0 15px 23px -18px var(--gray-D9);
     font-family: 'Inter', sans-serif;
     color: var(--gray-strong);
+    transition: all .3s ease-in-out;
 }
 
 .bill__title {
@@ -88,9 +89,28 @@
     font-weight: 600;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
+    transition: all .1s ease-in-out;
 }
 
 .bill__actionButtons_button_edit {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #d0d0d0;
+    color: rgb(148, 148, 148);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+
+}
+
+.bill__actionButtons_button_create_bill {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -104,4 +124,20 @@
     font-weight: 600;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
+    transition: all .1s ease-in-out;
+
+}
+
+/*HOVER*/
+
+.bill__actionButtons_button_buy:hover {
+    background-color: rgba(75, 211, 123, 0.4);
+}
+
+.bill__actionButtons_button_edit:hover {
+    background-color: #bbbbbb;
+}
+
+.bill__actionButtons_button_create_bill:hover {
+    background-color: rgba(255, 242, 98, 0.9);
 }

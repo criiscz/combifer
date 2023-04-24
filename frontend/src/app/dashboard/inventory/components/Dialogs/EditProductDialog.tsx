@@ -86,7 +86,6 @@ export default function EditProductDialog({closeDialog, product}: EditProductDia
       ...editProductFields,
       [name]: value
     })
-    console.log(editProductFields)
   };
   const handleSubmit = (e: any) => {
     e.preventDefault()
