@@ -30,12 +30,18 @@ import roles.domain.repository._
 import roles.infrastructure.repository._
 import permissions.domain.repository.PermissionRepository
 import permissions.infrastructure.repository.PermissionRepositoryImpl
+import orders.domain.repository.OrderRepository
+import orders.infrastructure.repository.OrderRepositoryImpl
+import order_products.domain.repository.OrderProductRepository
+import order_products.infrastrucuture.repository.OrderProductRepositoryImpl
 
 trait DI:
   given jwtService: JwtService = new JwtServiceImpl()
   given roleRepository: RoleRepository = new RoleRepositoryImpl()
   given userRoleRepository: UserRoleRepository = new UserRoleRepositoryImpl()
   given permissionRepository: PermissionRepository = new PermissionRepositoryImpl()
+  given orderRepository: OrderRepository = new OrderRepositoryImpl()
+  given orderProductRepository: OrderProductRepository = new OrderProductRepositoryImpl()
   given categoryProductRepository: CategoryProductRepository = new CategoryProductRepositoryImpl()
   given productRepository: ProductRepository = new ProductRepositoryImpl()
   given locationRepository: LocationRepository = new LocationRepositoryImpl()
