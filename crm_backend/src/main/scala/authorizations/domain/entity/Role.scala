@@ -1,7 +1,7 @@
 package authorizations.domain.entity
 
 case class Role (
-  id: Long,
+  id: Long = -1,
   name: String,
   description: Option[String]
 )
