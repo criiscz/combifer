@@ -7,6 +7,7 @@ import {BackResponse} from "@/models/BackResponse";
 // const API_URL = 'http://localhost:8090/';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+
 export const getAllProducts = async (authToken:string, page: number = 0, per_page:number = 100): Promise<BackResponse> => {
   const response = await fetch(API_URL + `products?page=${page}&per_page=${per_page}`, {
     method: "GET",

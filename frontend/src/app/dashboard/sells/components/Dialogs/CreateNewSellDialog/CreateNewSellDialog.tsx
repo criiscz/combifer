@@ -8,20 +8,75 @@ import ProductContext from "@/context/ProductContext";
 import Button from "@/app/components/Button";
 import {ProductCompleteQ} from "@/models/Product";
 import SellContext from "@/context/SellContext";
+import ToastContext from "@/context/ToastContext";
+import {useMutation} from "react-query";
+import {createClient} from "@/api/Clients";
+import {DocumentType} from "@/models/DocumentType";
+import {createNewSell, SellCreate} from "@/api/Sells";
+import Cookies from "universal-cookie";
 
 export default function CreateNewSellDialog({closeDialog}: CreateNewSellDialogProps) {
 
-  const {
-    productsSelected
-  } = useContext(ProductContext)
-
+  const {productsSelected} = useContext(ProductContext)
+  const {setToast, setText} = useContext(ToastContext)
   const {
     productTotal,
     iva,
     total,
     discount,
     selectedClient,
+    taxId,
+    setSelectedClient,
+    setProductTotal,
+    setIva,
+    setTotal,
+    setDiscount,
+    setProducts
   } = useContext(SellContext)
+  const cookies = new Cookies()
+
+  const clearSell = () => {
+    setProducts([])
+    setSelectedClient(undefined)
+    setProductTotal(0)
+    setIva(0)
+    setTotal(0)
+    setDiscount(0)
+  }
+
+  const {mutate: clientMutation} = useMutation({
+    mutationFn: (sell: SellCreate) => createNewSell(cookies.get('userToken'), sell),
+    onSuccess: () => {
+      closeDialog()
+      setToast(true)
+      setText('Venta creada con éxito')
+      clearSell()
+    }
+  })
+
+  const createSell = () => {
+    if (productsSelected.length && selectedClient) {
+      const products = productsSelected.map((product: ProductCompleteQ) => {
+        return {
+          lotId: product.lot.id,
+          quantity: product.quantity,
+          discount: 0,
+          taxId: taxId
+        }
+      })
+      const sell = {
+        client: selectedClient.idDocument,
+      }
+      clientMutation({
+        description: 'Venta',
+        products: products,
+        clientId: sell.client,
+      })
+    } else {
+      setToast(true)
+      setText('No hay productos o cliente seleccionado')
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -98,7 +153,7 @@ export default function CreateNewSellDialog({closeDialog}: CreateNewSellDialogPr
           </ItemComponent>
         </div>
         <div className={styles.row}>
-          <Button title={'Realizar Venta'} onClick={closeDialog} />
+          <Button title={'Realizar Venta'} onClick={createSell}/>
         </div>
       </div>
     </div>

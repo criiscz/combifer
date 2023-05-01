@@ -17,6 +17,9 @@ import {Client} from "@/models/Client";
 import CreateNewSellDialog
   from "./sells/components/Dialogs/CreateNewSellDialog/CreateNewSellDialog";
 import SellContext from "@/context/SellContext";
+import {useQuery} from "react-query";
+import {sessionInfo} from "@/api/Login";
+import Cookies from "universal-cookie";
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
@@ -31,6 +34,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   const [iva, setIva] = React.useState(0)
   const [total, setTotal] = React.useState(0)
   const [discount, setDiscount] = React.useState(0)
+  const [taxId, setTaxId] = React.useState(0)
 
   // const [products, setProducts] = useState<ProductComplete[]>([])
   // const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
@@ -81,10 +85,20 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     total,
     setTotal,
     discount,
-    setDiscount
+    setDiscount,
+    taxId,
+    setTaxId
   }), [productsSelected, selectedClient, productTotal, iva, total])
 
 
+
+  const cookies = useMemo(() => new Cookies(), []);
+
+  const {data} = useQuery({
+    queryKey: 'session-info',
+    queryFn: () => sessionInfo(cookies.get('userToken')),
+  })
+  
   return (
     <div>
       <ToastContext.Provider value={toastContext}>
@@ -110,7 +124,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                 <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
                 <div className={styles.container}>
                   <aside className={styles.asideNavBar}>
-                    <NavBar name={'Juan Peréz'} role={'Administrador'}/>
+                    <NavBar name={data?.username || 'Nombre'} role={data?.roles[0]?.name || 'Rol'}/>
                   </aside>
                   <main className={styles.body}>
                     {children}

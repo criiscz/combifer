@@ -21,6 +21,7 @@ export default function CarList({products}: BillProps) {
     setProductTotal,
     setTotal,
     setIva,
+    setTaxId
   } = useContext(SellContext)
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function CarList({products}: BillProps) {
 
   const calculateIVA = (price: number) => {
     if (data === undefined) return 0
+    setTaxId(data.data[0].id)
     return price * data.data[0].value
   }
   const getTotal = () => {

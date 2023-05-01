@@ -26,9 +26,16 @@ import recommendations.domain.service.SparkService
 import recommendations.infrastructure.service.SparkServiceImpl
 import recommendations.domain.repository.RecommendationProductRepository
 import recommendations.infrastructure.repository.RecommendationProductRepositoryImpl
+import roles.domain.repository._
+import roles.infrastructure.repository._
+import permissions.domain.repository.PermissionRepository
+import permissions.infrastructure.repository.PermissionRepositoryImpl
 
 trait DI:
   given jwtService: JwtService = new JwtServiceImpl()
+  given roleRepository: RoleRepository = new RoleRepositoryImpl()
+  given userRoleRepository: UserRoleRepository = new UserRoleRepositoryImpl()
+  given permissionRepository: PermissionRepository = new PermissionRepositoryImpl()
   given categoryProductRepository: CategoryProductRepository = new CategoryProductRepositoryImpl()
   given productRepository: ProductRepository = new ProductRepositoryImpl()
   given locationRepository: LocationRepository = new LocationRepositoryImpl()
@@ -40,5 +47,5 @@ trait DI:
   given saleProductRepository: SaleProductRepository = new SaleProductRepositoryImpl()
   given saleRepository: SaleRepository = new SaleRepositoryImpl()
   given hashService: HashService = new HashServiceImpl()
-  given sparkService: SparkService = new SparkServiceImpl()
+  //given sparkService: SparkService = new SparkServiceImpl()
   given recommendationRepository: RecommendationProductRepository = new RecommendationProductRepositoryImpl()

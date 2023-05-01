@@ -15,6 +15,8 @@ type SellContextType = {
   setTotal: React.Dispatch<React.SetStateAction<number>>,
   discount: number,
   setDiscount: React.Dispatch<React.SetStateAction<number>>
+  taxId: number,
+  setTaxId: React.Dispatch<React.SetStateAction<number>>
 }
 
 const sellContextState = {
@@ -29,7 +31,9 @@ const sellContextState = {
   total: 0,
   setTotal: () => {},
   discount: 0,
-  setDiscount: () => {}
+  setDiscount: () => {},
+  taxId: 0,
+  setTaxId: () => {}
 }
 
 const SellContext = React.createContext<SellContextType>(sellContextState)
