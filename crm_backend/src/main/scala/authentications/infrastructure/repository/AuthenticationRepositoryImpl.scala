@@ -24,6 +24,10 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository with BaseRep
         .returning(r => r)
     )
 
+  override def getTotalAmountOfUsers(): Long =
+    ctx.run(
+      query[User].size
+    )
   
   override def getUserByEmail(email:String):Option[User] =
     val q = quote {
@@ -33,3 +37,16 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository with BaseRep
       yield (user)
     }
     ctx.run(q).headOption
+
+  override def getUsers(from: Int, to: Int): List[(User, Agent)] =
+    val q = quote {
+      for
+        user <- query[User]
+          .sortBy(_.id)(Ord.ascNullsLast)
+          .take(lift(to))
+          .drop(lift(from))
+        agent <- query[Agent]
+          .join(_.idDocument == user.agentId)
+      yield(user, agent)
+    }
+    ctx.run(q)
