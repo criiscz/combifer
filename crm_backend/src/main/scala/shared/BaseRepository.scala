@@ -15,8 +15,7 @@ import sales.domain.entity.Sale
 import orders.domain.entity.Order
 import order_products.domain.entity.OrderProduct
 import recommendations.domain.entity.RecommendationProduct
-import roles.domain.entity.Role
-import authentications.domain.entity.UserRole
+import roles.domain.entity._
 import permissions.domain.entity.Permission
 
 object BaseRepository:
