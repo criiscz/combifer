@@ -11,14 +11,27 @@ class GetSessionInformationUseCase
   jwtService: JwtService, 
   agentRepository:AgentRepository,
   authorizationRepository: AuthorizationRepository
-  )
+)
 extends BaseUseCase[RequestGetSessionInformation, ResponseGetSessionInformation]:
 
   override def execute(request: RequestGetSessionInformation): Task[ResponseGetSessionInformation] = 
     ZIO.succeed {
-      ResponseGetSessionInformation (
-        username = request.user.username,
-        permissions = request.permission.permissions,
-        roles = authorizationRepository.getRolesOfUser(request.user.id)
+      for
+        userAgent <- ZIO.succeed(agentRepository.getAgent(request.user.agentId))
+        roles <- ZIO.succeed(authorizationRepository.getRolesOfUser(request.user.id))
+      yield (
+        ResponseGetSessionInformation (
+          name = userAgent match {
+            case None => ""
+            case Some(value) => value.name
+          },
+          lastname = userAgent match {
+            case None => ""
+            case Some(value) => value.lastName
+          },
+          username = request.user.username,
+          permissions = request.permission.permissions,
+          roles = roles
+        )
       )
-    }
+    }.flatten

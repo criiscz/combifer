@@ -29,7 +29,7 @@ import sales.infrastructure.controller.SalesController
 import agents.infrastructure.controller.ClientController
 import roles.infrastructure.controller.RoleController
 import permissions.infrastructure.controller.PermissionController
-
+import orders.infrastructure.controller.OrderController
 
 object Main extends ZIOAppDefault with DI:
 
@@ -43,6 +43,7 @@ object Main extends ZIOAppDefault with DI:
   ClientController()
   RoleController()
   PermissionController()
+  OrderController()
   //RecommendationController()
 
   val serverOptions:ZioHttpServerOptions[Any] =
