@@ -11,9 +11,9 @@ sealed class ResponseGetProducts(
   data,
   Meta(
     currentPage = request.page,
-    lastPage= request.page,
-    from=  request.page,
-    to= request.page,
-    total= total
+    lastPage = request.page,
+    from =  request.page,
+    to = request.page,
+    total = total
   )
 )

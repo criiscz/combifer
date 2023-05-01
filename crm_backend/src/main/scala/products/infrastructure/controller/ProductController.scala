@@ -24,7 +24,7 @@ import authentications.domain.service.JwtService
 import authentications.domain.error.AuthenticationError
 import authentications.domain.entity._
 
-class ProductController()
+class ProductController
 (using productRepository:ProductRepository, jwtService: JwtService) 
 extends BaseController():
 
