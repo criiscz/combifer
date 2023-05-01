@@ -10,7 +10,7 @@ import zio._
 
 import shared.BaseController
 import shared.responses._
-import roles.domain.repository.RoleRepository
+import roles.domain.repository._
 import shared.mapper.endpoints.Exposer._
 import authentications.domain.service.JwtService
 import authentications.domain.entity.UserContext
@@ -22,10 +22,12 @@ import roles.application.get_roles._
 import roles.application.remove_role._
 import roles.application.create_role._
 import roles.application.update_role._
+import roles.application.set_role_user._
 
 class RoleController
 (using
    roleRepository:RoleRepository,
+   userRoleRepository: UserRoleRepository,
    jwtService: JwtService)
 extends BaseController:
 
@@ -113,4 +115,20 @@ extends BaseController:
         request
       )
       .mapError(e => ErrorResponse(message = "Can't update Role"))
+    }.expose
+
+  private val setRoleToUser =
+    secureEndpoint
+    .in(routeName / path[Long]("role_id") / "set-to" / path[Long]("user_id"))
+    .post
+    .errorOutVariant[ApplicationError](oneOfVariant(jsonBody[ErrorResponse]))
+    .out(jsonBody[ResponseSetRoleToUser])
+    .exposeSecure
+
+  private val setRoleToUserRoute =
+    setRoleToUser.serverLogic{ (user:UserContext, permission: PermissionContext) => (roleId:Long, userId:Long) =>
+      SetRoleToUserUseCase().execute(
+        RequestSetRoleToUser(roleId, userId)
+      )
+      .mapError(e => ErrorResponse(message = "Can't set role to user"))
     }.expose

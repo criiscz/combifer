@@ -7,7 +7,7 @@ import roles.domain.repository.RoleRepository
 
 class GetRoleUseCase
 (using roleRepository:RoleRepository)
-    extends BaseUseCase[RequestGetRole, ResponseGetRole]:
+extends BaseUseCase[RequestGetRole, ResponseGetRole]:
 
     override def execute(request: RequestGetRole) =
         roleRepository.getRole(request.roleId) match

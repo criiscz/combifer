@@ -32,3 +32,16 @@ class SaleRepositoryImpl extends SaleRepository with BaseRepository:
         .insertValue(lift(sale))
         .returning(r => r)
     )
+
+  override def getSales(from: Int, to:Int): List[Sale] =
+    ctx.run(
+      query[Sale]
+        .sortBy(_.id)(Ord.ascNullsLast)
+        .take(lift(to))
+        .drop(lift(from))
+    )
+
+  override def getTotalAmountOfSales():Long =
+    ctx.run(
+      query[Sale].size
+    )
