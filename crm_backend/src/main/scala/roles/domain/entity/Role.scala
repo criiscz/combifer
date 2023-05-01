@@ -1,4 +1,4 @@
-package authorizations.domain.entity
+package roles.domain.entity
 
 case class Role (
   id: Long = -1,

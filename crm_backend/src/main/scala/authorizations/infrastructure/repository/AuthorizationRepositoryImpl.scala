@@ -9,6 +9,7 @@ import authorizations.domain.entity.PermissionContext
 import shared.BaseRepository
 import authentications.domain.entity.UserRole
 import authorizations.domain.entity._
+import roles.domain.entity.Role
 
 class AuthorizationRepositoryImpl extends AuthorizationRepository with BaseRepository:
 

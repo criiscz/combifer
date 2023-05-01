@@ -1,6 +1,6 @@
-package authorizations.domain.repository
+package roles.domain.repository
 
-import authorizations.domain.entity.Role
+import roles.domain.entity.Role
 
 trait RoleRepository:
     def getRole(roleId: Long): Option[Role]

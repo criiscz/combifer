@@ -1,9 +1,9 @@
-package authorizations.application.create_role
+package roles.application.create_role
 
 import shared.application.BaseUseCase
 import zio._
-import authorizations.domain.entity.Role
-import authorizations.domain.repository.RoleRepository
+import roles.domain.entity.Role
+import roles.domain.repository.RoleRepository
 
 class CreateRoleUseCase
 (using roleRepository:RoleRepository)

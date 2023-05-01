@@ -1,4 +1,4 @@
-package authorizations.application.update_role
+package roles.application.update_role
 
 case class RequestUpdateRole (
   name: String,

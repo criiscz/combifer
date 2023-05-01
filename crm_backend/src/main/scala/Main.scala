@@ -27,7 +27,7 @@ import taxes.infrastructure.controller.TaxController
 import sales.infrastructure.controller.SalesController
 //import recommendations.infrastructure.controller.RecommendationController
 import agents.infrastructure.controller.ClientController
-import authorizations.infrastructure.controller.RoleController
+import roles.infrastructure.controller.RoleController
 
 
 object Main extends ZIOAppDefault with DI:

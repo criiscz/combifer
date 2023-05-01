@@ -1,8 +1,8 @@
-package authorizations.application.remove_role
+package roles.application.remove_role
 
 import shared.application.BaseUseCase
 import zio._
-import authorizations.domain.repository.RoleRepository
+import roles.domain.repository.RoleRepository
 
 class RemoveRoleUseCase
 (using roleRepository:RoleRepository)

@@ -1,4 +1,4 @@
-package authorizations.application.remove_role
+package roles.application.remove_role
 
 case class RequestRemoveRole (
   roleId: Long

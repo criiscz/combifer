@@ -1,9 +1,9 @@
-package authorizations.application.update_role
+package roles.application.update_role
 
 import shared.application.BaseUseCase
 import zio._
-import authorizations.domain.repository.RoleRepository
-import authorizations.domain.entity.Role
+import roles.domain.repository.RoleRepository
+import roles.domain.entity.Role
 
 class UpdateRoleUseCase(roleId: Long)
 (using roleRepository:RoleRepository)

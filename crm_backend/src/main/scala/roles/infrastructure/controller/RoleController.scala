@@ -1,4 +1,4 @@
-package authorizations.infrastructure.controller
+package roles.infrastructure.controller
 
 import io.circe.generic.auto._
 import sttp.tapir.generic.auto._
@@ -10,18 +10,18 @@ import zio._
 
 import shared.BaseController
 import shared.responses._
-import authorizations.domain.repository.RoleRepository
+import roles.domain.repository.RoleRepository
 import shared.mapper.endpoints.Exposer._
 import authentications.domain.service.JwtService
 import authentications.domain.entity.UserContext
 import authorizations.domain.entity.PermissionContext
-import authorizations.domain.entity.Role
+import roles.domain.entity.Role
 
-import authorizations.application.get_role._
-import authorizations.application.get_roles._
-import authorizations.application.remove_role._
-import authorizations.application.create_role._
-import authorizations.application.update_role._
+import roles.application.get_role._
+import roles.application.get_roles._
+import roles.application.remove_role._
+import roles.application.create_role._
+import roles.application.update_role._
 
 class RoleController
 (using

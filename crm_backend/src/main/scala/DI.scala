@@ -26,8 +26,8 @@ import recommendations.domain.service.SparkService
 import recommendations.infrastructure.service.SparkServiceImpl
 import recommendations.domain.repository.RecommendationProductRepository
 import recommendations.infrastructure.repository.RecommendationProductRepositoryImpl
-import authorizations.domain.repository.RoleRepository
-import authorizations.infrastructure.repository.RoleRepositoryImpl
+import roles.domain.repository.RoleRepository
+import roles.infrastructure.repository.RoleRepositoryImpl
 
 trait DI:
   given jwtService: JwtService = new JwtServiceImpl()

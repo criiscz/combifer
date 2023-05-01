@@ -1,6 +1,6 @@
-package authorizations.application.get_roles
+package roles.application.get_roles
 
-import authorizations.domain.entity.Role
+import roles.domain.entity.Role
 import shared.responses._
 
 sealed class ResponseGetRoles (

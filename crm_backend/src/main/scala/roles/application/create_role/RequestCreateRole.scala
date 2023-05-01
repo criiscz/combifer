@@ -1,5 +1,4 @@
-package authorizations.application.create_role
-
+package roles.application.create_role
 
 case class RequestCreateRole (
   name: String,

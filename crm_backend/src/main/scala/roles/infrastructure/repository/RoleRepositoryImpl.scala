@@ -1,8 +1,8 @@
-package authorizations.infrastructure.repository
+package roles.infrastructure.repository
 
 import shared.BaseRepository
-import authorizations.domain.repository.RoleRepository
-import authorizations.domain.entity.Role
+import roles.domain.repository.RoleRepository
+import roles.domain.entity.Role
 
 import io.getquill._
 

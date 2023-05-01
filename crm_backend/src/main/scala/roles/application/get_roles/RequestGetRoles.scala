@@ -1,4 +1,4 @@
-package authorizations.application.get_roles
+package roles.application.get_roles
 
 import shared.requests.PaginatedRequest
 

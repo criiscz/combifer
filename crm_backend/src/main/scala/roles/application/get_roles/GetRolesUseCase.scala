@@ -1,8 +1,8 @@
-package authorizations.application.get_roles
+package roles.application.get_roles
 
 import shared.application.BaseUseCase
 import zio._
-import authorizations.domain.repository.RoleRepository
+import roles.domain.repository.RoleRepository
 
 class GetRolesUseCase
 (using roleRepository:RoleRepository)
