@@ -4,7 +4,7 @@ import {Icon} from "@iconify/react";
 import {useContext} from "react";
 import ProductContext from "@/context/ProductContext";
 
-export default function Table({products, header}: TableProps) {
+export default function Table({products, header, deleteButton}: TableProps) {
 
   // const [productSelected, setProductSelected] = useState<ProductCompleteQ[] | undefined>(undefined)
 
@@ -38,12 +38,12 @@ export default function Table({products, header}: TableProps) {
                 <div className={styles.table__body_row_item}>{product.lot.price}</div>
                 <div
                   className={styles.table__body_row_item}>{"quantity" in product ? product.quantity : 0}</div>
-                <div className={styles.table__body_row_item}>
+                {deleteButton && <div className={styles.table__body_row_item}>
                   <button className={styles.table__body_row_item_button}
                           onClick={() => handleDelete(product.lot.id as number)}>
                     <Icon icon={'ri:close-line'}></Icon>
                   </button>
-                </div>
+                </div>}
               </div>
             )
           }
@@ -56,5 +56,6 @@ export default function Table({products, header}: TableProps) {
 interface TableProps {
   products: ProductComplete[] | ProductCompleteQ[],
   header: string[],
+  deleteButton?: boolean
 
 }

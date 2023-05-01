@@ -6,6 +6,7 @@ import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import {useQuery} from "react-query";
 import cookie from "universal-cookie";
 import {getIVA} from "@/api/Taxes";
+import SellContext from "@/context/SellContext";
 
 
 export default function CarList({products}: BillProps) {
@@ -15,6 +16,16 @@ export default function CarList({products}: BillProps) {
 
   const {setOpen, setId} = useContext(ModalContext);
   const {data} = useQuery('iva', () => getIVA(cookies.get('userToken')))
+  const {
+    setProducts,
+    setProductTotal,
+    setTotal,
+    setIva,
+  } = useContext(SellContext)
+
+  useEffect(() => {
+    setProducts(products)
+  }, [products])
 
   const openModal = (id: string) => {
     if (setId) {
@@ -33,6 +44,7 @@ export default function CarList({products}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * (product.lot.price! - calculateIVA(product.lot.price!))
     })
+    setTotal(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -42,6 +54,7 @@ export default function CarList({products}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * calculateIVA(product.lot.price!)
     })
+    setIva(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -51,6 +64,7 @@ export default function CarList({products}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * product.lot.price!
     })
+    setProductTotal(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -99,12 +113,12 @@ export default function CarList({products}: BillProps) {
           >
             <Icon icon={'ri:add-line'}/>
           </button>
-          <button title={'Editar Precio'}
-                  className={styles.bill__actionButtons_button_edit}
-                  onClick={() => openModal('edit-price')}
-          >
-            <Icon icon={'healthicons:coins'}/>
-          </button>
+          {/*<button title={'Editar Precio'}*/}
+          {/*        className={styles.bill__actionButtons_button_edit}*/}
+          {/*        onClick={() => openModal('edit-price')}*/}
+          {/*>*/}
+          {/*  <Icon icon={'healthicons:coins'}/>*/}
+          {/*</button>*/}
         </div>
       </div>
     </div>

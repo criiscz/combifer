@@ -14,7 +14,9 @@ import Toast from "@/app/components/Toast/Toast";
 import AddProductCartDialog from "@/app/dashboard/sells/components/Dialogs/AddProductCartDialog";
 import ClientContext from "@/context/ClientContext";
 import {Client} from "@/models/Client";
-import CreateNewSellDialog from "./sells/components/Dialogs/CreateNewSellDialog";
+import CreateNewSellDialog
+  from "./sells/components/Dialogs/CreateNewSellDialog/CreateNewSellDialog";
+import SellContext from "@/context/SellContext";
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
@@ -24,7 +26,11 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   const [toastText, setToastText] = React.useState('')
   const [refresh, setRefresh] = React.useState(false)
   const [selectedClient, setSelectedClient] = React.useState<Client>()
-  const [clients, setClients] = React.useState<Client[]|undefined>([])
+  const [clients, setClients] = React.useState<Client[] | undefined>([])
+  const [productTotal, setProductTotal] = React.useState(0)
+  const [iva, setIva] = React.useState(0)
+  const [total, setTotal] = React.useState(0)
+  const [discount, setDiscount] = React.useState(0)
 
   // const [products, setProducts] = useState<ProductComplete[]>([])
   // const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
@@ -63,40 +69,57 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     setClients
   }), [selectedClient, clients])
 
+  const sellContext = useMemo(() => ({
+    products: productsSelected,
+    setProducts: setProductsSelected,
+    selectedClient,
+    setSelectedClient,
+    productTotal,
+    setProductTotal,
+    iva,
+    setIva,
+    total,
+    setTotal,
+    discount,
+    setDiscount
+  }), [productsSelected, selectedClient, productTotal, iva, total])
+
 
   return (
     <div>
       <ToastContext.Provider value={toastContext}>
-        <ClientContext.Provider value={clientContext}>
-        <ProductContext.Provider value={productContext}>
-          <ModalContext.Provider value={modalContext}>
-            <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
-              {
-                id === 'create-product' &&
-                <CreateProductDialog closeDialog={() => setOpen(false)}/> ||
-                id === 'edit-product' &&
-                <EditProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
-                id === 'delete-product' &&
-                <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
-                id === 'buy-bill' &&
-                <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
-                id === 'create-bill' &&
-                <CreateNewSellDialog closeDialog={() => setOpen(false)}/>
+        <SellContext.Provider value={sellContext}>
+          <ClientContext.Provider value={clientContext}>
+            <ProductContext.Provider value={productContext}>
+              <ModalContext.Provider value={modalContext}>
+                <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
+                  {
+                    id === 'create-product' &&
+                    <CreateProductDialog closeDialog={() => setOpen(false)}/> ||
+                    id === 'edit-product' &&
+                    <EditProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
+                    id === 'delete-product' &&
+                    <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
+                    id === 'buy-bill' &&
+                    <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
+                    id === 'create-bill' &&
+                    <CreateNewSellDialog closeDialog={() => setOpen(false)}/>
 
-              }
-            </Modal>
-            <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
-            <div className={styles.container}>
-              <aside className={styles.asideNavBar}>
-                <NavBar name={'Juan Peréz'} role={'Administrador'}/>
-              </aside>
-              <main className={styles.body}>
-                {children}
-              </main>
-            </div>
-          </ModalContext.Provider>
-        </ProductContext.Provider>
-        </ClientContext.Provider>
+                  }
+                </Modal>
+                <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
+                <div className={styles.container}>
+                  <aside className={styles.asideNavBar}>
+                    <NavBar name={'Juan Peréz'} role={'Administrador'}/>
+                  </aside>
+                  <main className={styles.body}>
+                    {children}
+                  </main>
+                </div>
+              </ModalContext.Provider>
+            </ProductContext.Provider>
+          </ClientContext.Provider>
+        </SellContext.Provider>
       </ToastContext.Provider>
     </div>
   )
