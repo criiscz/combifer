@@ -15,6 +15,10 @@ import AddProductCartDialog from "@/app/dashboard/sells/components/Dialogs/AddPr
 import ProductList from "@/app/dashboard/inventory/components/ProductList/ProductList";
 import {useRouter} from "next/navigation";
 import Cookies from "universal-cookie";
+import {useQuery} from "react-query";
+import {sessionInfo} from "@/api/Login";
+import {BackResponse} from "@/models/BackResponse";
+import {getAllCategories} from "@/api/Categories";
 
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
@@ -25,13 +29,14 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   const [toastText, setToastText] = React.useState('')
   const [refresh, setRefresh] = React.useState(false)
 
-  const [products, setProducts] = useState<ProductComplete[]>([])
-  const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
-  const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
-  const selectProduct = (product: ProductComplete | undefined) => {
-    setProductSelected(product)
-    console.log("Product selected: ", product)
-  }
+
+  const cookies = useMemo(() => new Cookies(), []);
+
+  const {data} = useQuery({
+    queryKey: 'session-info',
+    queryFn: () => sessionInfo(cookies.get('userToken')),
+  })
+  
   return (
     <div>
       <ToastContext.Provider value={{toast, setToast, text: toastText, setText: setToastText}}>
@@ -47,13 +52,13 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                 id === 'delete-product' &&
                 <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
                 id === 'buy-bill' &&
-                <AddProductCartDialog  closeDialog={() => setOpen(false)}/>
+                <AddProductCartDialog closeDialog={() => setOpen(false)}/>
               }
             </Modal>
             <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
             <body className={styles.container}>
               <aside className={styles.asideNavBar}>
-                <NavBar name={'Juan Peréz'} role={'Administrador'}/>
+                <NavBar name={data?.username || 'Nombre'} role={data?.roles[0].name || 'Rol'}/>
               </aside>
               <main className={styles.body}>
                 {children}
