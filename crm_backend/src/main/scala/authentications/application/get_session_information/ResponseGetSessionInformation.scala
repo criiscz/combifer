@@ -1,7 +1,7 @@
 package authentications.application.get_session_information
 
-import authorizations.domain.entity._
 import roles.domain.entity.Role
+import permissions.domain.entity.Permission
 
 case class ResponseGetSessionInformation (
   username: String,

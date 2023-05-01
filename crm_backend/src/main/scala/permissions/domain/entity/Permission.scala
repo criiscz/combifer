@@ -1,7 +1,7 @@
-package authorizations.domain.entity
+package permissions.domain.entity
 
 case class Permission (
-  id: Long,
+  id: Long = -1,
   name: String,
   accessModule: String,
   roleId: Long

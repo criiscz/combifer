@@ -28,10 +28,13 @@ import recommendations.domain.repository.RecommendationProductRepository
 import recommendations.infrastructure.repository.RecommendationProductRepositoryImpl
 import roles.domain.repository.RoleRepository
 import roles.infrastructure.repository.RoleRepositoryImpl
+import permissions.domain.repository.PermissionRepository
+import permissions.infrastructure.repository.PermissionRepositoryImpl
 
 trait DI:
   given jwtService: JwtService = new JwtServiceImpl()
   given roleRepository: RoleRepository = new RoleRepositoryImpl()
+  given permissionRepository: PermissionRepository = new PermissionRepositoryImpl()
   given categoryProductRepository: CategoryProductRepository = new CategoryProductRepositoryImpl()
   given productRepository: ProductRepository = new ProductRepositoryImpl()
   given locationRepository: LocationRepository = new LocationRepositoryImpl()

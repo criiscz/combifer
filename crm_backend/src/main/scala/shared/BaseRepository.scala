@@ -17,6 +17,7 @@ import order_products.domain.entity.OrderProduct
 import recommendations.domain.entity.RecommendationProduct
 import roles.domain.entity.Role
 import authentications.domain.entity.UserRole
+import permissions.domain.entity.Permission
 
 object BaseRepository:
   lazy val postgresConnection = new PostgresJdbcContext(SnakeCase, "productionDatabase")
@@ -111,6 +112,13 @@ trait BaseRepository:
     insertMeta[Role](_.id)
   implicit val roleUpdate:UpdateMeta[Role] = 
     updateMeta[Role](_.id)
+
+  implicit val permissionTableName:SchemaMeta[Permission] =
+    schemaMeta[Permission]("permissions")
+  implicit val permissionInsert:InsertMeta[Permission] =
+    insertMeta[Permission](_.id)
+  implicit val permissionUpdate:UpdateMeta[Permission] =
+    updateMeta[Permission](_.id)
 
   implicit val userRoleTableName:SchemaMeta[UserRole] = 
     schemaMeta[UserRole]("user_roles")
