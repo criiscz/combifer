@@ -106,3 +106,7 @@
     color: var(--black);
     font-family: 'Inter', sans-serif;
 }
+
+.no_show {
+    display: none;
+}

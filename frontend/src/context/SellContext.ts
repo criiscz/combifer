@@ -4,7 +4,9 @@ import {Client} from "@/models/Client";
 
 type SellContextType = {
   products: ProductCompleteQ[] | undefined,
-  setProducts: React.Dispatch<React.SetStateAction<ProductCompleteQ[] | undefined>>
+  setProducts: React.Dispatch<React.SetStateAction<ProductCompleteQ[] | ProductComplete[]>>
+  productsSelected: ProductCompleteQ[] | undefined,
+  setProductsSelected: React.Dispatch<React.SetStateAction<ProductCompleteQ[] | ProductComplete[] | undefined>>
   selectedClient: Client | undefined,
   setSelectedClient: React.Dispatch<React.SetStateAction<Client | undefined>>
   productTotal: number,
@@ -22,6 +24,8 @@ type SellContextType = {
 const sellContextState = {
   products: undefined,
   setProducts: () => {},
+  productsSelected: undefined,
+  setProductsSelected: () => {},
   selectedClient: undefined,
   setSelectedClient: () => {},
   productTotal: 0,

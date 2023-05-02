@@ -2,7 +2,7 @@ import styles from './style.module.css'
 import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import {useCallback, useContext, useEffect, useState} from "react";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
-import ProductList from "@/app/dashboard/sells/components/ProductList/ProductList";
+import ProductList from "@/app/dashboard/sells/new-sell/components/ProductList/ProductList";
 import {useQuery} from "react-query";
 import {getAllProductLots} from "@/api/ProductLots";
 import ProductContext from "@/context/ProductContext";

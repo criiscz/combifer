@@ -11,11 +11,11 @@ import ProductContext from "@/context/ProductContext";
 import ToastContext from "@/context/ToastContext";
 import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import Toast from "@/app/components/Toast/Toast";
-import AddProductCartDialog from "@/app/dashboard/sells/components/Dialogs/AddProductCartDialog";
+import AddProductCartDialog from "@/app/dashboard/sells/new-sell/components/Dialogs/AddProductCartDialog";
 import ClientContext from "@/context/ClientContext";
 import {Client} from "@/models/Client";
 import CreateNewSellDialog
-  from "./sells/components/Dialogs/CreateNewSellDialog/CreateNewSellDialog";
+  from "@/app/dashboard/sells/new-sell/components/Dialogs/CreateNewSellDialog/CreateNewSellDialog";
 import SellContext from "@/context/SellContext";
 import {useQuery} from "react-query";
 import {sessionInfo} from "@/api/Login";
@@ -74,8 +74,10 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   }), [selectedClient, clients])
 
   const sellContext = useMemo(() => ({
-    products: productsSelected,
-    setProducts: setProductsSelected,
+    products: productSelected,
+    setProducts: setProductSelected,
+    productsSelected,
+    setProductsSelected,
     selectedClient,
     setSelectedClient,
     productTotal,
@@ -117,7 +119,9 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                     id === 'buy-bill' &&
                     <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
                     id === 'create-bill' &&
-                    <CreateNewSellDialog closeDialog={() => setOpen(false)}/>
+                    <CreateNewSellDialog closeDialog={() => setOpen(false)}/> ||
+                    id === 'view-bill' &&
+                    <CreateNewSellDialog closeDialog={() => setOpen(false)} readonly={true}/>
 
                   }
                 </Modal>

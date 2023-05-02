@@ -1,10 +1,7 @@
-'use client'
-import React from "react";
-
-export default function SellsLayout({children}: { children: React.ReactNode }) {
-    return (
+export default function SellLayout({children}: {children: JSX.Element}){
+    return(
         <div>
-            {children}
+          {children}
         </div>
     )
 }

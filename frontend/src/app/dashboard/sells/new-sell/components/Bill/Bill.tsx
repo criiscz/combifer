@@ -9,7 +9,7 @@ import {getIVA} from "@/api/Taxes";
 import SellContext from "@/context/SellContext";
 
 
-export default function CarList({products}: BillProps) {
+export default function CarList({products, readonly}: BillProps) {
 
   const cookies = new cookie()
 
@@ -104,23 +104,23 @@ export default function CarList({products}: BillProps) {
         </div>
         <div className={styles.bill__actionButtons}>
           <button title={'Abrir Carrito'}
-                  className={styles.bill__actionButtons_button_buy}
+                  className={!readonly ? styles.bill__actionButtons_button_buy : styles.no_show}
                   onClick={() => openModal('buy-bill')}
           >
             <Icon icon={'icons8:buy'}/>
           </button>
           <button title={'Crear Factura'}
-                  className={styles.bill__actionButtons_button_create_bill}
+                  className={!readonly ? styles.bill__actionButtons_button_create_bill : styles.no_show}
                   onClick={() => openModal('create-bill')}
           >
             <Icon icon={'ri:add-line'}/>
           </button>
-          {/*<button title={'Editar Precio'}*/}
-          {/*        className={styles.bill__actionButtons_button_edit}*/}
-          {/*        onClick={() => openModal('edit-price')}*/}
-          {/*>*/}
-          {/*  <Icon icon={'healthicons:coins'}/>*/}
-          {/*</button>*/}
+          <button title={'Mas detalles'}
+                  className={readonly ? styles.bill__actionButtons_button_edit : styles.no_show}
+                  onClick={() => openModal('view-bill')}
+          >
+            <Icon icon={'ri:more-line'}/>
+          </button>
         </div>
       </div>
     </div>
@@ -128,5 +128,6 @@ export default function CarList({products}: BillProps) {
 }
 
 interface BillProps {
-  products: ProductCompleteQ[]
+  products: ProductCompleteQ[],
+  readonly?: boolean
 }

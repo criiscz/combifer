@@ -4,17 +4,17 @@ import Sale from "@/models/Sale";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// export async function getAllSells(token: string, page: number = 0, per_page: number = 10): Promise<BackResponse> {
-//   const response = await fetch(API_URL + `clients?page=${page}&per_page=${per_page}`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Authorization": "Bearer " + token
-//     },
-//   });
-//   return await response.json() as BackResponse;
-//
-// }
+export async function getAllSells(token: string, page: number = 0, per_page: number = 100): Promise<BackResponse> {
+  const response = await fetch(API_URL + `sales?page=${page}&per_page=${per_page}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+  });
+  return await response.json() as BackResponse;
+
+}
 
 export async function createNewSell(token: string, sell: SellCreate): Promise<Sale> {
   console.log(JSON.stringify(sell));

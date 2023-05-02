@@ -51,8 +51,16 @@ export default function ClientForm() {
     if (data !== undefined) {
       setClients(data.data)
     }
+    if (selectedClient === undefined) {
+      Array.from(document.getElementsByClassName(styles.row__item_value)).forEach((element) => {
+        // @ts-ignore
+        element.value = ''
+      })
+      // @ts-ignore
+      document.getElementById('searchbar')!.value = ''
+    }
     document.getElementById('searchbar')?.focus()
-  }, [clients, data, setClients])
+  }, [selectedClient, clients, data, setClients])
 
   const createnewClient = () => {
     clientMutation()

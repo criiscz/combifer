@@ -1,8 +1,8 @@
 import styles from "./style.module.css";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
-import ProductList from "@/app/dashboard/sells/components/ProductList/ProductList";
+import ProductList from "@/app/dashboard/sells/new-sell/components/ProductList/ProductList";
 import {Icon} from "@iconify/react";
-import Table from "@/app/dashboard/sells/components/Table/Table";
+import Table from "@/app/dashboard/sells/new-sell/components/Table/Table";
 import {useContext} from "react";
 import ProductContext from "@/context/ProductContext";
 import Button from "@/app/components/Button";
@@ -15,7 +15,7 @@ import {DocumentType} from "@/models/DocumentType";
 import {createNewSell, SellCreate} from "@/api/Sells";
 import Cookies from "universal-cookie";
 
-export default function CreateNewSellDialog({closeDialog}: CreateNewSellDialogProps) {
+export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSellDialogProps) {
 
   const {productsSelected} = useContext(ProductContext)
   const {setToast, setText} = useContext(ToastContext)
@@ -31,7 +31,8 @@ export default function CreateNewSellDialog({closeDialog}: CreateNewSellDialogPr
     setIva,
     setTotal,
     setDiscount,
-    setProducts
+    setProducts,
+    setProductsSelected
   } = useContext(SellContext)
   const cookies = new Cookies()
 
@@ -42,6 +43,7 @@ export default function CreateNewSellDialog({closeDialog}: CreateNewSellDialogPr
     setIva(0)
     setTotal(0)
     setDiscount(0)
+    setProductsSelected([])
   }
 
   const {mutate: clientMutation} = useMutation({
@@ -152,7 +154,7 @@ export default function CreateNewSellDialog({closeDialog}: CreateNewSellDialogPr
             />
           </ItemComponent>
         </div>
-        <div className={styles.row}>
+        <div className={!readonly ? styles.row : styles.no_show}>
           <Button title={'Realizar Venta'} onClick={createSell}/>
         </div>
       </div>
@@ -176,5 +178,6 @@ function ItemComponent({
 }
 
 interface CreateNewSellDialogProps {
-  closeDialog: () => void
+  closeDialog: () => void,
+  readonly?: boolean
 }

@@ -1,7 +1,6 @@
 .bill__container{
     display: flex;
     flex-direction: column;
-    height: 70%;
     padding: 2rem;
     width: 100%;
     background-color: var(--white);
@@ -140,4 +139,8 @@
 
 .bill__actionButtons_button_create_bill:hover {
     background-color: rgba(255, 242, 98, 0.9);
+}
+
+.no_show {
+    display: none;
 }

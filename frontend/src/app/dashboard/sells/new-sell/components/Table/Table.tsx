@@ -57,5 +57,4 @@ interface TableProps {
   products: ProductComplete[] | ProductCompleteQ[],
   header: string[],
   deleteButton?: boolean
-
 }
