@@ -12,7 +12,17 @@ export async function getAllClients(token: string, page: number = 0, per_page: n
     },
   });
   return await response.json() as BackResponse;
+}
 
+export async function getClient(token: string, clientId: number | string): Promise<BackResponse> {
+  const response = await fetch(API_URL + `clients/${clientId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+  });
+  return await response.json() as BackResponse;
 }
 
 export async function createClient(token: string, client: ClientCreate): Promise<Client> {

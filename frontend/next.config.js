@@ -4,7 +4,6 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    formats: ['image/avif', 'image/webp', 'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'],
     remotePatterns: [
       {
         protocol: 'https',

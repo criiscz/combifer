@@ -12,18 +12,34 @@ import Cookies from "universal-cookie";
 import {getAllSells, getSellById} from "@/api/Sells";
 import {BackResponse} from "@/models/BackResponse";
 import Bill from "./new-sell/components/Bill/Bill";
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {ProductLot} from "@/models/ProductLot";
 import {getProduct} from "@/api/Products";
 import Sale, {SaleComplete} from "@/models/Sale";
 import {ProductCompleteQ} from "@/models/Product";
+import {getClient} from "@/api/Clients";
+import {Client} from "@/models/Client";
+import SellContext from "@/context/SellContext";
 
 export default function SellPage() {
   const cookies = useMemo( () => new Cookies(), [])
+  const [clientId, setClientId] = useState<number>(0)
+
   const router = useRouter()
+
+  const { selectedClient, setSelectedClient} = useContext(SellContext)
+
   const {data: bills} = useQuery<BackResponse>(
     'bills',
     () => getAllSells(cookies.get('userToken'))
+  )
+
+  const {data: clients, refetch: refetchClients} = useQuery<BackResponse>(
+    'clients',
+    () => getClient(cookies.get('userToken'), clientId),
+    {
+      enabled: !!clientId && clientId !== 0
+    }
   )
   const [billsFiltered, setBillsFiltered] = useState(bills?.data || [])
   const [saleSelected, setSaleSelected] = useState<SaleComplete | undefined>(undefined)
@@ -40,6 +56,11 @@ export default function SellPage() {
     })
   }, [bills, cookies]) // Toco hacer esto porque no se actualizaba el estado (no se porque)
 
+  useEffect(() => {
+    refetchClients().then(() => {
+      setSelectedClient(clients?.data)
+    })
+  }, [clientId, clients?.data, refetchClients, setSelectedClient])
   const searchBill = (value: string) => {
     if (value.length) {
       if (value.toLowerCase().includes('id:')) {
@@ -59,8 +80,9 @@ export default function SellPage() {
     }
   }
 
-  const setItemSelected = (id: number) => {
-    setSaleSelected(sales.find(sale => sale.sale.id == id))
+  const setItemSelected = (bill: any) => {
+    setSaleSelected(sales.find(sale => sale.sale.id == bill.id))
+    setClientId(bill.clientId)
   }
 
   return (

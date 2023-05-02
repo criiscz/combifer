@@ -18,7 +18,7 @@ export default function TableBills({header, items, setItemSelected}: {
     const rowId = row.parentElement?.children[0].innerHTML
     const bill = items.find(bill => bill.id == rowId)
     setBill(bill)
-    setItemSelected(bill.id)
+    setItemSelected(bill)
   }
   return (
     <div className={styles.table__container}>
@@ -40,7 +40,7 @@ export default function TableBills({header, items, setItemSelected}: {
                 <div className={styles.table__body_row_item}>{item.employeeId}</div>
                 <div className={styles.table__body_row_item}>${0}</div>
                 {
-                  // TODO: Calcular el total de la factura
+                  // TODO: Calcular el total de la factura (usar un contexto?)
                 }
               </div>
             )

@@ -56,6 +56,13 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
     }
   })
 
+  const close = () => {
+    if (readonly) {
+      clearSell()
+    }
+    closeDialog()
+  }
+
   const createSell = () => {
     if (productsSelected.length && selectedClient) {
       const products = productsSelected.map((product: ProductCompleteQ) => {
@@ -84,7 +91,7 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Generar Factura</h2>
-        <button className={styles.closeButton} onClick={closeDialog}>
+        <button className={styles.closeButton} onClick={close}>
           <Icon icon="ri:close-line" width={30}/>
         </button>
       </div>
