@@ -128,7 +128,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                 <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
                 <div className={styles.container}>
                   <aside className={styles.asideNavBar}>
-                    <NavBar name={data?.username || 'Nombre'} role={data?.roles[0]?.name || 'Rol'}/>
+                    <NavBar name={data?.name + ' ' + data?.lastname || 'Nombre'} role={data && data.roles[0] && data.roles[0].name || 'Rol'}/>
                   </aside>
                   <main className={styles.body}>
                     {children}

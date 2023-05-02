@@ -7,6 +7,7 @@ import {useQuery} from "react-query";
 import cookie from "universal-cookie";
 import {getIVA} from "@/api/Taxes";
 import SellContext from "@/context/SellContext";
+import {SaleComplete} from "@/models/Sale";
 
 
 export default function CarList({products, readonly}: BillProps) {
@@ -26,6 +27,7 @@ export default function CarList({products, readonly}: BillProps) {
 
   useEffect(() => {
     setProducts(products)
+    console.log(products)
   }, [products])
 
   const openModal = (id: string) => {
@@ -46,6 +48,7 @@ export default function CarList({products, readonly}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * (product.lot.price! - calculateIVA(product.lot.price!))
     })
+    setTotal(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -55,6 +58,7 @@ export default function CarList({products, readonly}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * calculateIVA(product.lot.price!)
     })
+    setIva(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -64,6 +68,7 @@ export default function CarList({products, readonly}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * product.lot.price!
     })
+    setProductTotal(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -72,9 +77,7 @@ export default function CarList({products, readonly}: BillProps) {
       <h1 className={styles.bill__title}>Resumen de compra</h1>
       <div className={styles.bill__body}>
         <div className={styles.bill__of_sale_title}>
-          <h2>Factura N</h2>
-          <h2
-            className={styles.overview__title_product_price}>666{/*props.productSelected.lot.id*/}</h2>
+          <h2>Factura</h2>
         </div>
         <div>
           <div className={styles.bill__data_item}>
@@ -125,6 +128,6 @@ export default function CarList({products, readonly}: BillProps) {
 }
 
 interface BillProps {
-  products: ProductCompleteQ[],
+  products: ProductCompleteQ[]
   readonly?: boolean
 }

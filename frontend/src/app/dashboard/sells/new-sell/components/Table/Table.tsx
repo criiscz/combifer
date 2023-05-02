@@ -29,15 +29,15 @@ export default function Table({products, header, deleteButton}: TableProps) {
       </div>
       <div className={styles.table__body}>
         {/*<div className={styles.table__body} onClick={selectRow}>*/}
-        {products.map((product) => {
+        {products.map((product:ProductCompleteQ) => {
             return (
               <div className={styles.table__body_row} key={product.lot.id}>
                 <div className={styles.table__body_row_item}>{product.lot.id}</div>
                 <div className={styles.table__body_row_item}>{product.product.name}</div>
-                <div className={styles.table__body_row_item}>{product.category.name}</div>
-                <div className={styles.table__body_row_item}>{product.lot.price}</div>
+                <div className={styles.table__body_row_item}>${product.lot.price}</div>
+                <div className={styles.table__body_row_item}>{product.quantity}</div>
                 <div
-                  className={styles.table__body_row_item}>{"quantity" in product ? product.quantity : 0}</div>
+                  className={styles.table__body_row_item}>${product.quantity! * product.lot.price!}</div>
                 {deleteButton && <div className={styles.table__body_row_item}>
                   <button className={styles.table__body_row_item_button}
                           onClick={() => handleDelete(product.lot.id as number)}>

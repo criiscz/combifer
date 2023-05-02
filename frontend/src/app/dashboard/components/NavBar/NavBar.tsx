@@ -41,29 +41,14 @@ export default function NavBar({name, role, id}: NavBarProps) {
     setActive(newActive)
   })
 
-  // // Maybe this is not the best way to do this, but it works! :D
-  // React.useEffect(() => {
-  //   const href = window.location.href
-  //   if (href.includes('inventory')) setActive([true, false, false, false])
-  //   else if (href.includes('sells')) setActive([false, true, false, false])
-  //   else if (href.includes('reports')) setActive([false, false, true, false])
-  //   else if (href.includes('settings')) setActive([false, false, false, true])
-  // }, [])
-
-  const routeToIndexMap = {
-    inventory: 0,
-    sells: 1,
-    reports: 2,
-    settings: 3,
-  };
-
+  // Maybe this is not the best way to do this, but it works! :D
   React.useEffect(() => {
-    const { pathname } = window.location;
-    // @ts-ignore
-    const activeIndex = routeToIndexMap[pathname.replace("/", "")] || 0;
-    setActive([false, false, false, false]);
-    setActive(prev => ({ ...prev, [activeIndex]: true }));
-  }, []);
+    const href = window.location.href
+    if (href.includes('inventory')) setActive([true, false, false, false])
+    else if (href.includes('sells')) setActive([false, true, false, false])
+    else if (href.includes('reports')) setActive([false, false, true, false])
+    else if (href.includes('settings')) setActive([false, false, false, true])
+  }, [])
 
   return (
     <nav className={styles.navbar}>

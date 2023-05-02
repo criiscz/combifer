@@ -16,6 +16,17 @@ export async function getAllSells(token: string, page: number = 0, per_page: num
 
 }
 
+export async function getSellById(token: string, id: number): Promise<Sale> {
+  const response = await fetch(API_URL + `sales/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+  });
+  return await response.json() as Sale;
+}
+
 export async function createNewSell(token: string, sell: SellCreate): Promise<Sale> {
   console.log(JSON.stringify(sell));
   const response = await fetch(API_URL + `sales/`, {
