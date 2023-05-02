@@ -46,7 +46,6 @@ export default function CarList({products, readonly}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * (product.lot.price! - calculateIVA(product.lot.price!))
     })
-    setTotal(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -56,7 +55,6 @@ export default function CarList({products, readonly}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * calculateIVA(product.lot.price!)
     })
-    setIva(total)
     return parseFloat(total.toFixed(2))
   }
 
@@ -66,7 +64,6 @@ export default function CarList({products, readonly}: BillProps) {
       if (product.quantity === undefined) return
       total += product.quantity * product.lot.price!
     })
-    setProductTotal(total)
     return parseFloat(total.toFixed(2))
   }
 

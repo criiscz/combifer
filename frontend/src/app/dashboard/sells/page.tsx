@@ -12,17 +12,20 @@ import Cookies from "universal-cookie";
 import {getAllSells} from "@/api/Sells";
 import {BackResponse} from "@/models/BackResponse";
 import Bill from "./new-sell/components/Bill/Bill";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function SellPage() {
   const cookies = new Cookies()
   const router = useRouter()
-  const {data: bills, isLoading} = useQuery<BackResponse>(
+  const {data: bills} = useQuery<BackResponse>(
     'bills',
     () => getAllSells(cookies.get('userToken'))
   )
-
   const [billsFiltered, setBillsFiltered] = useState(bills?.data || [])
+
+  useEffect(() => {
+    setBillsFiltered(bills?.data || [])
+  }, [bills]) // Toco hacer esto porque no se actualizaba el estado (no se porque)
 
   const searchBill = (value: string) => {
     if (value.length) {
@@ -57,7 +60,7 @@ export default function SellPage() {
           {
             <TableBills
               header={['Id', 'Fecha', 'Id de Cliente', 'Id de empleado', 'Total']}
-              items={billsFiltered || []}
+              items={billsFiltered}
             />
           }
         </div>
