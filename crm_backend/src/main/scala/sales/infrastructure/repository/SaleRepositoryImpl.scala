@@ -7,6 +7,7 @@ import sales.domain.entity.Sale
 import shared.BaseRepository
 import sale_products.domain.entity.SaleProduct
 import agents.domain.entity.Agent
+import authentications.domain.entity.User
 
 class SaleRepositoryImpl extends SaleRepository with BaseRepository:
 
@@ -16,9 +17,10 @@ class SaleRepositoryImpl extends SaleRepository with BaseRepository:
     val q = quote {
       for 
         sale <- query[Sale].filter(_.id == lift(id))
+        employeeAgent <- query[User].filter(_.id == sale.employeeId)
         employee <- 
           query[Agent]
-            .join(_.idDocument == sale.employeeId)
+            .join(_.idDocument == employeeAgent.agentId)
         client <- 
           query[Agent]
             .join(_.idDocument == sale.clientId)
