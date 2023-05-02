@@ -18,7 +18,7 @@ class CreateOrderUseCase(user:UserContext)
   orderProductRepository: OrderProductRepository,
   productLotRepository: ProductLotRepository,
   productRepository: ProductRepository
-  )
+)
 extends BaseUseCase[RequestCreateOrder, ResponseCreateOrder]:
 
   override def execute(request: RequestCreateOrder): Task[ResponseCreateOrder] = 

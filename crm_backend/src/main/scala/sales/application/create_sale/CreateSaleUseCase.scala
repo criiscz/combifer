@@ -9,6 +9,8 @@ import sales.domain.entity.Sale
 import authentications.domain.entity.UserContext
 import product_lots.domain.repository.ProductLotRepository
 import sale_products.domain.entity.SaleProduct
+import product_lots.domain.entity.ProductLot
+import products.domain.entity.Product
 
 class CreateSaleUseCase 
 (user:UserContext) 
@@ -20,32 +22,52 @@ extends BaseUseCase[RequestCreateSale, ResponseCreateSale]:
 
   override def execute(request: RequestCreateSale): Task[ResponseCreateSale] = 
     ZIO.succeed {
-      val sale = saleRepository.insertSale (
-        Sale( description = request.description, clientId = request.clientId, employeeId = user.id)
-      )
-      val soldProducts = 
-        ZIO.foreachPar(request.products) (saveSaleProduct(_, sale.id))
-
-      ResponseCreateSale(sale)
-    }
-
-  private def saveSaleProduct(soldProduct: SaleProductInformation,saleId: Long) = 
-    ZIO.succeed {
       for
-        (lot, product) <- productLotRepository.getLotWithProduct(soldProduct.lotId)
-      yield(
-        saleProductRepository.insertSaleProduct(
-          SaleProduct (
-            productQuantity = soldProduct.quantity,
-            productDiscount = soldProduct.discount,
-            productMeasureUnit = product.measureUnit,
-            productUnitPrice = lot.price,
-            productName = product.name, 
-            productDescription = product.description,
-            saleId = saleId,
-            taxId = soldProduct.taxId,
-            productLotId = lot.id
+        quantities <- ZIO
+          .foreachPar(request.products)(checkQuantitiesFromInventory(_))
+          .mapError(e => Throwable(e.toString()))
+        sale <- ZIO.succeed(
+          saleRepository.insertSale (
+            Sale( description = request.description, clientId = request.clientId, employeeId = user.id)
           )
         )
-      )
-    }
+        saleProduct <- ZIO.foreachPar(quantities)(saveSaleProduct(_, sale.id))
+      yield(ResponseCreateSale(sale))
+    }.flatten
+
+  private def saveSaleProduct(productInfo: (ProductLot, Product, SaleProductInformation), saleId: Long) =
+    ZIO.succeed {
+      val (lot, product, soldProduct) = productInfo
+      for
+        updatedLot <- ZIO.succeed(
+          productLotRepository.updateLot(
+            lot.copy(quantity = lot.quantity - soldProduct.quantity)
+          )
+        )
+        saleProduct <- ZIO.succeed(
+          saleProductRepository.insertSaleProduct(
+            SaleProduct (
+              productQuantity = soldProduct.quantity,
+              productDiscount = soldProduct.discount,
+              productMeasureUnit = product.measureUnit,
+              productUnitPrice = lot.price,
+              productName = product.name,
+              productDescription = product.description,
+              saleId = saleId,
+              taxId = soldProduct.taxId,
+              productLotId = lot.id
+            )
+          )
+        )
+      yield(saleProduct)
+    }.flatten
+
+  private def checkQuantitiesFromInventory(soldProduct: SaleProductInformation) =
+      for
+        productLot <- ZIO.fromOption(productLotRepository.getLotWithProduct(soldProduct.lotId))
+        hasEnought <-
+          if(productLot(0).quantity >= soldProduct.quantity)
+            ZIO.succeed(true)
+          else
+            ZIO.fail(s"No enougth amount of product ${productLot(1).name}")
+      yield(productLot(0), productLot(1), soldProduct)

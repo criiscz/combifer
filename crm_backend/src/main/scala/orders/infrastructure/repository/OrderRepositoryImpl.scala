@@ -52,3 +52,8 @@ class OrderRepositoryImpl extends OrderRepository with BaseRepository:
         .updateValue(lift(order))
         .returning(r => r)
     )
+
+  override def getTotalAmountOfOrders(): Long =
+    ctx.run(
+      query[Order].size
+    )
