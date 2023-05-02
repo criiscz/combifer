@@ -34,6 +34,8 @@ import orders.domain.repository.OrderRepository
 import orders.infrastructure.repository.OrderRepositoryImpl
 import order_products.domain.repository.OrderProductRepository
 import order_products.infrastrucuture.repository.OrderProductRepositoryImpl
+import reports.domain.repository.ReportRepository
+import reports.intrastructure.repository.ReportRepositoryImpl
 
 trait DI:
   given jwtService: JwtService = new JwtServiceImpl()
@@ -55,3 +57,4 @@ trait DI:
   given hashService: HashService = new HashServiceImpl()
   //given sparkService: SparkService = new SparkServiceImpl()
   given recommendationRepository: RecommendationProductRepository = new RecommendationProductRepositoryImpl()
+  given reportController: ReportRepository = new ReportRepositoryImpl()

@@ -20,10 +20,10 @@ class SaleRepositoryImpl extends SaleRepository with BaseRepository:
         employeeAgent <- query[User].filter(_.id == sale.employeeId)
         employee <- 
           query[Agent]
-            .join(_.idDocument == employeeAgent.agentId)
+            .filter(_.idDocument == employeeAgent.agentId)
         client <- 
           query[Agent]
-            .join(_.idDocument == sale.clientId)
+            .filter(_.idDocument == sale.clientId)
       yield (sale, employee, client)
     }
     (ctx.run(q)).headOption

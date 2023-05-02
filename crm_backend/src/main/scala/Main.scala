@@ -25,11 +25,11 @@ import shared.interceptors._
 import sttp.tapir.server.interceptor.cors.CORSInterceptor
 import taxes.infrastructure.controller.TaxController
 import sales.infrastructure.controller.SalesController
-//import recommendations.infrastructure.controller.RecommendationController
 import agents.infrastructure.controller.ClientController
 import roles.infrastructure.controller.RoleController
 import permissions.infrastructure.controller.PermissionController
 import orders.infrastructure.controller.OrderController
+import reports.intrastructure.controller.ReportController
 
 object Main extends ZIOAppDefault with DI:
 
@@ -44,6 +44,7 @@ object Main extends ZIOAppDefault with DI:
   RoleController()
   PermissionController()
   OrderController()
+  ReportController()
   //RecommendationController()
 
   val serverOptions:ZioHttpServerOptions[Any] =
