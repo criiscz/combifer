@@ -18,16 +18,28 @@ class ReportRepositoryImpl extends ReportRepository with BaseRepository:
   override def getMostSoldProducts(startDate: LocalDate, endDate: LocalDate, amountOfProducts: Int): List[SoldProductInformation] =
     val q = quote {
       for
-        sales <- query[Sale]
-        saleProduct <- query[SaleProduct].filter(_.saleId == sales.id)
-        lots <- query[ProductLot].filter(_.id == saleProduct.productLotId)
-        (productId, amount) <- query[Product].filter(_.id == lots.productId)
-          .groupBy(_.id)
+        data <- query[Sale].join(query[SaleProduct]).on(_.id == _.saleId)
+          .join(query[ProductLot]).on({ case((s, sp), pl) => sp.productLotId == pl.id} )
+          .join(query[Product]).on({ case((sp, pl), p) => pl.productId == p.id })
+          .filter {  data =>
+            val (((sale, saleProduct), productLot), product) = data
+            infix"${sale.creationDate} > ${lift(startDate)}".as[Boolean] &&
+            infix"${sale.creationDate} < ${lift(endDate)}".as[Boolean]
+          }
+          .groupBy {
+            case (((sale, saleProduct), productLot), product) => product
+          }
           .map {
-            case (id, product) => (id, product.size)
+            case (product, data) => (product, data.size)
           }
           .sortBy(_._2)(Ord.desc)
           .take(lift(amountOfProducts))
-      yield (lots)
+      yield (data)
     }
-    ctx.run(q).map(product => SoldProductInformation(null))
+    ctx.run(q)
+      .map(productData =>
+        SoldProductInformation(
+          productData._1,
+          productData._2
+        )
+      )
