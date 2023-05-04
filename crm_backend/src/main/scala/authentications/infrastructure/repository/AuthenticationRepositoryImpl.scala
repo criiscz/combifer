@@ -50,3 +50,9 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository with BaseRep
       yield(user, agent)
     }
     ctx.run(q)
+
+  override def getUserById(userId: Long):Option[User] =
+    ctx.run(
+      query[User]
+      .filter(_.id == lift(userId))
+    ).headOption

@@ -17,10 +17,9 @@ class SaleRepositoryImpl extends SaleRepository with BaseRepository:
     val q = quote {
       for 
         sale <- query[Sale].filter(_.id == lift(id))
-        employeeAgent <- query[User].filter(_.id == sale.employeeId)
-        employee <- 
+        employee <-
           query[Agent]
-            .filter(_.idDocument == employeeAgent.agentId)
+            .filter(_.idDocument == sale.employeeId)
         client <- 
           query[Agent]
             .filter(_.idDocument == sale.clientId)
