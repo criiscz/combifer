@@ -11,12 +11,15 @@ import product_lots.domain.repository.ProductLotRepository
 import sale_products.domain.entity.SaleProduct
 import product_lots.domain.entity.ProductLot
 import products.domain.entity.Product
+import agents.domain.repository.AgentRepository
+import authentications.domain.repository.AuthenticationRepository
 
 class CreateSaleUseCase 
 (user:UserContext) 
 (using 
   saleRepository: SaleRepository, 
   saleProductRepository: SaleProductRepository,
+  authenticationRepository: AuthenticationRepository,
   productLotRepository: ProductLotRepository)
 extends BaseUseCase[RequestCreateSale, ResponseCreateSale]:
 
@@ -26,9 +29,11 @@ extends BaseUseCase[RequestCreateSale, ResponseCreateSale]:
         quantities <- ZIO
           .foreachPar(request.products)(checkQuantitiesFromInventory(_))
           .mapError(e => Throwable(e.toString()))
+        employeeAgent <- ZIO.fromOption(authenticationRepository.getUserById(user.id))
+          .mapError(e => Throwable(e.toString()))
         sale <- ZIO.succeed(
           saleRepository.insertSale (
-            Sale( description = request.description, clientId = request.clientId, employeeId = user.id)
+            Sale( description = request.description, clientId = request.clientId, employeeId = employeeAgent.id)
           )
         )
         saleProduct <- ZIO.foreachPar(quantities)(saveSaleProduct(_, sale.id))
