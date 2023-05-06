@@ -10,6 +10,8 @@ import product_lots.domain.entity.ProductLot
 import sale_products.domain.entity.SaleProduct
 import sales.domain.entity.Sale
 import products.domain.entity.Product
+import orders.domain.entity.Order
+import order_products.domain.entity.OrderProduct
 
 class ReportRepositoryImpl extends ReportRepository with BaseRepository:
 
@@ -21,7 +23,7 @@ class ReportRepositoryImpl extends ReportRepository with BaseRepository:
         data <- query[Sale].join(query[SaleProduct]).on(_.id == _.saleId)
           .join(query[ProductLot]).on({ case((s, sp), pl) => sp.productLotId == pl.id} )
           .join(query[Product]).on({ case((sp, pl), p) => pl.productId == p.id })
-          .filter {  data =>
+          .filter { data =>
             val (((sale, saleProduct), productLot), product) = data
             infix"${sale.creationDate} > ${lift(startDate)}".as[Boolean] &&
             infix"${sale.creationDate} < ${lift(endDate)}".as[Boolean]
@@ -43,3 +45,17 @@ class ReportRepositoryImpl extends ReportRepository with BaseRepository:
           productData._2
         )
       )
+
+  override def getOrderProducts(startDate:LocalDate, endDate:LocalDate): List[OrderProduct] =
+    val q = quote {
+      for
+        data <- query[Order]
+          .join(query[OrderProduct]).on(_.id == _.orderId)
+          .filter { data =>
+            val (order, product) = data
+            infix"${order.createDate} > ${lift(startDate)}".as[Boolean] &&
+            infix"${order.createDate} < ${lift(endDate)}".as[Boolean]
+          }
+      yield(data)
+    }
+    ctx.run(q).map(_._2)

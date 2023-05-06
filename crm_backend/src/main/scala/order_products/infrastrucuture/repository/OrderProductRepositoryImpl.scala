@@ -12,7 +12,7 @@ class OrderProductRepositoryImpl extends OrderProductRepository with BaseReposit
 
   import ctx._
 
-  override def getProductsOfOrderId(orderId:Int):List[OrderProduct] =
+  override def getProductsOfOrderId(orderId:Long):List[OrderProduct] =
     ctx.run(
       query[OrderProduct].filter(_.orderId == lift(orderId))
     )
