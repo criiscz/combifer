@@ -23,7 +23,7 @@ class CreateSaleUseCase
   productLotRepository: ProductLotRepository)
 extends BaseUseCase[RequestCreateSale, ResponseCreateSale]:
 
-  override def execute(request: RequestCreateSale): Task[ResponseCreateSale] = 
+  override def execute(request: RequestCreateSale): Task[ResponseCreateSale] =
     ZIO.succeed {
       for
         quantities <- ZIO
@@ -32,9 +32,7 @@ extends BaseUseCase[RequestCreateSale, ResponseCreateSale]:
         employeeAgent <- ZIO.fromOption(authenticationRepository.getUserById(user.id))
           .mapError(e => Throwable(e.toString()))
         sale <- ZIO.succeed(
-          saleRepository.insertSale (
-            Sale( description = request.description, clientId = request.clientId, employeeId = employeeAgent.id)
-          )
+          saleRepository.insertSale(Sale(description = request.description, clientId = request.clientId, employeeId = employeeAgent._2.idDocument))
         )
         saleProduct <- ZIO.foreachPar(quantities)(saveSaleProduct(_, sale.id))
       yield(ResponseCreateSale(sale))

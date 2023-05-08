@@ -51,8 +51,11 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository with BaseRep
     }
     ctx.run(q)
 
-  override def getUserById(userId: Long):Option[User] =
-    ctx.run(
-      query[User]
-      .filter(_.id == lift(userId))
-    ).headOption
+  override def getUserById(userId: Long):Option[(User,Agent)] =
+    val q = quote {
+      for
+        user <- query[User].filter(_.id == lift(userId))
+        agent <- query[Agent].join(_.idDocument == user.agentId)
+      yield (user, agent)
+    }
+    ctx.run(q).headOption

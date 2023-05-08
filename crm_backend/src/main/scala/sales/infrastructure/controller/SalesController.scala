@@ -17,6 +17,7 @@ import authentications.domain.entity._
 import authorizations.domain.entity._
 
 import authentications.domain.service.JwtService
+import authentications.domain.repository.AuthenticationRepository
 import sales.domain.repository.SaleRepository
 import sale_products.domain.repository.SaleProductRepository
 import product_lots.domain.repository.ProductLotRepository
@@ -24,12 +25,14 @@ import shared.mapper.endpoints.Exposer._
 import sales.domain.entity.Sale
 
 
-class SalesController ()
-(using 
+class SalesController
+(using
   jwtService: JwtService,
   saleProductRepository: SaleProductRepository,
   saleRepository: SaleRepository,
-  productLotRepository: ProductLotRepository)
+  productLotRepository: ProductLotRepository,
+  authenticationRepository: AuthenticationRepository,
+)
 extends BaseController:
 
   private val routeName = "sales"
@@ -43,7 +46,7 @@ extends BaseController:
     .out(jsonBody[ResponseCreateSale])
     .exposeSecure
 
-  private val createSaleRote: ZServerEndpoint[Any, Any] =
+  private val createSaleRote =
     createSale.serverLogic{ (user:UserContext, permission:PermissionContext) => request =>
       CreateSaleUseCase(user).execute(
         request
