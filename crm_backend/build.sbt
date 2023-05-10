@@ -54,6 +54,10 @@ val authDependencies = Seq(
   ("com.github.t3hnar" %% "scala-bcrypt" % "4.3.0").cross(CrossVersion.for3Use2_13)
 )
 
+val emailDependencies = Seq(
+  "com.github.daddykotex" %% "courier" % "3.2.0"
+)
+
 lazy val root = project
 .in(file("."))
 .settings(
@@ -67,6 +71,7 @@ lazy val root = project
     libraryDependencies ++= authDependencies,
     libraryDependencies ++= sparkDependencies,
     libraryDependencies ++= sparkCompatDependencies,
+    libraryDependencies ++= emailDependencies,
     libraryDependencies ++= testingDependencies,
   )
 
