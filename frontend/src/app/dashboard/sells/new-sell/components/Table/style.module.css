@@ -65,6 +65,25 @@
     width: 100%;
 }
 
+.table__body_row_item_button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-right: 2rem;
+    align-items: center;
+    border: none;
+    font-size: 1.5rem;
+    background-color: transparent;
+    color: var(--gray-strong);
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.table__body_row_item_button:hover {
+    color: red;
+}
+
 .table__body_row:hover {
     background-color: var(--gray-EE);
 }

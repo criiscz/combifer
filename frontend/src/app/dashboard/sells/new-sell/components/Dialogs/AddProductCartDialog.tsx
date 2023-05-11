@@ -1,8 +1,8 @@
 import styles from './style.module.css'
-import {ProductComplete} from "@/models/Product";
-import {useContext, useEffect, useState} from "react";
+import {ProductComplete, ProductCompleteQ} from "@/models/Product";
+import {useCallback, useContext, useEffect, useState} from "react";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
-import ProductList from "@/app/dashboard/sells/components/ProductList/ProductList";
+import ProductList from "@/app/dashboard/sells/new-sell/components/ProductList/ProductList";
 import {useQuery} from "react-query";
 import {getAllProductLots} from "@/api/ProductLots";
 import ProductContext from "@/context/ProductContext";
@@ -12,13 +12,11 @@ import cookie from "universal-cookie";
 
 export default function AddProductCartDialog({
                                                closeDialog,
-                                               productsCar
                                              }: AddProductCartDialogProps) {
   const cookies = new cookie()
 
   const [products, setProducts] = useState<ProductComplete[]>([])
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
-  const [productSelected, setProductSelected] = useState<ProductComplete [] | undefined>(undefined)
   const [update, setUpdate] = useState(false)
 
 
@@ -26,7 +24,14 @@ export default function AddProductCartDialog({
     data: productsLotData,
     refetch
   } = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
-  const {refresh, setRefresh} = useContext(ProductContext)
+
+  const {
+    refresh,
+    setRefresh,
+    setProducts: setProductsSel,
+    productsSelected,
+    setProductsSelected
+  } = useContext(ProductContext)
 
   useEffect(() => {
     if (productsLotData !== undefined) {
@@ -45,13 +50,17 @@ export default function AddProductCartDialog({
   useEffect(() => {
     if (refresh) {
       refetch()
-      setProductSelected(undefined)
+      setProductsSelected(undefined!)
       setRefresh(false)
       setTimeout(() => {
         setUpdate(true)
       }, 1000)
     }
-  }, [refresh])
+  }, [refetch, refresh, setProductsSelected, setRefresh])
+
+  useEffect(() => {
+    document.getElementById('searchbar')?.focus()
+  }, [])
 
 
   const SearchProduct = (name: string) => {
@@ -64,20 +73,21 @@ export default function AddProductCartDialog({
     }
   }
 
-  const selectProducts = (product: ProductComplete[] | undefined) => {
-    setProductSelected(product)
-    console.log("Product selected: ", product)
-  }
+  const selectProducts = useCallback((product: ProductCompleteQ[] | undefined) => {
+    setProductsSelected(product!)
+    setProductsSel(product)
+    console.log("Product selected: (DIALOG)", product)
+  }, [setProductsSelected, setProductsSel])
 
   const fillCar = () => {
     closeDialog()
-    console.log("ADD car: ", productSelected)
+    console.log("ADD car: ", productsSelected)
   }
 
   return (
     <div className={styles.AddProductCart__container}>
       <div className={styles.AddProductCart__header}>
-        <SearchBar onSubmit={SearchProduct}/>
+        <SearchBar onSubmit={SearchProduct} id={"searchbar"}/>
       </div>
       <div className={styles.ddProductCart__body}>
         {
@@ -103,6 +113,6 @@ export default function AddProductCartDialog({
 
 interface AddProductCartDialogProps {
   closeDialog: () => void
-  productsCar?: (product: ProductComplete[] | undefined) => void
+  productsCar?: (product: ProductCompleteQ[] | undefined) => void
 }
 

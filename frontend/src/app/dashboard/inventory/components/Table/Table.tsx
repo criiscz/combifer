@@ -12,9 +12,7 @@ export default function Table({
     const row = e.target
     const rowId = row.parentElement?.children[0].innerHTML
     const product = products.find(product => product.lot.id == rowId)
-    console.log("Product selected 2: ", rowId, products)
     productSelected(product)
-
   }
 
   return (

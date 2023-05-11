@@ -2,7 +2,7 @@
 import styles from '../login.module.css'
 import {FormEvent, useEffect, useMemo, useState} from "react";
 import {useRouter} from 'next/navigation';
-import {login} from "@/api/Login";
+import {login, sessionInfo} from "@/api/Login";
 import Cookies from "universal-cookie"
 
 
