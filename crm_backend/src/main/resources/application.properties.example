@@ -1,0 +1,14 @@
+productionDatabase.dataSourceClassName=org.postgresql.ds.PGSimpleDataSource
+productionDatabase.dataSource.url=
+productionDatabase.dataSource.user=
+productionDatabase.dataSource.password=
+
+testDatabase.dataSourceClassName=org.postgresql.ds.PGSimpleDataSource
+testDatabase.dataSource.url=jdbc:postgresql://127.0.0.1:5432/crm
+testDatabase.dataSource.user=
+testDatabase.dataSource.password=
+
+mailserver.smtp=smtp.gmail.com
+mailserver.port=587
+mailserver.address=
+mailserver.password=

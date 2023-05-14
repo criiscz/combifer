@@ -15,9 +15,11 @@ import sales.application.get_sales._
 
 import authentications.domain.entity._
 import authorizations.domain.entity._
-
 import authentications.domain.service.JwtService
 import authentications.domain.repository.AuthenticationRepository
+
+import notifications.domain.service.EmailNotificationService
+
 import sales.domain.repository.SaleRepository
 import sale_products.domain.repository.SaleProductRepository
 import product_lots.domain.repository.ProductLotRepository
@@ -32,6 +34,7 @@ class SalesController
   saleRepository: SaleRepository,
   productLotRepository: ProductLotRepository,
   authenticationRepository: AuthenticationRepository,
+  emailNotificationService: EmailNotificationService
 )
 extends BaseController:
 
