@@ -1,10 +1,12 @@
 "use client"
 import styles from './style.module.css'
 import {useQuery} from "react-query";
-import Chart from 'react-apexcharts'
 import {ApexOptions} from "apexcharts";
 import {useEffect, useState} from "react";
 import {getReportBuys, getReportProductMostSold} from "@/api/Reports";
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
 export default function ReportPage() {
   return (
@@ -96,7 +98,7 @@ const ProductReport = () => {
     }
   } as ApexOptions
 
-  return data && <Chart options={options} series={series} type={"bar"} width={600}/>
+  return typeof window !== 'undefined' && data && <Chart options={options} series={series} type={"bar"} width={600}/>
 }
 const BuyReport = () => {
 
@@ -236,7 +238,7 @@ const BuyReport = () => {
 
   function getDefaultStartDate() {
     const date = new Date()
-    date.setMonth(date.getMonth() - 1)
+    date.setMonth(date.getMonth() - 2)
     return date.toISOString().split("T")[0]
   }
 
@@ -252,7 +254,7 @@ const BuyReport = () => {
                name="end_date" id="end_date" value={endDate}
                onChange={e => setEndDate(e.target.value)}/>
       </div>
-      {data && <Chart options={options} series={series} type={"bar"} width={600}/>}
+      {typeof window !== 'undefined' && data && <Chart options={options} series={series} type={"bar"} width={600}/>}
     </div>
   )
 }

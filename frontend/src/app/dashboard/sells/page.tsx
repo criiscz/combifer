@@ -3,9 +3,6 @@ import {useRouter} from "next/navigation";
 import styles from "@/app/dashboard/sells/style.module.css";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
 import Button from "@/app/components/Button";
-import ProductList from "@/app/dashboard/inventory/components/ProductList/ProductList";
-import Overview from "@/app/dashboard/inventory/components/Overview/Overview";
-import Table from "@/app/dashboard/sells/new-sell/components/TableInventary/Table";
 import TableBills from "@/app/dashboard/sells/components/TableBills/TableBills";
 import {useQuery} from "react-query";
 import Cookies from "universal-cookie";
@@ -13,12 +10,9 @@ import {getAllSells, getSellById} from "@/api/Sells";
 import {BackResponse} from "@/models/BackResponse";
 import Bill from "./new-sell/components/Bill/Bill";
 import {useContext, useEffect, useMemo, useState} from "react";
-import {ProductLot} from "@/models/ProductLot";
-import {getProduct} from "@/api/Products";
 import Sale, {SaleComplete} from "@/models/Sale";
 import {ProductCompleteQ} from "@/models/Product";
 import {getClient} from "@/api/Clients";
-import {Client} from "@/models/Client";
 import SellContext from "@/context/SellContext";
 
 export default function SellPage() {
