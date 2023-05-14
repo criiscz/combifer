@@ -36,8 +36,12 @@ import order_products.domain.repository.OrderProductRepository
 import order_products.infrastrucuture.repository.OrderProductRepositoryImpl
 import reports.domain.repository.ReportRepository
 import reports.intrastructure.repository.ReportRepositoryImpl
+import utils.Configuration
+import notifications.domain.service.EmailNotificationService
+import notifications.infrastructure.service.EmailNotificationServiceImpl
 
 trait DI:
+  Configuration.init()
   given jwtService: JwtService = new JwtServiceImpl()
   given roleRepository: RoleRepository = new RoleRepositoryImpl()
   given userRoleRepository: UserRoleRepository = new UserRoleRepositoryImpl()
@@ -58,3 +62,4 @@ trait DI:
   //given sparkService: SparkService = new SparkServiceImpl()
   given recommendationRepository: RecommendationProductRepository = new RecommendationProductRepositoryImpl()
   given reportController: ReportRepository = new ReportRepositoryImpl()
+  given emailNotificationService: EmailNotificationService = new EmailNotificationServiceImpl()
