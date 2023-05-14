@@ -1,0 +1,112 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    width: 100% ;
+    max-width: 1000px;
+    border-radius: 10px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.title {
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+    transform: scale(1.1);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.rowItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    padding: 1rem;
+    color: var(--black);
+}
+
+.rowItem__title {
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.rowItem__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 100%;
+    height: 15rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 9px 25px -17px rgba(0, 0, 0, 0.6);
+    padding: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.item__row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: .5rem 0;
+    border-bottom: 1px solid var(--gray-D9);
+}
+
+.item__row:last-child {
+    border-bottom: none;
+}
+
+.item__title {
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.item__value {
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.no_show {
+    display: none;
+}

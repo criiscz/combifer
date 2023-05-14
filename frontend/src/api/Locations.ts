@@ -10,5 +10,4 @@ export async function getAllLocations(page: number = 0, per_page: number = 10): 
     },
   });
   return await response.json() as BackResponse;
-
 }

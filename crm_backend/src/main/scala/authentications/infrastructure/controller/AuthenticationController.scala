@@ -11,6 +11,7 @@ import zio._
 import authentications.application.login_user._
 import authentications.application.create_user._
 import authentications.application.get_session_information._
+import authentications.application.get_users._
 
 import shared.responses.ErrorResponse
 import shared.mapper.endpoints.Exposer._
@@ -21,9 +22,10 @@ import agents.domain.repository.AgentRepository
 import authentications.domain.service.HashService
 import authorizations.domain.repository.AuthorizationRepository
 import shared.BaseController
-import shared.responses.ApplicationError
+import shared.responses._
 import authorizations.domain.entity.PermissionContext
 import authentications.domain.entity.UserContext
+import authentications.domain.entity.User
 
 class AuthenticationController()
 (using 
@@ -80,3 +82,20 @@ class AuthenticationController()
       .mapError(e => ErrorResponse(message="Can't get current session information"))
     }.expose
 
+  private val getUsers =
+    secureEndpoint
+    .in("users")
+    .get
+    .in(
+      query[Int]("page").and(query[Int]("per_page"))
+    )
+    .errorOutVariant[ApplicationError](oneOfVariant(jsonBody[ErrorResponse]))
+    .out(jsonBody[PaginatedResponse[UserAgentInformation]])
+    .exposeSecure
+
+  private val getUsersRoute=
+    getUsers.serverLogic { (user:UserContext, permission:PermissionContext) => (page: Int, perPage: Int) =>
+      GetUsersUseCase().execute(
+        RequestGetUsers(page, perPage)
+      ).mapError(e => ErrorResponse(message = "Can't get Roles"))
+    }.expose

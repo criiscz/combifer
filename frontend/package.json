@@ -12,6 +12,8 @@
     "test:ci": "cypress run"
   },
   "dependencies": {
+    "apexcharts": "^3.40.0",
+    "react-apexcharts": "^1.4.0",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {

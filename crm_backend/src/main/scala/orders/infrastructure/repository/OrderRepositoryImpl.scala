@@ -37,3 +37,23 @@ class OrderRepositoryImpl extends OrderRepository with BaseRepository:
         .take(lift(to))
         .drop(lift(from))
     )
+
+  override def insertOrder(order:Order): Order = 
+    ctx.run(
+      query[Order]
+        .insertValue(lift(order))
+        .returning(r => r)
+    )
+
+  override def updateOrder(order:Order): Order = 
+    ctx.run(
+      query[Order]
+        .filter(_.id == lift(order.id))
+        .updateValue(lift(order))
+        .returning(r => r)
+    )
+
+  override def getTotalAmountOfOrders(): Long =
+    ctx.run(
+      query[Order].size
+    )

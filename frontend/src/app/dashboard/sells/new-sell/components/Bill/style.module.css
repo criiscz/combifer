@@ -1,0 +1,146 @@
+.bill__container{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: 0 15px 23px -18px var(--gray-D9);
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-strong);
+    transition: all .3s ease-in-out;
+}
+
+.bill__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.bill__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.bill__of_sale_title {
+    font-size: 1.0rem;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+    border-bottom: 2px solid var(--gray-strong);
+    width: fit-content;
+}
+
+.bill__data_item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid var(--gray-D9);
+    padding: .3rem 0;
+}
+
+.bill__data_item_header {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.bill__data_item_value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.bill__actionButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.bill__actionButtons_button_buy {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(75, 211, 123, 0.2);
+    color: rgb(75, 211, 123);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+}
+
+.bill__actionButtons_button_edit {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #d0d0d0;
+    color: rgb(148, 148, 148);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+
+}
+
+.bill__actionButtons_button_create_bill {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(255, 243, 116, 0.76);
+    color: rgb(255, 214, 4);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+
+}
+
+/*HOVER*/
+
+.bill__actionButtons_button_buy:hover {
+    background-color: rgba(75, 211, 123, 0.4);
+}
+
+.bill__actionButtons_button_edit:hover {
+    background-color: #bbbbbb;
+}
+
+.bill__actionButtons_button_create_bill:hover {
+    background-color: rgba(255, 242, 98, 0.9);
+}
+
+.no_show {
+    display: none;
+}

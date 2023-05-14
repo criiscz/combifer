@@ -5,7 +5,7 @@ import {MeasureUnit} from "@/models/MeasureUnit";
 // get API_URL from .env.local file
 // const API_URL = 'https://618d4d14fe09aa001744068b.mockapi.io/';
 // const API_URL = 'http://localhost:8090/';
-const API_URL = 'http://3.237.202.227:8090/';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
 // export async function getAllMeasureUnits(page: number = 0, per_page: number = 10): Promise<BackResponse> {

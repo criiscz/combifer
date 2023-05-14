@@ -7,6 +7,7 @@ import sales.domain.entity.Sale
 import shared.BaseRepository
 import sale_products.domain.entity.SaleProduct
 import agents.domain.entity.Agent
+import authentications.domain.entity.User
 
 class SaleRepositoryImpl extends SaleRepository with BaseRepository:
 
@@ -16,12 +17,12 @@ class SaleRepositoryImpl extends SaleRepository with BaseRepository:
     val q = quote {
       for 
         sale <- query[Sale].filter(_.id == lift(id))
-        employee <- 
+        employee <-
           query[Agent]
-            .join(_.idDocument == sale.employeeId)
+            .filter(_.idDocument == sale.employeeId)
         client <- 
           query[Agent]
-            .join(_.idDocument == sale.clientId)
+            .filter(_.idDocument == sale.clientId)
       yield (sale, employee, client)
     }
     (ctx.run(q)).headOption
@@ -31,4 +32,17 @@ class SaleRepositoryImpl extends SaleRepository with BaseRepository:
       query[Sale]
         .insertValue(lift(sale))
         .returning(r => r)
+    )
+
+  override def getSales(from: Int, to:Int): List[Sale] =
+    ctx.run(
+      query[Sale]
+        .sortBy(_.id)(Ord.ascNullsLast)
+        .take(lift(to))
+        .drop(lift(from))
+    )
+
+  override def getTotalAmountOfSales():Long =
+    ctx.run(
+      query[Sale].size
     )
