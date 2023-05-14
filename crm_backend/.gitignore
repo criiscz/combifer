@@ -32,3 +32,7 @@ metals.sbt
 .idea
 .idea_modules
 /.worksheet/
+
+# Env
+src/main/resources/application.properties
+/src/main/resources/application.properties
