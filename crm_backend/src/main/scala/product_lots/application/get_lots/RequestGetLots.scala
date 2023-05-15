@@ -4,6 +4,6 @@ import shared.requests.PaginatedRequest
 
 case class RequestGetLots (
   page: Int,
-  perPage: Int
+  perPage: Int,
+  search: Option[String]
 ) extends PaginatedRequest(page, perPage)
-

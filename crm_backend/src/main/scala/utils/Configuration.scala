@@ -3,6 +3,7 @@ package utils
 import java.util.Properties
 import scala.io.Source
 import java.io.FileInputStream
+import zio._
 
 object Configuration:
 
@@ -22,3 +23,12 @@ object Configuration:
         println(s"Error, can't find $propertyName in the properties file")
         None
       }
+
+  def getPro(propertyName: String): IO[Throwable, String] =
+    properties.getProperty(propertyName) match
+      case property:String => ZIO.succeed(property)
+      case null =>
+        for
+          _ <- ZIO.logInfo(s"Error, can't find $propertyName in the properties file")
+          error <- ZIO.fail(Throwable("xd"))
+        yield(error)

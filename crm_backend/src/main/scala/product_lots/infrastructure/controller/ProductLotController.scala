@@ -51,18 +51,22 @@ class ProductLotController() (using productLotRepository: ProductLotRepository):
       .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
 
-  private val getProductLots:PublicEndpoint[(Int, Int), ErrorResponse, PaginatedResponse[ProductLot], Any] =
+  private val getProductLots:PublicEndpoint[(Int, Int, Option[String]), ErrorResponse, PaginatedResponse[ProductLotInformation], Any] =
     endpoint
       .in("product-lots")
-      .in(query[Int]("page").and(query[Int]("per_page")))
+      .in(
+        query[Int]("page")
+          .and(query[Int]("per_page"))
+          .and(query[Option[String]]("search"))
+      )
       .get
       .errorOut(jsonBody[ErrorResponse])
-      .out(jsonBody[PaginatedResponse[ProductLot]])
+      .out(jsonBody[PaginatedResponse[ProductLotInformation]])
       .expose
-  
-  private val getProductLotsRoute: ZServerEndpoint[Any, Any] = getProductLots.zServerLogic{ (page, perPage) => 
+
+  private val getProductLotsRoute: ZServerEndpoint[Any, Any] = getProductLots.zServerLogic{ (page, perPage, search) =>
     GetLotsUseCase()
-      .execute(RequestGetLots(page, perPage)) 
+      .execute(RequestGetLots(page, perPage, search))
       .mapError(e => ErrorResponse(message="Can't create product lot"))
   }.expose
 

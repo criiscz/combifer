@@ -3,8 +3,9 @@ val scala3Version = "3.2.2"
 libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "openapi-model" % "early-semver"
 libraryDependencySchemes += "com.softwaremill.sttp.apispec" %% "apispec-model" % "early-semver"
 
-val zioVersion = "2.0.10"
+val zioVersion = "2.0.13"
 val zioHttpVersion = "0.0.4"
+val zioLogginVersion = "2.1.12"
 val tapirVersion = "1.2.10"
 val sparkVersion = "3.3.2"
 
@@ -28,6 +29,7 @@ val sparkCompatDependencies = Seq(
 val zioDependencies = Seq(
   "dev.zio" %% "zio" % zioVersion,
   "dev.zio" %% "zio-http" % zioHttpVersion,
+  "dev.zio" %% "zio-logging" % zioLogginVersion
 )
 
 val tapirDependencies = Seq(
