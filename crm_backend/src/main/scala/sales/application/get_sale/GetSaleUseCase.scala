@@ -16,10 +16,10 @@ extends BaseUseCase[RequestGetSale, ResponseGetSale]:
     ZIO.attempt {
       for
         sale <- ZIO.fromOption(saleRepository.getSale(request.saleId))
-          .mapError(e => Throwable())
-        products <- ZIO.succeed(
+          .mapError(e => Throwable("Can't find sale entitiy"))
+        products <- ZIO.attempt(
           saleProductRepository.getSoldProductsOfSale(request.saleId)
-        )
+        ).mapError(e => Throwable("Can't find sale products"))
       yield (
         ResponseGetSale (
           sale = sale(0),

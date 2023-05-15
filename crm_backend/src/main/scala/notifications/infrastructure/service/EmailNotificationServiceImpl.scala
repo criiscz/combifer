@@ -8,6 +8,7 @@ import courier._, Defaults._
 import scala.util._
 import utils.Configuration
 import javax.mail.internet.InternetAddress
+import java.util.concurrent.CompletableFuture
 
 class EmailNotificationServiceImpl extends EmailNotificationService:
 
@@ -17,13 +18,21 @@ class EmailNotificationServiceImpl extends EmailNotificationService:
     }
 
   override def sendNotificationToAdmins(content: String): IO[Throwable, NotificationData] =
-    ZIO.attempt {
-      val adminEmail = "noijpiz@gmail.com"
-      sendEmail(adminEmail, "Testing", content)
-      NotificationData(adminEmail)
-    }
+    for
+      adminEmails <- ZIO.fromOption(
+        Configuration.get("admin.mails")
+      ).mapError(e => Throwable("Can't get config"))
+      sended <- sendEmail(
+        emails = adminEmails.split(",").toList,
+        subject = "Combifer Notification System",
+        content = content
+      )
+      _ <- ZIO.logInfo(s"Sended Email to $adminEmails")
+    yield(
+      sended
+    )
 
-  private def sendEmail(email: String, subject: String, content: String): IO[Throwable, NotificationData] =
+  private def sendEmail(emails: List[String], subject: String, content: String): IO[Throwable, NotificationData] =
     ZIO.attempt {
       (for
           mailserver <- Configuration.get("mailserver.smtp")
@@ -39,13 +48,15 @@ class EmailNotificationServiceImpl extends EmailNotificationService:
         )
       ).toRight(Throwable("Can't generate mailer"))
       .map { mailer =>
-        mailer(Envelope.from("you" `@` "gmail.com")
-               .to(InternetAddress(email))
-               .subject(subject)
-               .content(Text(content))).onComplete {
-          case Success(_) => println("Delivered message")
-          case Failure(_) => println("Failed to deliver message")
-        }
+        val envelope = Envelope.from("noreply.nojipiz" `@` "gmail.com")
+          .to(emails.map(InternetAddress(_)): _*)
+          .subject(subject)
+          .content(Text(content))
+        val mailerFuture = CompletableFuture.supplyAsync(() => mailer(envelope))
+        for
+          sender <- ZIO.fromCompletableFuture(mailerFuture).unit
+          _ <- ZIO.logInfo(s"Sending email...")
+        yield()
       }
-      NotificationData(email)
+      NotificationData(emails.mkString(","))
     }
