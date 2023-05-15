@@ -9,7 +9,7 @@ trait ProductLotRepository:
   def getLot(id: Long): Option[ProductLot]
   def getLotWithProduct(id: Long): Option[(ProductLot,Product)]
   def getLotInventory(id:Long): Option[(ProductLot, Product, CategoryProduct, Location)]
-  def getLots(from:Int, to:Int): List[ProductLot]
+  def getLots(from:Int, to:Int, search: Option[String]): List[(ProductLot, Product, CategoryProduct, Location)]
   def getLotsOfProduct(productId: Long, from:Int, to:Int): List[ProductLot]
   def getTotalAmountOfLots():Long
   def getTotalAmountOfLotsAtProduct(productId:Long):Long
