@@ -1,0 +1,180 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 60%;
+    padding: 2rem;
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: 0 15px 23px -18px var(--gray-D9);
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-strong);
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.title_product {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+}
+
+.title_product_name {
+    font-size: 1.5rem;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+    border-bottom: 2px solid var(--gray-strong);
+    width: fit-content;
+}
+
+.title_product_price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.body__data_item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid var(--gray-D9);
+    padding: .5rem 0;
+}
+
+.body__data_item:last-child {
+    border-bottom: none;
+}
+
+.body__data_item_header {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+}
+
+.body__data_item_value {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+}
+
+.body__actionButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.body__actionButtons_edit {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(75, 211, 123, 0.2);
+    color: rgb(75, 211, 123);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.body__actionButtons_delete {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(255, 116, 116, 0.2);
+    color: rgb(255, 116, 116);
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.body__actionButtons_edit:hover {
+    background-color: rgba(75, 211, 123, 0.4);
+}
+
+.body__actionButtons_edit:active {
+    background-color: rgba(75, 211, 123, 0.6);
+}
+
+.body__actionButtons_delete:hover {
+    background-color: rgba(255, 116, 116, 0.4);
+}
+
+.body__actionButtons_delete:active {
+    background-color: rgba(255, 116, 116, 0.6);
+}
+
+.body__data_item_info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-strong);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* --- Permission Level Styles --- */
+.permissionLevel {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3em;
+}
+
+.permissionLevel__item {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: var(--red-strong);
+}
+
+.permissionLevel__item_active {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: var(--green-strong);
+}
+
+

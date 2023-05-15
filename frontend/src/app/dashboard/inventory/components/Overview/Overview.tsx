@@ -85,23 +85,6 @@ export default function Overview(props: OverviewProps) {
             <Icon icon={'ri:add-box-line'}/>
           </button>
         </div>
-        {/*<div className={styles.overview__total_description}>*/}
-        {/*  <div className={styles.overview__total_item}>*/}
-        {/*    <h2 className={styles.overview__total_item_header}>Ganancias Netas</h2>*/}
-        {/*    <h2*/}
-        {/*      className={styles.overview__total_item_value}>{props.productSelected.product.id}</h2>*/}
-        {/*  </div>*/}
-        {/*  <div className={styles.overview__total_item}>*/}
-        {/*    <h2 className={styles.overview__total_item_header}>Total Cantidad Vendido</h2>*/}
-        {/*    <h2*/}
-        {/*      className={styles.overview__total_item_value}>{props.productSelected.product.id}</h2>*/}
-        {/*  </div>*/}
-        {/*  <div className={styles.overview__total_item}>*/}
-        {/*    <h2 className={styles.overview__total_item_header}>Última venta</h2>*/}
-        {/*    <h2*/}
-        {/*      className={styles.overview__total_item_value}>{props.productSelected.product.id}</h2>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
       </div>
     </div>
   )

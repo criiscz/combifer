@@ -11,7 +11,8 @@ import ProductContext from "@/context/ProductContext";
 import ToastContext from "@/context/ToastContext";
 import {ProductComplete, ProductCompleteQ} from "@/models/Product";
 import Toast from "@/app/components/Toast/Toast";
-import AddProductCartDialog from "@/app/dashboard/sells/new-sell/components/Dialogs/AddProductCartDialog";
+import AddProductCartDialog
+  from "@/app/dashboard/sells/new-sell/components/Dialogs/AddProductCartDialog";
 import ClientContext from "@/context/ClientContext";
 import {Client} from "@/models/Client";
 import CreateNewSellDialog
@@ -93,14 +94,28 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   }), [productsSelected, selectedClient, productTotal, iva, total])
 
 
-
   const cookies = useMemo(() => new Cookies(), []);
 
   const {data} = useQuery({
     queryKey: 'session-info',
     queryFn: () => sessionInfo(cookies.get('userToken')),
   })
-  
+
+  function SelectModal() {
+    return id === 'create-product' &&
+      <CreateProductDialog closeDialog={() => setOpen(false)}/> ||
+      id === 'edit-product' &&
+      <EditProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
+      id === 'delete-product' &&
+      <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
+      id === 'buy-bill' &&
+      <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
+      id === 'create-bill' &&
+      <CreateNewSellDialog closeDialog={() => setOpen(false)}/> ||
+      id === 'view-bill' &&
+      <CreateNewSellDialog closeDialog={() => setOpen(false)} readonly={true}/>;
+  }
+
   return (
     <div>
       <ToastContext.Provider value={toastContext}>
@@ -109,26 +124,13 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
             <ProductContext.Provider value={productContext}>
               <ModalContext.Provider value={modalContext}>
                 <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
-                  {
-                    id === 'create-product' &&
-                    <CreateProductDialog closeDialog={() => setOpen(false)}/> ||
-                    id === 'edit-product' &&
-                    <EditProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
-                    id === 'delete-product' &&
-                    <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
-                    id === 'buy-bill' &&
-                    <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
-                    id === 'create-bill' &&
-                    <CreateNewSellDialog closeDialog={() => setOpen(false)}/> ||
-                    id === 'view-bill' &&
-                    <CreateNewSellDialog closeDialog={() => setOpen(false)} readonly={true}/>
-
-                  }
+                  { SelectModal() }
                 </Modal>
                 <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
                 <div className={styles.container}>
                   <aside className={styles.asideNavBar}>
-                    <NavBar name={data?.name + ' ' + data?.lastname || 'Nombre'} role={data && data.roles[0] && data.roles[0].name || 'Rol'}/>
+                    <NavBar name={data?.name + ' ' + data?.lastname || 'Nombre'}
+                            role={data && data.roles[0] && data.roles[0].name || 'Rol'}/>
                   </aside>
                   <main className={styles.body}>
                     {children}
