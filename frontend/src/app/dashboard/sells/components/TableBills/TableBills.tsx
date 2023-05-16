@@ -1,8 +1,6 @@
 import styles from './style.module.css'
-import {useQuery} from "react-query";
 import cookie from "universal-cookie";
-import {getSellById} from "@/api/Sells";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Sale from "@/models/Sale";
 
 export default function TableBills({header, items, setItemSelected}: {
@@ -12,7 +10,6 @@ export default function TableBills({header, items, setItemSelected}: {
 }) {
   const cookies = new cookie()
   const [bill, setBill] = useState<Sale | undefined>()
-  const [saleSelected, setSaleSelected] = useState<Sale | undefined>(undefined)
   const selectRow = (e: any) => {
     const row = e.target
     const rowId = row.parentElement?.children[0].innerHTML

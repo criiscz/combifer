@@ -5,11 +5,13 @@ import {ApexOptions} from "apexcharts";
 import {useEffect, useState} from "react";
 import {getReportBuys, getReportProductMostSold} from "@/api/Reports";
 import dynamic from "next/dynamic";
+import {useLoginStatus} from "../../../../hooks/hooks";
 
 const Chart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
 export default function ReportPage() {
-  return (
+  const {isAdmin} = useLoginStatus()
+  return isAdmin && (
     <div className={styles.container}>
       <div className={styles.reports}>
         <h1 className={styles.reports__title}>Reportes</h1>
@@ -21,10 +23,10 @@ export default function ReportPage() {
             <BuyReport/>
           </ReportPanel>
           <ReportPanel title={'Reporte de Ventas'} description={'Ventaaas'}>
-            <ProductReport/>
+            {/*<ProductReport/>*/}
           </ReportPanel>
           <ReportPanel title={'Reporte de Finanzas'} description={'Finanzaaas'}>
-            <ProductReport/>
+            {/*<ProductReport/>*/}
           </ReportPanel>
         </div>
       </div>
@@ -46,20 +48,25 @@ const ReportPanel = (props: ReportPanelProps) => {
 
 const ProductReport = () => {
 
-  const {data} = useQuery('report_products_mopst', async () => {
-    return await fetch('http://localhost:8090/reports/most-sold-products?start_date=2020-10-10&end_date=2023-06-10&products_amount=3', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(res => res.json())
+  const {data} = useQuery('report_products_most', async () => {
+    return await getReportProductMostSold('2022-02-02', '2023-06-06', 10)
+      .then(res => res.data).then(res => {
+        const data = res.map((item: any) => {
+          return {
+            name: item.product.name,
+            data: item.soldAmount
+          }
+        })
+        return {
+          data: data
+        }
+      })
   })
 
   const series = [
     {
       name: "Most Sold Products",
-      data: [44, 55, 41, 67, 22, 43]
-
+      data: data && data.data.map((item: any) => item.data)
     }
   ]
   const options = {
@@ -79,9 +86,6 @@ const ProductReport = () => {
     },
     dataLabels: {
       enabled: true,
-      formatter: function (val: any) {
-        return val + "%";
-      },
       offsetY: -20,
       style: {
         fontSize: '12px',
@@ -89,7 +93,7 @@ const ProductReport = () => {
       }
     },
     xaxis: {
-      categories: ['Product 1', 'Product 2', 'Product 3', 'Product 4', 'Product 5', 'Product 6'],
+      categories: data && data.data.map((item: any) => item.name) || [],
     },
     yaxis: {
       title: {
@@ -98,7 +102,8 @@ const ProductReport = () => {
     }
   } as ApexOptions
 
-  return typeof window !== 'undefined' && data && <Chart options={options} series={series} type={"bar"} width={600}/>
+  return typeof window !== 'undefined' && data &&
+    <Chart options={options} series={series} type={"bar"} width={600}/> || null
 }
 const BuyReport = () => {
 
@@ -254,7 +259,8 @@ const BuyReport = () => {
                name="end_date" id="end_date" value={endDate}
                onChange={e => setEndDate(e.target.value)}/>
       </div>
-      {typeof window !== 'undefined' && data && <Chart options={options} series={series} type={"bar"} width={600}/>}
+      {typeof window !== 'undefined' && data &&
+        <Chart options={options} series={series} type={"bar"} width={600}/>}
     </div>
   )
 }
