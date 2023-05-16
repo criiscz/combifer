@@ -10,6 +10,7 @@ import {useQuery} from "react-query";
 import {useEffect, useState} from "react";
 import Table from "@/app/dashboard/components/Table/Table";
 import UserDetails from "./components/UserDetails/UserDetails";
+import {useLoginStatus} from "../../../../hooks/hooks";
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -20,6 +21,8 @@ export default function SettingsPage() {
     'user',
     () => getAllUsers(cookies.get('userToken'))
   )
+
+  const {isAdmin} = useLoginStatus()
 
   const [usersFiltered, setUsersFiltered] = useState(data?.data || [])
   const [userSelected, setUserSelected] = useState<any>(undefined)
@@ -63,7 +66,7 @@ export default function SettingsPage() {
     setUserSelected(user)
   }
 
-  return (
+  return isAdmin && (
     <div className={styles.container}>
       <section className={styles.header}>
         <SearchBar onSubmit={searchUser} placeholder={'Buscar Usuarios'}/>

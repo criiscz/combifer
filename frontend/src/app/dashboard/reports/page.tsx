@@ -5,11 +5,13 @@ import {ApexOptions} from "apexcharts";
 import {useEffect, useState} from "react";
 import {getReportBuys, getReportProductMostSold} from "@/api/Reports";
 import dynamic from "next/dynamic";
+import {useLoginStatus} from "../../../../hooks/hooks";
 
 const Chart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
 export default function ReportPage() {
-  return (
+  const {isAdmin} = useLoginStatus()
+  return isAdmin && (
     <div className={styles.container}>
       <div className={styles.reports}>
         <h1 className={styles.reports__title}>Reportes</h1>

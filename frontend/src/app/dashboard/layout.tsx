@@ -99,6 +99,13 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   const {data} = useQuery({
     queryKey: 'session-info',
     queryFn: () => sessionInfo(cookies.get('userToken')),
+    onSuccess: (data) => {
+      if (data) {
+        cookies.set('user', data.name + ' ' + data.lastname, {path: '/'})
+        cookies.set('role', data.roles[0].name,{path: '/'})
+        cookies.set('username', data.username,{path: '/'})
+      }
+    }
   })
 
   function SelectModal() {

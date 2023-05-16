@@ -15,11 +15,13 @@ import {getAllOrders, getOrderByid} from "@/api/Orders";
 import {Order, OrderData} from "@/models/Order";
 import Sale, {SaleComplete} from "@/models/Sale";
 import OrderDetails from './components/OrderDetails/OrderDetails';
+import {useLoginStatus} from "../../../../hooks/hooks";
 
 export default function SettingsPage() {
 
   const router = useRouter()
   const cookies = useMemo(() => new Cookie(), [])
+  const { isAdmin } = useLoginStatus()
 
   const [ordersFiltered, setOrdersFiltered] = useState<any>([])
   const [orderSelected, setOrderSelected] = useState<any>(undefined)
@@ -67,7 +69,7 @@ export default function SettingsPage() {
     setOrderSelected(order)
   }
 
-  return (
+  return isAdmin && (
     <div className={styles.container}>
       <section className={styles.header}>
         <SearchBar onSubmit={searchOrder} placeholder={'Buscar Ordenes'}/>

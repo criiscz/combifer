@@ -1,7 +1,6 @@
 import styles from './style.module.css'
-import {Product, ProductComplete} from "@/models/Product";
+import {ProductComplete} from "@/models/Product";
 import Table from "../Table/Table";
-import {Dispatch, SetStateAction} from "react";
 
 export default function ProductList({
                                       products,

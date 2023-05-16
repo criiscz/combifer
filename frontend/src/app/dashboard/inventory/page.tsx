@@ -27,11 +27,6 @@ export default function InventoryPage() {
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
-  // const {
-  //   data: productsLotData,
-  //   refetch
-  // } = useQuery('productLots', () => getAllProductLots(cookies.get('token'), pageToFetch, 20))
-
   const {
     data: productsLotData,
     fetchNextPage,
@@ -133,7 +128,6 @@ export default function InventoryPage() {
     <div className={styles.inventory_container}>
       <section className={styles.inventory__header}>
         <SearchBar onSubmit={SearchProduct}/>
-        {/*<Title Title={'Lista de Productos'}/>*/}
         <Button title={'Agregar Producto'} onClick={AddProduct} icon={'ri:add-circle-line'}/>
       </section>
       <section className={styles.inventory__body}>

@@ -1,21 +1,69 @@
-.maintance {
+.container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100vh;
     width: 100%;
-    font-family: 'Inter', sans-serif;
+    padding: 2rem 5rem;
 }
 
-.elements {
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: 'Inter', sans-serif;
+
+}
+
+.content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    width: 80%;
-    height: 80%;
-    background: var(--white);
+    width: 100%;
+}
+
+.settings__cards {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 2rem;
+    gap: 1.5rem;
+}
+
+.settings__card_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 10rem;
+    height: 10rem;
+    padding: 1rem;
     border-radius: 0.5rem;
+    background: #fff;
+    transition: all 0.3s ease-in-out;
+    color: var(--gray-strong);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+}
+
+/* Icon style */
+.settings__card {
+    width: 10rem;
+    height: 10rem;
+    margin: 0 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    cursor: pointer;
+}
+
+.settings__card_item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+    color: var(--gray-light);
 }
