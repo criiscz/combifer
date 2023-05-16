@@ -7,9 +7,10 @@ export const useLoginStatus = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!cookies.get('role')) {
-      router.push('/');
-    } else if (cookies.get('role') !== 'Administrator') {
+    if (cookies.get('role') !== 'Administrator'
+      && window.location.pathname !== '/dashboard/inventory' // this is ugly
+      && window.location.pathname !== '/dashboard/sells' // this is ugly
+    ) {
       router.push('/dashboard');
     }
   }, [cookies, router]);
