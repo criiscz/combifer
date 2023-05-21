@@ -16,10 +16,12 @@ import authentications.domain.service.JwtService
 
 import reports.application.most_sold._
 import reports.application.orders_bought._
+import reports.application.financial_status._
 
 import authentications.domain.entity.UserContext
 import authorizations.domain.entity.PermissionContext
 import java.time.LocalDate
+
 
 class ReportController
 (using
@@ -68,6 +70,27 @@ extends BaseController:
     getProductsOrder.zServerLogic {(startDate: LocalDate, endDate: LocalDate) =>
       OrdersBoughtUseCase().execute(
         RequestOrdersBought(
+          startDate,
+          endDate
+        )
+      ).mapError(e => ErrorResponse(message = "Can't generate report"))
+    }.expose
+
+  private val getFinancialReport =
+    endpoint
+    .in(routeName / "financial-report")
+    .in(
+      query[LocalDate]("start_date")
+        .and(query[LocalDate]("end_date"))
+    )
+    .get
+    .out(jsonBody[ResponseFinancialStatus])
+    .expose
+
+  private val getFinancialReportRoute =
+    getFinancialReport.zServerLogic {(startDate: LocalDate, endDate: LocalDate) =>
+      FinancialStatusUseCase().execute(
+        RequestFinancialStatus(
           startDate,
           endDate
         )

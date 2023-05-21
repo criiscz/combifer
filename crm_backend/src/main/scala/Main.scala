@@ -30,6 +30,7 @@ import roles.infrastructure.controller.RoleController
 import permissions.infrastructure.controller.PermissionController
 import orders.infrastructure.controller.OrderController
 import reports.intrastructure.controller.ReportController
+import recommendations.infrastructure.controller.RecommendationController
 
 object Main extends ZIOAppDefault with DI:
 
@@ -45,7 +46,7 @@ object Main extends ZIOAppDefault with DI:
   PermissionController()
   OrderController()
   ReportController()
-  //RecommendationController()
+  RecommendationController()
 
   val serverOptions:ZioHttpServerOptions[Any] =
     ZioHttpServerOptions

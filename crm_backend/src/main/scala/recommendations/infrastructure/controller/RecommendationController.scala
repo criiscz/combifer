@@ -25,20 +25,34 @@ class RecommendationController()
 )
 extends BaseController():
 
-  private val getProductRecommendationToClient: PublicEndpoint[Long, ErrorResponse, ResponseProductsToClient, Any] = 
+  private val getProductRecommendationToClient: PublicEndpoint[Long, ErrorResponse, ResponseGetProductForClient, Any] =
     endpoint
-    .in("recommendation_product" / path[Long]("id"))
+    .in("recommendation_product")
     .get
+    .in(query[Long]("client_id"))
     .errorOut(jsonBody[ErrorResponse])
-    .out(jsonBody[ResponseProductsToClient])
+    .out(jsonBody[ResponseGetProductForClient])
     .expose
 
   private val getProductRecommendatonToClientRoute: ZServerEndpoint[Any, Any] = 
-    getProductRecommendationToClient.zServerLogic { (id:Long) =>
+    getProductRecommendationToClient.zServerLogic { (clientId:Long) =>
+       GetProductForClient()
+         .execute(RequestGetProductForClient(clientId))
+         .mapError(e => ErrorResponse(message="Can't get recommendation"))
+    }.expose
+
+  private val generateRecommendations: PublicEndpoint[String, ErrorResponse, ResponseProductsToClient, Any] =
+    endpoint
+      .in("generate_recommendations")
+      .get
+      .in(query[String]("strategy"))
+      .errorOut(jsonBody[ErrorResponse])
+      .out(jsonBody[ResponseProductsToClient])
+      .expose
+
+  private val generateRecommendationsRoute: ZServerEndpoint[Any, Any] =
+    generateRecommendations.zServerLogic { strategy =>
       ProductsToClient()
-        .execute(RequestProductsToClient("nice"))
-        .mapError(e => ErrorResponse(message="Cant recommend!"))
-      // GetProductForClient()
-      //   .execute(request)
-      //   .mapError(e => ErrorResponse(message="Can't get recommendation"))
+        .execute(RequestProductsToClient(strategy))
+        .mapError(e => ErrorResponse(message = "Can't create recommendations"))
     }.expose

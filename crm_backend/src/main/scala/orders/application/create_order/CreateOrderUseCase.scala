@@ -23,51 +23,51 @@ extends BaseUseCase[RequestCreateOrder, ResponseCreateOrder]:
 
   override def execute(request: RequestCreateOrder): Task[ResponseCreateOrder] = 
     ZIO.succeed{
-      val order = orderRepository.insertOrder(
-        Order (
-          createDate = LocalDate.now(),
-          receiveDate = None,
-          description = request.description,
-          employeeId = user.agentId
-        )
-      )
-      val products = 
-        ZIO.foreachPar(request.products)(insertProductOrder(_, order.id))
-      ResponseCreateOrder(order)
-    }
+      for
+        order <- ZIO.attempt(orderRepository.insertOrder(
+          Order (
+            createDate = LocalDate.now(),
+            receiveDate = None,
+            description = request.description,
+            employeeId = user.agentId
+          )
+        ))
+        products <- ZIO.foreachPar(request.products)(insertProductOrder(_, order.id))
+      yield (ResponseCreateOrder(order, products))
+    }.flatten
 
   private def insertProductOrder(productInfo: OrderProductInformation, orderId:Long) = 
-    ZIO.succeed {
-      for 
-       lot <- ZIO.succeed(resolveProductLot(productInfo))
-       product <- ZIO.succeed(productRepository.getProduct(productInfo.productId))
-      yield (
-        orderProductRepository.insertOrderProduct(
-          OrderProduct(
-            productQuantity = productInfo.quantity,
-            productUnitPrice = productInfo.unitPrice,
-            productName = product.get.name,
-            orderId, 
-            productLotId = lot.id
+    ZIO.attempt {
+      for
+        lot <- ZIO.attempt(resolveProductLot(productInfo))
+        product <- ZIO.attempt(productRepository.getProduct(productInfo.productId))
+        orderProduct <- ZIO.attempt {
+          orderProductRepository.insertOrderProduct(
+            OrderProduct(
+              productQuantity = productInfo.quantity,
+              productUnitPrice = productInfo.unitPrice,
+              productName = product.get.name,
+              orderId,
+              productLotId = lot.id
+            )
           )
-        )
-      )
-    }
+        }
+      yield (orderProduct)
+    }.flatten
 
   private def resolveProductLot(productInfo: OrderProductInformation): ProductLot =
     productInfo.lotId match
-    case None => productLotRepository.insertLot(
-      ProductLot (
-        price = productInfo.unitPrice,
-        enterDate = LocalDate.now(),
-        emptynessDate = None,
-        quantity = 0,
-        productId = productInfo.productId
+      case None => productLotRepository.insertLot(
+        ProductLot (
+          price = productInfo.unitPrice,
+          enterDate = LocalDate.now(),
+          emptynessDate = None,
+          quantity = 0,
+          productId = productInfo.productId
+        )
       )
-    )
-    case Some(value) =>  productLotRepository
-      .getLot(value)
-      .getOrElse(
-        resolveProductLot(productInfo.copy(lotId = None))
+      case Some(value) =>  productLotRepository
+          .getLot(value)
+          .getOrElse(
+            resolveProductLot(productInfo.copy(lotId = None))
       )
-
