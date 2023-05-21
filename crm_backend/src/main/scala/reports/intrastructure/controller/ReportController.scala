@@ -17,6 +17,7 @@ import authentications.domain.service.JwtService
 import reports.application.most_sold._
 import reports.application.orders_bought._
 import reports.application.financial_status._
+import reports.application.sales_sold._
 
 import authentications.domain.entity.UserContext
 import authorizations.domain.entity.PermissionContext
@@ -70,6 +71,28 @@ extends BaseController:
     getProductsOrder.zServerLogic {(startDate: LocalDate, endDate: LocalDate) =>
       OrdersBoughtUseCase().execute(
         RequestOrdersBought(
+          startDate,
+          endDate
+        )
+      ).mapError(e => ErrorResponse(message = "Can't generate report"))
+    }.expose
+
+
+  private val getProductsSale =
+    endpoint
+    .in(routeName / "sale-sold-products")
+    .in(
+      query[LocalDate]("start_date")
+        .and(query[LocalDate]("end_date"))
+    )
+    .get
+    .out(jsonBody[ResponseSalesSold])
+    .expose
+
+  private val getProductsSaleRoute =
+    getProductsSale.zServerLogic {(startDate: LocalDate, endDate: LocalDate) =>
+      SalesSoldUseCase().execute(
+        RequestSalesSold(
           startDate,
           endDate
         )
