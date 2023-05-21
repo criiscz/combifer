@@ -1,7 +1,7 @@
 package recommendations.application.products_to_client
 
-import recommendations.domain.entity.RatingProductClient
+import recommendations.domain.entity.RecommendationProduct
 
 case class ResponseProductsToClient (
-  data: List[RatingProductClient]
+  data: List[RecommendationProduct]
 )

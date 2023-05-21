@@ -59,7 +59,7 @@ trait DI:
   given saleProductRepository: SaleProductRepository = new SaleProductRepositoryImpl()
   given saleRepository: SaleRepository = new SaleRepositoryImpl()
   given hashService: HashService = new HashServiceImpl()
-  //given sparkService: SparkService = new SparkServiceImpl()
+  given sparkService: SparkService = new SparkServiceImpl()
   given recommendationRepository: RecommendationProductRepository = new RecommendationProductRepositoryImpl()
   given reportController: ReportRepository = new ReportRepositoryImpl()
   given emailNotificationService: EmailNotificationService = new EmailNotificationServiceImpl()

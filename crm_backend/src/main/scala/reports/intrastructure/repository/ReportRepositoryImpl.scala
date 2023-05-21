@@ -59,3 +59,51 @@ class ReportRepositoryImpl extends ReportRepository with BaseRepository:
       yield(data)
     }
     ctx.run(q).map(_._2)
+
+  override def getSaleProducts(startDate:LocalDate, endDate:LocalDate): List[SaleProduct] =
+    val q = quote {
+      for
+        data <- query[Sale]
+          .join(query[SaleProduct]).on(_.id == _.saleId)
+          .filter { data =>
+            val (sale, product) = data
+            infix"${sale.creationDate} > ${lift(startDate)}".as[Boolean] &&
+            infix"${sale.creationDate} < ${lift(endDate)}".as[Boolean]
+          }
+      yield(data)
+    }
+    ctx.run(q).map(_._2)
+
+  override def getTotalOutcomeBetween(startDate:LocalDate, endDate:LocalDate): Option[Double] =
+    val q = quote {
+      for
+        data <- query[Order]
+          .join(query[OrderProduct]).on(_.id == _.orderId)
+          .filter { data =>
+            val (order, product) = data
+            infix"${order.createDate} > ${lift(startDate)}".as[Boolean] &&
+            infix"${order.createDate} < ${lift(endDate)}".as[Boolean]
+          }.map(data =>
+              val (order, product) = data
+              product.productUnitPrice * product.productQuantity
+          )
+      yield(data)
+    }
+    ctx.run(q.sum)
+
+  override def getTotalIncomeBetween(startDate:LocalDate, endDate:LocalDate): Option[Double] =
+    val q = quote {
+      for
+        data <- query[Sale]
+          .join(query[SaleProduct]).on(_.id == _.saleId)
+          .filter { data =>
+            val (sale, product) = data
+            infix"${sale.creationDate} > ${lift(startDate)}".as[Boolean] &&
+            infix"${sale.creationDate} < ${lift(endDate)}".as[Boolean]
+          }.map(data =>
+              val (sale, product) = data
+              product.productUnitPrice * product.productQuantity
+          )
+      yield(data)
+    }
+    ctx.run(q.sum)
