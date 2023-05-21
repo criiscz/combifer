@@ -14,13 +14,21 @@ class ProductLotRepositoryImpl extends ProductLotRepository with BaseRepository:
 
   import ctx._
 
-  override def getLots(from: Int, to: Int): List[ProductLot] =
-     ctx.run(
-       query[ProductLot]
-        .sortBy(_.id)(Ord.ascNullsLast)
-        .take(lift(to))
-        .drop(lift(from))
-     )
+  override def getLots(from: Int, to: Int, search: Option[String]): List[(ProductLot, Product, CategoryProduct, Location)] =
+    val searchText = s"%${search.getOrElse("")}%"
+    val q = quote {
+      for {
+        lot <- query[ProductLot]
+        product <- query[Product]
+            .filter(_.name like lift(searchText))
+            .join(_.id == lot.productId)
+        category <- query[CategoryProduct]
+          .join(_.id == product.categoryProductId)
+        location <- query[Location]
+          .join(_.id == product.locationId)
+      } yield (lot,product,category, location)
+    }
+     ctx.run(q)
 
   override def getTotalAmountOfLots(): Long = 
     ctx.run(query[ProductLot].size)

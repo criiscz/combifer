@@ -3,8 +3,9 @@ package recommendations.domain.entity
 import java.time.LocalDate
 
 case class RecommendationProduct (
-  id: Long,
+  id: Long = -1,
   clientId: Long,
   productId:Long,
-  createDate: LocalDate
+  recommendedRate: Double,
+  createDate: LocalDate = LocalDate.now()
 )

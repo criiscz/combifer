@@ -11,7 +11,13 @@ class GetLotsUseCase()(
   override def execute(request: RequestGetLots) = 
     ZIO.succeed(
       for 
-        products <- ZIO.succeed( productLotRepository.getLots(request.from, request.to))
+        products <- ZIO.succeed(productLotRepository.getLots(request.from, request.to, request.search))
         total <- ZIO.succeed(productLotRepository.getTotalAmountOfLots())
-      yield( ResponseGetLots( data = products, request = request, total = total) )
+      yield(
+        ResponseGetLots(
+          data = products
+            .map(d => ProductLotInformation(d(0), d(1), d(3), d(2))),
+          request = request,
+          total = total)
+      )
     ).flatten

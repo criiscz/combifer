@@ -48,5 +48,20 @@ class RecommendationProductRepositoryImpl extends RecommendationProductRepositor
     }
     ctx.run(ratedData)
       .map(data => 
-        RatingProductClient(data._1, data._2, data._3)
+        RatingProductClient(
+          productId = data._1,
+          clientId = data._2,
+          rating = data._3
+        )
       )
+
+  override def insertRecommendationsList(recommendations: List[RecommendationProduct]): List[RecommendationProduct] =
+    val q = quote {
+      liftQuery(recommendations)
+        .foreach(d =>
+          query[RecommendationProduct]
+            .insertValue(d)
+            .returning(r => r)
+        )
+    }
+    ctx.run(q)

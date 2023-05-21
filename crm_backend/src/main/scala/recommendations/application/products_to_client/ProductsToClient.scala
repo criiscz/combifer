@@ -1,7 +1,6 @@
 package recommendations.application.products_to_client
 
 import zio._
-import org.apache.spark.sql._
 
 import shared.application.BaseUseCase
 import recommendations.domain.repository.RecommendationProductRepository
@@ -18,7 +17,7 @@ extends BaseUseCase[RequestProductsToClient, ResponseProductsToClient]:
     ZIO.succeed {
       val productHistoryOfClients = recommendationProductRepository.getProductsBoughtByClient()
       val dataframe = sparkService.generateDataFrame(productHistoryOfClients)
-      sparkService.traitALSModel(dataframe)
-
-      ResponseProductsToClient(productHistoryOfClients)
+      val trainResults = sparkService.traitALSModel(dataframe)
+      recommendationProductRepository.insertRecommendationsList(trainResults)
+      ResponseProductsToClient(trainResults)
     } 

@@ -9,6 +9,6 @@ case class RequestCreateSale(
 case class SaleProductInformation(
   lotId:Long,
   quantity: Long,
-  discount: Float,
+  discount: Double,
   taxId: Long
 )
