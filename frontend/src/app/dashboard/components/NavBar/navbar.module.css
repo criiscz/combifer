@@ -168,3 +168,8 @@
 .navbar__logout:hover {
     color: #383838;
 }
+
+.navbar__logout_text {
+    cursor: pointer;
+    margin-inline: 0.5rem;
+}

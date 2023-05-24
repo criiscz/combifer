@@ -15,7 +15,7 @@ import {getAllOrders, getOrderByid} from "@/api/Orders";
 import {Order, OrderData} from "@/models/Order";
 import Sale, {SaleComplete} from "@/models/Sale";
 import OrderDetails from './components/OrderDetails/OrderDetails';
-import {useLoginStatus} from "../../../../hooks/hooks";
+import {useLoginStatus} from "@/hooks/useLoginStatus";
 
 export default function SettingsPage() {
 

@@ -93,7 +93,19 @@ export default function SellPage() {
           {
             <TableBills
               header={['Id', 'Fecha', 'Id de Cliente', 'Id de empleado', 'Total']}
-              items={billsFiltered}
+              items={
+                billsFiltered.map((bill: any) => {
+                  return {
+                    id: bill.id,
+                    date: bill.creationDate,
+                    clientId: bill.clientId,
+                    employeeId: bill.employeeId,
+                    total: sales.find(sale => sale.sale.id == bill.id)?.products.map((product) => {
+                      return product.productQuantity * product.productUnitPrice
+                    }).reduce((a, b) => a + b, 0)
+                  }
+                })
+              }
               setItemSelected={setItemSelected}
             />
           }

@@ -34,6 +34,7 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
     setProducts,
     setProductsSelected
   } = useContext(SellContext)
+
   const cookies = new Cookies()
 
   const clearSell = () => {
@@ -169,11 +170,7 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
   )
 }
 
-function ItemComponent({
-                         title, children
-                       }: {
-  title: string, children?: any
-}) {
+function ItemComponent({title, children}: { title: string, children?: any }) {
   return (
     <div className={styles.rowItem}>
       <h3 className={styles.rowItem__title}>{title}</h3>

@@ -6,14 +6,18 @@ import {useContext} from "react";
 import ModalContext from "@/context/ModalContext";
 import ProductContext from "@/context/ProductContext";
 import {ProductComplete} from "@/models/Product";
+import UserContext from "@/context/UserContext";
 
 export default function UserDetails(props: UserDetailsProps) {
 
   const {open , setOpen, id, setId} = useContext(ModalContext);
-  const openModal = (id:string, user:any) => {
+  const {setUserId, setUserDetails} = useContext(UserContext)
+  const openModal = (id:string, user:number) => {
     if (setId) {
       setId(id)
     }
+    setUserDetails(props.userSelected)
+    setUserId(user)
     setOpen(true)
   }
 
@@ -61,15 +65,15 @@ export default function UserDetails(props: UserDetailsProps) {
         </div>
         <div className={styles.body__actionButtons}>
           <button title={'Editar'} className={styles.body__actionButtons_edit}
-                  onClick={() => openModal('edit-user', props.userSelected.user.id)}
+                  onClick={() => openModal('edit-user', props.userSelected.id)}
           >
             <Icon icon={'ri:edit-line'}/>
           </button>
-          <button title={'Eliminar'} className={styles.body__actionButtons_delete}
-                  onClick={() => openModal('delete-user', props.userSelected.user.id)}
-          >
-            <Icon icon={'ri:delete-bin-line'}/>
-          </button>
+          {/*<button title={'Eliminar'} className={styles.body__actionButtons_delete}*/}
+          {/*        onClick={() => openModal('delete-user', props.userSelected.id)}*/}
+          {/*>*/}
+          {/*  <Icon icon={'ri:delete-bin-line'}/>*/}
+          {/*</button>*/}
         </div>
       </div>
 

@@ -1,15 +1,17 @@
 'use client'
 import styles from './navbar.module.css'
 import Link from "next/link";
-import React, {useCallback} from "react";
+import React, {useCallback, useMemo} from "react";
 import {Icon} from "@iconify/react";
 import MenuOption from "@/app/dashboard/components/NavBar/MenuOption/MenuOption";
-import { useLoginStatus } from '../../../../../hooks/hooks';
-import cookie from "universal-cookie";
+import { useLoginStatus } from '@/hooks/useLoginStatus';
+import Cookies from "universal-cookie";
+import {useRouter} from "next/navigation";
 
 export default function NavBar({name, role, id}: NavBarProps) {
   const { isAdmin } = useLoginStatus()
-  const cookies = new cookie()
+  const cookies = useMemo(() => new Cookies(), [])
+  const router = useRouter()
 
   const tabNameDictionary = {
     inventory: "inventory",
@@ -76,6 +78,10 @@ export default function NavBar({name, role, id}: NavBarProps) {
 
   const removeToken = () => {
     cookies.remove('userToken')
+    cookies.remove('user')
+    cookies.remove('username')
+    cookies.remove('role')
+    window.location.href = '/logout'
   }
 
 
@@ -126,7 +132,7 @@ export default function NavBar({name, role, id}: NavBarProps) {
       <div>
         <div className={styles.navbar__logout}>
           <Icon icon="bi:door-open-fill"/>
-          <Link href={'/logout'} onClick={removeToken}> Cerrar Sesión </Link>
+          <div className={styles.navbar__logout_text} onClick={removeToken}> Cerrar Sesión </div>
         </div>
       </div>
     </nav>

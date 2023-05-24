@@ -5,7 +5,7 @@ import {ApexOptions} from "apexcharts";
 import {useEffect, useState} from "react";
 import {getReportBuys, getReportProductMostSold} from "@/api/Reports";
 import dynamic from "next/dynamic";
-import {useLoginStatus} from "../../../../hooks/hooks";
+import {useLoginStatus} from "@/hooks/useLoginStatus";
 
 const Chart = dynamic(() => import('react-apexcharts'), {ssr: false})
 

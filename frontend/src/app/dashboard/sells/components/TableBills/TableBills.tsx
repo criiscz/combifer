@@ -1,7 +1,8 @@
 import styles from './style.module.css'
 import cookie from "universal-cookie";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import Sale from "@/models/Sale";
+import SellContext from "@/context/SellContext";
 
 export default function TableBills({header, items, setItemSelected}: {
   header: string[],
@@ -10,7 +11,9 @@ export default function TableBills({header, items, setItemSelected}: {
 }) {
   const cookies = new cookie()
   const [bill, setBill] = useState<Sale | undefined>()
+  const {total} = useContext(SellContext)
   const selectRow = (e: any) => {
+    console.log(items)
     const row = e.target
     const rowId = row.parentElement?.children[0].innerHTML
     const bill = items.find(bill => bill.id == rowId)
@@ -32,13 +35,10 @@ export default function TableBills({header, items, setItemSelected}: {
             return (
               <div className={styles.table__body_row} key={item.id} onClick={selectRow}>
                 <div className={styles.table__body_row_item}>{item.id}</div>
-                <div className={styles.table__body_row_item}>{item.creationDate}</div>
+                <div className={styles.table__body_row_item}>{item.date}</div>
                 <div className={styles.table__body_row_item}>{item.clientId}</div>
                 <div className={styles.table__body_row_item}>{item.employeeId}</div>
-                <div className={styles.table__body_row_item}>${0}</div>
-                {
-                  // TODO: Calcular el total de la factura (usar un contexto?)
-                }
+                <div className={styles.table__body_row_item}>${item.total}</div>
               </div>
             )
           })

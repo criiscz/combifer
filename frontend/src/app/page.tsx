@@ -1,9 +1,9 @@
 'use client'
 import {useRouter} from 'next/navigation'
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import LogoLogin from "@/app/login/components/LogoLogin";
 import styles from './page.module.css'
-import Cookies from "universal-cookie";
+import Cookie from "universal-cookie";
 import { Inter } from 'next/font/google'
 
 const inter = Inter({
@@ -12,12 +12,12 @@ const inter = Inter({
 });
 export default function Home() {
   const router = useRouter();
+  const cookies = useMemo(() => new Cookie(), [])
 
   useEffect(() => {
-    const cookies = new Cookies();
     if (cookies.get('userToken')) router.push('/dashboard')
     else router.push('/login')
-  }, [router])
+  }, [cookies, router])
 
   return (
 
