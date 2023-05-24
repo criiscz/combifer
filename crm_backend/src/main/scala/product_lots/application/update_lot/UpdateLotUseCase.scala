@@ -14,6 +14,7 @@ extends BaseUseCase[RequestUpdateLot, ResponseUpdateLot]:
       ProductLot(
         id = productId,
         price = request.price,
+        basePrice = request.basePrice,
         enterDate = request.enterDate,
         emptynessDate = request.emptynessDate,
         quantity =request.quantity,
