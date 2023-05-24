@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 case class RequestCreateLot(
   price: Double,
+  basePrice: Double,
   enterDate: LocalDate,
   emptynessDate: Option[LocalDate],
   quantity: Option[Long],

@@ -16,7 +16,8 @@ extends BaseUseCase[RequestCreateLot, ResponseCreateLot]:
         enterDate = request.enterDate,
         emptynessDate = request.emptynessDate,
         quantity = request.quantity.getOrElse(0),
-        productId = request.productId
+        productId = request.productId,
+        basePrice = request.basePrice
       ))
     ZIO.succeed (
       ResponseCreateLot(data = response)
