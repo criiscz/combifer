@@ -45,7 +45,7 @@ extends BaseUseCase[RequestCreateOrder, ResponseCreateOrder]:
           orderProductRepository.insertOrderProduct(
             OrderProduct(
               productQuantity = productInfo.quantity,
-              productUnitPrice = productInfo.unitPrice,
+              productUnitPrice = productInfo.baseUnitPrice,
               productName = product.get.name,
               orderId,
               productLotId = lot.id
@@ -62,8 +62,9 @@ extends BaseUseCase[RequestCreateOrder, ResponseCreateOrder]:
           price = productInfo.unitPrice,
           enterDate = LocalDate.now(),
           emptynessDate = None,
-          quantity = 0,
-          productId = productInfo.productId
+          quantity = productInfo.quantity,
+          productId = productInfo.productId,
+          basePrice = productInfo.baseUnitPrice
         )
       )
       case Some(value) =>  productLotRepository

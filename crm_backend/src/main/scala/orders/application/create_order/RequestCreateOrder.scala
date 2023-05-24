@@ -7,7 +7,8 @@ case class RequestCreateOrder (
 
 case class OrderProductInformation (
   quantity: Int,
-  unitPrice: Float,
+  baseUnitPrice: Float,
+  unitPrice:Float,
   name: String,
   lotId: Option[Long],
   productId: Long
