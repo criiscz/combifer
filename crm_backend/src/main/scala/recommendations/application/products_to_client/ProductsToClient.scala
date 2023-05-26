@@ -18,6 +18,7 @@ extends BaseUseCase[RequestProductsToClient, ResponseProductsToClient]:
       val productHistoryOfClients = recommendationProductRepository.getProductsBoughtByClient()
       val dataframe = sparkService.generateDataFrame(productHistoryOfClients)
       val trainResults = sparkService.traitALSModel(dataframe)
+      recommendationProductRepository.removeAllRecommendations()
       recommendationProductRepository.insertRecommendationsList(trainResults)
       ResponseProductsToClient(trainResults)
     } 

@@ -11,6 +11,10 @@ extends BaseUseCase[RequestSalesSold, ResponseSalesSold]:
   override def execute(request: RequestSalesSold): Task[ResponseSalesSold] =
     ZIO.attempt {
       ResponseSalesSold(
-        data = reportRepository.getSaleProducts(request.startDate, request.endDate)
+        data = reportRepository
+          .getSaleProducts(request.startDate, request.endDate)
+          .map(data =>
+            SaleProductInformation(data._1, data._2)
+          )
       )
     }

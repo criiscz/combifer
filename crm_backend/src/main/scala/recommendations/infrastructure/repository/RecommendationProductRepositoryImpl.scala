@@ -65,3 +65,6 @@ class RecommendationProductRepositoryImpl extends RecommendationProductRepositor
         )
     }
     ctx.run(q)
+
+  override def removeAllRecommendations(): Unit =
+    ctx.run(query[RecommendationProduct].delete)
