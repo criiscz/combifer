@@ -60,7 +60,7 @@ class ReportRepositoryImpl extends ReportRepository with BaseRepository:
     }
     ctx.run(q).map(_._2)
 
-  override def getSaleProducts(startDate:LocalDate, endDate:LocalDate): List[SaleProduct] =
+  override def getSaleProducts(startDate:LocalDate, endDate:LocalDate): List[(SaleProduct, LocalDate)] =
     val q = quote {
       for
         data <- query[Sale]
@@ -72,7 +72,7 @@ class ReportRepositoryImpl extends ReportRepository with BaseRepository:
           }
       yield(data)
     }
-    ctx.run(q).map(_._2)
+    ctx.run(q).map(d => (d._2, d._1.creationDate))
 
   override def getTotalOutcomeBetween(startDate:LocalDate, endDate:LocalDate): Option[Double] =
     val q = quote {

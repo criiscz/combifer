@@ -4,5 +4,10 @@ import products.domain.entity.Product
 import recommendations.domain.entity.RecommendationProduct
 
 case class ResponseGetProductForClient (
-  products: List[(RecommendationProduct, Product)]
+  products: List[RecommendationItem]
+)
+
+case class RecommendationItem(
+  recommendation: RecommendationProduct,
+  product: Product
 )

@@ -9,3 +9,4 @@ trait RecommendationProductRepository:
   def getRecommendationsForClient(clientId:Long): List[(RecommendationProduct, Product)]
   def getProductsBoughtByClient(): List[RatingProductClient]
   def insertRecommendationsList(recommendations: List[RecommendationProduct]): List[RecommendationProduct]
+  def removeAllRecommendations(): Unit
