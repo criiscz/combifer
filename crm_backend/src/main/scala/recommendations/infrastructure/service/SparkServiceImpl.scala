@@ -77,7 +77,7 @@ class SparkServiceImpl extends SparkService:
     val rmse = evaluator.evaluate(predictions)
     println(s"Root-mean-square error = $rmse")
 
-    val clientRecomendations = model.recommendForAllUsers(10)
+    val clientRecomendations = model.recommendForAllUsers(5)
     clientRecomendations.show()
 
     clientRecomendations

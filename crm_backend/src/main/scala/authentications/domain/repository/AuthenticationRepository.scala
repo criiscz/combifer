@@ -10,3 +10,4 @@ trait AuthenticationRepository:
   def getUsers(from: Int, to: Int): List[(User, Agent)]
   def getTotalAmountOfUsers():Long
   def getUserById(userId: Long):Option[(User, Agent)]
+  def getUserByIdDocument(idDocument: Long):Option[(User, Agent)]

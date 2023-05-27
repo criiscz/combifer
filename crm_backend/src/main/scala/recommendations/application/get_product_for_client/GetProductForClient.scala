@@ -14,6 +14,6 @@ extends BaseUseCase[RequestGetProductForClient,ResponseGetProductForClient]:
     ZIO.succeed{
       val products = recommendationProductRepository.getRecommendationsForClient(
           clientId = request.clientId
-        )
+        ).map(data => RecommendationItem(data._1, data._2))
       ResponseGetProductForClient(products)
     }

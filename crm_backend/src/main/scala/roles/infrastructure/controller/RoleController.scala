@@ -15,6 +15,7 @@ import shared.mapper.endpoints.Exposer._
 import authentications.domain.service.JwtService
 import authentications.domain.entity.UserContext
 import authorizations.domain.entity.PermissionContext
+import authentications.domain.repository.AuthenticationRepository
 import roles.domain.entity.Role
 
 import roles.application.get_role._
@@ -28,6 +29,7 @@ class RoleController
 (using
    roleRepository:RoleRepository,
    userRoleRepository: UserRoleRepository,
+   authenticationRepository: AuthenticationRepository,
    jwtService: JwtService)
 extends BaseController:
 
@@ -119,16 +121,16 @@ extends BaseController:
 
   private val setRoleToUser =
     secureEndpoint
-    .in(routeName / path[Long]("role_id") / "set-to" / path[Long]("user_id"))
+    .in(routeName / path[Long]("role_id") / "set-to" / path[Long]("id_document"))
     .post
     .errorOutVariant[ApplicationError](oneOfVariant(jsonBody[ErrorResponse]))
     .out(jsonBody[ResponseSetRoleToUser])
     .exposeSecure
 
   private val setRoleToUserRoute =
-    setRoleToUser.serverLogic{ (user:UserContext, permission: PermissionContext) => (roleId:Long, userId:Long) =>
+    setRoleToUser.serverLogic{ (user:UserContext, permission: PermissionContext) => (roleId:Long, idDocument:Long) =>
       SetRoleToUserUseCase().execute(
-        RequestSetRoleToUser(roleId, userId)
+        RequestSetRoleToUser(roleId, idDocument)
       )
       .mapError(e => ErrorResponse(message = "Can't set role to user"))
     }.expose
