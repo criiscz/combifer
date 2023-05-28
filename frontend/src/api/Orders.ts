@@ -25,3 +25,15 @@ export async function getOrderByid(token: string, id: number): Promise<OrderData
   });
   return await response.json() as OrderData;
 }
+
+export async function createOrder(token: string, order: any[]): Promise<BackResponse> {
+  const response = await fetch(API_URL + `orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify(order)
+  });
+  return await response.json() as BackResponse;
+}

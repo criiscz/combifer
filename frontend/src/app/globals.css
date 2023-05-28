@@ -39,10 +39,10 @@
     --card-rgb: 180, 185, 188;
     --card-border-rgb: 131, 134, 135;
 
-    --yellow-strong: #FDDC28;
+    --yellow-strong: #ffd800;
     --yellow-light: #FFEE90;
     --white: #FFFFFF;
-    --black: #383838;
+    --black: #2f2f2f;
     --gray-strong: #818181;
     --gray-light: #929292;
 
@@ -53,7 +53,7 @@
     --red-light: #FFE0E0;
 
     --gray-D9: #D9D9D9;
-    --gray-EE: #EEEEEE;
+    --gray-EE: #eeeeee;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -90,3 +90,89 @@
 .addProductCart__footer_button_delete:active {
     background: #d41a1a;
 }
+
+.smart_system_OH_YEAH_EGG_BTW_I_24_HOURS_CODING_HAPPY_NOT_HAPPY {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 4rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    width: 100%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-EE) var(--gray-EE);
+    margin-bottom: 20px;
+    gap: 1rem;
+}
+
+.smart__top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    height: 2rem;
+    top: 0;
+    border-radius: 1rem;
+    padding: 1rem;
+    width: 100%;
+}
+
+.smart__name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    height: 2rem;
+    top: 0;
+    gap: 1rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 100%;
+    box-shadow: 0 11px 10px -5px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
+    color: var(--yellow-strong);
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.smart__name span {
+    position: relative;
+    top: 15px;
+    left: -50px;
+    font-size: .5rem;
+    font-weight: 500;
+    color: #d2d2d2;
+    text-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.smart__exit {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    height: 3rem;
+    border-radius: 1rem;
+    margin-left: 1rem;
+    font-size: 2rem;
+    font-weight: 500;
+    color: red;
+    top: 0;
+    gap: 1rem;
+    width: 5rem;
+    background: #fcbaba;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.smart__name:hover {
+    background: #fafafa;
+}

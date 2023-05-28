@@ -7,14 +7,60 @@ import ModalContext from "@/context/ModalContext";
 import ProductContext from "@/context/ProductContext";
 import {ProductComplete} from "@/models/Product";
 import {OrderData} from "@/models/Order";
+import SellContext from "@/context/SellContext";
+import {useQuery} from "react-query";
+import {cookies} from "next/headers";
+import {getOrderByid} from "@/api/Orders";
+import {getToken} from "@/helpers/helpers";
+import orderContext from "@/context/OrderContext";
+import {getIVA} from "@/api/Taxes";
 
 export default function OrderDetails(props: OrderDetailsProps) {
 
   const {open, setOpen, id, setId} = useContext(ModalContext);
+
+  const {data:iva} = useQuery('iva',
+    () => {return getIVA(getToken())},
+    {
+      enabled: true,
+    }
+  )
+
+  const {setProductsAdded} = useContext(orderContext)
+  const {
+    setProductTotal,
+    setIva,
+    setTotal,
+    setDiscount,
+  } = useContext(SellContext)
+
+  // const {data} = useQuery('order-details',
+  //   () => {return getOrderByid(getToken(), props.orderSelected.id)},
+  //   {
+  //     enabled: !!props.orderSelected,
+  //   }
+  // )
   const openModal = (id: string, user: any) => {
     if (setId) {
       setId(id)
     }
+    setProductsAdded(user.products.map((product: any) => {
+      return {
+        quantity: product.productQuantity,
+        id: product.id,
+        name: product.productName,
+        buy_price: product.productUnitPrice,
+        sell_price: product.productUnitPrice * 1.3,
+      }
+    }))
+
+    setProductTotal(user.total)
+    if (iva !== undefined){
+      setIva(user.total * iva.data[0].value)
+      setTotal(user.total - (user.total * iva.data[0].value))
+    }
+    setDiscount(0)
+
     setOpen(true)
   }
 
@@ -56,15 +102,10 @@ export default function OrderDetails(props: OrderDetailsProps) {
           </div>
         </div>
         <div className={styles.body__actionButtons}>
-          <button title={'Editar'} className={styles.body__actionButtons_edit}
-                  onClick={() => openModal('edit-user', props.orderSelected.order.id)}
+          <button title={'Ver detalles'} className={styles.body__actionButtons_details}
+                  onClick={() => openModal('order-details', props.orderSelected)}
           >
-            <Icon icon={'ri:edit-line'}/>
-          </button>
-          <button title={'Eliminar'} className={styles.body__actionButtons_delete}
-                  onClick={() => openModal('delete-user', props.orderSelected.order.id)}
-          >
-            <Icon icon={'ri:delete-bin-line'}/>
+            <Icon icon={'ri:more-line'}/>
           </button>
         </div>
       </div>

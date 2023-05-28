@@ -46,11 +46,6 @@ export default function Table({header, items, itemsToDisplay = header.length, se
                     );
                   })
                 }
-                {/*<div className={styles.table__body_row_item}>{item.id}</div>*/}
-                {/*<div className={styles.table__body_row_item}>{item.creationDate}</div>*/}
-                {/*<div className={styles.table__body_row_item}>{item.clientId}</div>*/}
-                {/*<div className={styles.table__body_row_item}>{item.employeeId}</div>*/}
-                {/*<div className={styles.table__body_row_item}>${0}</div>*/}
               </div>
             )
           })

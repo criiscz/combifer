@@ -6,7 +6,7 @@ import {Icon} from "@iconify/react";
 import {useEffect, useMemo} from "react";
 import cookie from "universal-cookie"
 import {useRouter} from "next/navigation";
-import {useLoginStatus} from "../../../../hooks/hooks";
+import {useLoginStatus} from "@/hooks/useLoginStatus";
 
 export default function SettingsPage() {
   const { isAdmin } = useLoginStatus()

@@ -24,6 +24,7 @@ export default function Table({
   }
 
 
+
   return (
     <div className={styles.table__container}>
       <div className={styles.table__header}>

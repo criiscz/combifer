@@ -2,7 +2,7 @@
 import NavBar from "@/app/dashboard/components/NavBar/NavBar";
 import styles from './style.module.css'
 import ModalContext from "@/context/ModalContext";
-import React, {useMemo, useState} from "react";
+import React, {useContext, useMemo, useState} from "react";
 import Modal from "@/app/components/Modal/Modal";
 import CreateProductDialog from "@/app/dashboard/inventory/components/Dialogs/CreateProductDialog";
 import EditProductDialog from "@/app/dashboard/inventory/components/Dialogs/EditProductDialog";
@@ -21,6 +21,14 @@ import SellContext from "@/context/SellContext";
 import {useQuery} from "react-query";
 import {sessionInfo} from "@/api/Login";
 import Cookies from "universal-cookie";
+import CreateNewUserDialog
+  from "./users/components/Dialogs/CreateNewUserDialog/CreateNewUserDialog";
+import EditUserDialog from "@/app/dashboard/users/components/Dialogs/EditUserDialog/EditUserDialog";
+import UserContext from "@/context/UserContext";
+import AddProductOrder from "@/app/dashboard/orders/new-order/components/Dialogs/AddProductOrder";
+import OrderContext from "@/context/OrderContext";
+import CreateNewBuyDialog
+  from "@/app/dashboard/orders/new-order/components/Dialogs/CreateNewSellDialog/CreateNewSellDialog";
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
@@ -37,10 +45,10 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
   const [discount, setDiscount] = React.useState(0)
   const [taxId, setTaxId] = React.useState(0)
 
-  // const [products, setProducts] = useState<ProductComplete[]>([])
-  // const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
   const [productSelected, setProductSelected] = useState<ProductComplete[] | ProductCompleteQ[]>([])
   const [productsSelected, setProductsSelected] = useState<ProductComplete[] | ProductCompleteQ[] | undefined>([])
+
+  const [productsAdded, setProductsAdded] = useState<any[]>([])
 
   const productContext = useMemo(() => ({
     product,
@@ -52,28 +60,24 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     productsSelected: productSelected,
     setProductsSelected: setProductSelected
   }), [product, productSelected, productsSelected, refresh])
-
   const toastContext = useMemo(() => ({
     toast,
     setToast,
     text: toastText,
     setText: setToastText
   }), [toast, toastText])
-
   const modalContext = useMemo(() => ({
     open,
     setOpen,
     id,
     setId
   }), [open, id])
-
   const clientContext = useMemo(() => ({
     selectedClient,
     setSelectedClient,
     clients,
     setClients
   }), [selectedClient, clients])
-
   const sellContext = useMemo(() => ({
     products: productSelected,
     setProducts: setProductSelected,
@@ -93,34 +97,53 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     setTaxId
   }), [productsSelected, selectedClient, productTotal, iva, total])
 
+  const orderContext = useMemo(() => ({
+    productsAdded,
+    setProductsAdded
+  }), [productsAdded])
+
+
 
   const cookies = useMemo(() => new Cookies(), []);
 
   const {data} = useQuery({
     queryKey: 'session-info',
     queryFn: () => sessionInfo(cookies.get('userToken')),
+    enabled: !!cookies.get('userToken'),
     onSuccess: (data) => {
       if (data) {
         cookies.set('user', data.name + ' ' + data.lastname, {path: '/'})
-        cookies.set('role', data.roles[0].name,{path: '/'})
-        cookies.set('username', data.username,{path: '/'})
+        cookies.set('role', data.roles[0].name, {path: '/'})
+        cookies.set('username', data.username, {path: '/'})
       }
-    }
+    },
   })
+
+  const {userDetails} = useContext(UserContext)
 
   function SelectModal() {
     return id === 'create-product' &&
-      <CreateProductDialog closeDialog={() => setOpen(false)}/> ||
+        <CreateProductDialog closeDialog={() => setOpen(false)}/> ||
       id === 'edit-product' &&
-      <EditProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
+        <EditProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
       id === 'delete-product' &&
-      <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
+        <DeleteProductDialog closeDialog={() => setOpen(false)} product={product}/> ||
       id === 'buy-bill' &&
-      <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
+        <AddProductCartDialog closeDialog={() => setOpen(false)}/> ||
       id === 'create-bill' &&
-      <CreateNewSellDialog closeDialog={() => setOpen(false)}/> ||
+        <CreateNewSellDialog closeDialog={() => setOpen(false)}/> ||
       id === 'view-bill' &&
-      <CreateNewSellDialog closeDialog={() => setOpen(false)} readonly={true}/>;
+        <CreateNewSellDialog closeDialog={() => setOpen(false)} readonly={true}/> ||
+      id === 'create-user' &&
+        <CreateNewUserDialog closeDialog={() => setOpen(false)}/> ||
+      id === 'edit-user' &&
+        <EditUserDialog closeDialog={() => setOpen(false)} user={userDetails}/> ||
+      id === 'order-bill' &&
+        <AddProductOrder closeDialog={() => setOpen(false)}/> ||
+      id === 'order-create-bill' &&
+        <CreateNewBuyDialog closeDialog={() => setOpen(false)} readonly={false}/> ||
+      id === 'order-details' &&
+        <CreateNewBuyDialog closeDialog={() => setOpen(false)} readonly={true}/>
   }
 
   return (
@@ -130,19 +153,21 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
           <ClientContext.Provider value={clientContext}>
             <ProductContext.Provider value={productContext}>
               <ModalContext.Provider value={modalContext}>
-                <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
-                  { SelectModal() }
-                </Modal>
-                <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
-                <div className={styles.container}>
-                  <aside className={styles.asideNavBar}>
-                    <NavBar name={data?.name + ' ' + data?.lastname || 'Nombre'}
-                            role={data && data.roles[0] && data.roles[0].name || 'Rol'}/>
-                  </aside>
-                  <main className={styles.body}>
-                    {children}
-                  </main>
-                </div>
+                <OrderContext.Provider value={orderContext}>
+                  <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
+                    {SelectModal()}
+                  </Modal>
+                  <Toast open={toast} onclose={() => setToast(false)} text={toastText}/>
+                  <div className={styles.container}>
+                    <aside className={styles.asideNavBar}>
+                      <NavBar name={data?.name + ' ' + data?.lastname || 'Nombre'}
+                              role={data && data.roles[0] && data.roles[0].name || 'Rol'}/>
+                    </aside>
+                    <main className={styles.body}>
+                      {children}
+                    </main>
+                  </div>
+                </OrderContext.Provider>
               </ModalContext.Provider>
             </ProductContext.Provider>
           </ClientContext.Provider>
