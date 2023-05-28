@@ -23,7 +23,7 @@ export default function SettingsPage() {
   const cookies = useMemo(() => new Cookie(), [])
   const { isAdmin } = useLoginStatus()
 
-  const [ordersFiltered, setOrdersFiltered] = useState<any>([])
+  const [ordersFiltered, setOrdersFiltered] = useState<any>(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('orders') || '[]') : [] )
   const [orderSelected, setOrderSelected] = useState<any>(undefined)
   const [allOrders, setOrders] = useState<OrderData[]>([])
 
@@ -40,6 +40,7 @@ export default function SettingsPage() {
     Promise.all(ordersFetch).then((orders) => {
       setOrdersFiltered(orders as OrderData[] || [])
       setOrders(orders as OrderData[])
+      localStorage.setItem('orders', JSON.stringify(orders))
     })
   }, [orders, cookies])
 
@@ -86,7 +87,7 @@ export default function SettingsPage() {
                      id: order.order.id,
                      date: order.order.createDate,
                      employee: order.employee.idDocument,
-                     total: 0, // TODO: Calcular total
+                     total: order.products.map( (product) => product.productQuantity * product.productUnitPrice).reduce((a, b) => a + b, 0),
                      products: order.products,
                      name: order.employee.name,
                      lastName: order.employee.lastName,

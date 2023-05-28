@@ -17,18 +17,15 @@ export default function CarList({products, readonly}: BillProps) {
 
   const {setOpen, setId} = useContext(ModalContext);
   const {data} = useQuery('iva', () => getIVA(cookies.get('userToken')))
-  const {
-    setProducts,
-    setProductTotal,
-    setTotal,
-    setIva,
-    setTaxId
-  } = useContext(SellContext)
 
-  useEffect(() => {
-    setProducts(products)
-    console.log(products)
-  }, [products])
+  const {taxId,
+    setTaxId,
+    total,
+    setTotal,
+    iva,
+    setIva,
+    productTotal,
+    setProductTotal, setProducts} = useContext(SellContext)
 
   const openModal = (id: string) => {
     if (setId) {
@@ -46,7 +43,7 @@ export default function CarList({products, readonly}: BillProps) {
     let total = 0
     products.forEach((product) => {
       if (product.quantity === undefined) return
-      total += product.quantity * (product.lot.price! - calculateIVA(product.lot.price!))
+      total += product.quantity * (product.buy_price! - calculateIVA(product.buy_price!))
     })
     setTotal(total)
     return parseFloat(total.toFixed(2))
@@ -56,7 +53,7 @@ export default function CarList({products, readonly}: BillProps) {
     let total = 0
     products.forEach((product) => {
       if (product.quantity === undefined) return
-      total += product.quantity * calculateIVA(product.lot.price!)
+      total += product.quantity * calculateIVA(product.buy_price!)
     })
     setIva(total)
     return parseFloat(total.toFixed(2))
@@ -66,9 +63,10 @@ export default function CarList({products, readonly}: BillProps) {
     let total = 0
     products.forEach((product) => {
       if (product.quantity === undefined) return
-      total += product.quantity * product.lot.price!
+      total += product.quantity * product.buy_price!
     })
     setProductTotal(total)
+    setProducts(products)
     return parseFloat(total.toFixed(2))
   }
 
@@ -88,30 +86,36 @@ export default function CarList({products, readonly}: BillProps) {
           <div className={styles.bill__data_item}>
             <h2 className={styles.bill__data_item_header}>Total</h2>
             <h2
-              className={styles.bill__data_item_value}>{getTotal()}
+              className={styles.bill__data_item_value}>{
+              getTotal()
+            }
             </h2>
           </div>
           <div className={styles.bill__data_item}>
             <h2 className={styles.bill__data_item_header}>IVA</h2>
             <h2
-              className={styles.bill__data_item_value}>{getTotalIVA()}</h2>
+              className={styles.bill__data_item_value}>{
+              getTotalIVA()
+            }</h2>
           </div>
           <div className={styles.bill__data_item}>
             <h2 className={styles.bill__data_item_header}>Precio Total</h2>
             <h2
-              className={styles.bill__data_item_value}>{getTotalPrice()}</h2>
+              className={styles.bill__data_item_value}>{
+              getTotalPrice()
+            }</h2>
           </div>
         </div>
         <div className={styles.bill__actionButtons}>
           <button title={'Abrir Carrito'}
                   className={!readonly ? styles.bill__actionButtons_button_buy : styles.no_show}
-                  onClick={() => openModal('buy-bill')}
+                  onClick={() => openModal('order-bill')}
           >
             <Icon icon={'icons8:buy'}/>
           </button>
           <button title={'Crear Factura'}
                   className={!readonly ? styles.bill__actionButtons_button_create_bill : styles.no_show}
-                  onClick={() => openModal('create-bill')}
+                  onClick={() => openModal('order-create-bill')}
           >
             <Icon icon={'ri:add-line'}/>
           </button>
@@ -128,6 +132,6 @@ export default function CarList({products, readonly}: BillProps) {
 }
 
 interface BillProps {
-  products: ProductCompleteQ[]
+  products: any[]
   readonly?: boolean
 }

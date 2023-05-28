@@ -1,5 +1,6 @@
 /** @type {{images: {remotePatterns: [{protocol: string, hostname: string, port: string, pathname: string}], formats: (string)[]}, experimental: {appDir: boolean}}} */
 const nextConfig = {
+
   experimental: {
     appDir: true,
   },
@@ -12,7 +13,7 @@ const nextConfig = {
         pathname: '/siat/**',
       },
     ]
-  }
+  },
   // redirects: async () => {
   //   return [
   //     {
@@ -22,6 +23,9 @@ const nextConfig = {
   //     },
   //   ]
   // }
+  excludes:[
+      '/cypress',
+  ]
 }
 
 module.exports = nextConfig

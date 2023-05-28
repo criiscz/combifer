@@ -25,6 +25,10 @@ import CreateNewUserDialog
   from "./users/components/Dialogs/CreateNewUserDialog/CreateNewUserDialog";
 import EditUserDialog from "@/app/dashboard/users/components/Dialogs/EditUserDialog/EditUserDialog";
 import UserContext from "@/context/UserContext";
+import AddProductOrder from "@/app/dashboard/orders/new-order/components/Dialogs/AddProductOrder";
+import OrderContext from "@/context/OrderContext";
+import CreateNewBuyDialog
+  from "@/app/dashboard/orders/new-order/components/Dialogs/CreateNewSellDialog/CreateNewSellDialog";
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
@@ -43,6 +47,8 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
 
   const [productSelected, setProductSelected] = useState<ProductComplete[] | ProductCompleteQ[]>([])
   const [productsSelected, setProductsSelected] = useState<ProductComplete[] | ProductCompleteQ[] | undefined>([])
+
+  const [productsAdded, setProductsAdded] = useState<any[]>([])
 
   const productContext = useMemo(() => ({
     product,
@@ -91,6 +97,10 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     setTaxId
   }), [productsSelected, selectedClient, productTotal, iva, total])
 
+  const orderContext = useMemo(() => ({
+    productsAdded,
+    setProductsAdded
+  }), [productsAdded])
 
 
 
@@ -127,7 +137,13 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
       id === 'create-user' &&
         <CreateNewUserDialog closeDialog={() => setOpen(false)}/> ||
       id === 'edit-user' &&
-        <EditUserDialog closeDialog={() => setOpen(false)} user={userDetails}/>
+        <EditUserDialog closeDialog={() => setOpen(false)} user={userDetails}/> ||
+      id === 'order-bill' &&
+        <AddProductOrder closeDialog={() => setOpen(false)}/> ||
+      id === 'order-create-bill' &&
+        <CreateNewBuyDialog closeDialog={() => setOpen(false)} readonly={false}/> ||
+      id === 'order-details' &&
+        <CreateNewBuyDialog closeDialog={() => setOpen(false)} readonly={true}/>
   }
 
   return (
@@ -137,6 +153,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
           <ClientContext.Provider value={clientContext}>
             <ProductContext.Provider value={productContext}>
               <ModalContext.Provider value={modalContext}>
+                <OrderContext.Provider value={orderContext}>
                   <Modal isOpen={open} id={id} onClose={() => setOpen(false)}>
                     {SelectModal()}
                   </Modal>
@@ -150,6 +167,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                       {children}
                     </main>
                   </div>
+                </OrderContext.Provider>
               </ModalContext.Provider>
             </ProductContext.Provider>
           </ClientContext.Provider>

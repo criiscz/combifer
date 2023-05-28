@@ -4,11 +4,14 @@ import {useCallback, useContext, useEffect, useState} from "react";
 import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
 import ProductList from "@/app/dashboard/sells/new-sell/components/ProductList/ProductList";
 import {useQuery} from "react-query";
-import {getAllProductLots} from "@/api/ProductLots";
+import {getAllProductLots, getProductRecommendation} from "@/api/ProductLots";
 import ProductContext from "@/context/ProductContext";
 import {ProductLot} from "@/models/ProductLot";
 import {getProduct} from "@/api/Products";
 import cookie from "universal-cookie";
+import SellContext from "@/context/SellContext";
+import ClientContext from "@/context/ClientContext";
+import {Icon} from "@iconify/react";
 
 export default function AddProductCartDialog({
                                                closeDialog,
@@ -19,11 +22,38 @@ export default function AddProductCartDialog({
   const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
   const [update, setUpdate] = useState(false)
 
+  const [productRecommendation, setProductRecommendation] = useState([])
+
+  const {selectedClient} = useContext(ClientContext)
+
+  const {isFetching: fetchingAI} = useQuery(
+    'smart-system-get-product',
+    () => getProductRecommendation(selectedClient!.idDocument),
+    {
+      enabled: selectedClient !== undefined,
+      onSuccess: (data) => {
+        setProductRecommendation(data.products)
+      }
+    }
+  )
+
 
   const {
     data: productsLotData,
+    isFetching,
     refetch
-  } = useQuery('productLots', () => getAllProductLots(cookies.get('token')))
+  } = useQuery(
+    'productLots',
+    () => getAllProductLots(cookies.get('token')),
+    {
+      onSuccess: (data) => {
+        setProducts(data.data.filter((product: any) => product.lot.quantity > 0))
+        setProductsFiltered(data.data.filter((product: any) => product.lot.quantity > 0))
+
+      },
+      cacheTime: 0,
+    }
+  )
 
   const {
     refresh,
@@ -33,19 +63,6 @@ export default function AddProductCartDialog({
     setProductsSelected
   } = useContext(ProductContext)
 
-  useEffect(() => {
-    if (productsLotData !== undefined) {
-      console.log('Entro a refrescar')
-      const products = productsLotData.data.map(async (productLot: ProductLot) => {
-        return await getProduct(productLot.id)
-      })
-      Promise.all(products).then((products) => {
-        setProducts(products as ProductComplete[])
-        setProductsFiltered(products as ProductComplete[])
-      })
-      setUpdate(false)
-    }
-  }, [productsLotData, refetch, update])
 
   useEffect(() => {
     if (refresh) {
@@ -81,7 +98,10 @@ export default function AddProductCartDialog({
 
   const fillCar = () => {
     closeDialog()
-    console.log("ADD car: ", productsSelected)
+  }
+
+  const selectSuggestion = (name: string) => {
+    SearchProduct(name)
   }
 
   return (
@@ -90,6 +110,28 @@ export default function AddProductCartDialog({
         <SearchBar onSubmit={SearchProduct} id={"searchbar"}/>
       </div>
       <div className={styles.ddProductCart__body}>
+        {
+          selectedClient === undefined ? <></> :
+          fetchingAI ? <p>Cargando...</p> :
+
+          <div className={styles.smart_system_OH_YEAH_EGG_BTW_I_24_HOURS_CODING_HAPPY_NOT_HAPPY}>
+            {productRecommendation.map((product: any) => {
+              return (
+                <div className={styles.smart__top} key={product.recommendation.id}>
+                  <div className={styles.smart__name} onClick={() => selectSuggestion(product.product.name)}>
+                    <Icon icon={'ri:bard-fill'}/>
+                    {product.product.name}
+                  </div>
+                  <div className={styles.smart__exit} onClick={() => SearchProduct('')}>
+                    <Icon icon={'ri:close-line'}/>
+                    {product.product.price}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        }
+
         {
           products === undefined ?
             <ProductList products={[]} productSelected={selectProducts}/> :

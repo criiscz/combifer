@@ -18,8 +18,8 @@ import {BackResponse} from "@/models/BackResponse";
 export default function InventoryPage() {
   const cookies = new cookie()
 
-  const [products, setProducts] = useState<ProductComplete[]>([])
-  const [productsFiltered, setProductsFiltered] = useState<ProductComplete[]>(products)
+  const [products, setProducts] = useState<any[]>(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('products-items') || '[]') : [])
+  const [productsFiltered, setProductsFiltered] = useState<any[]>(products)
   const [productSelected, setProductSelected] = useState<ProductComplete | undefined>(undefined)
   const {setOpen, setId} = useContext(ModalContext);
   const [update, setUpdate] = useState(false)
@@ -29,47 +29,27 @@ export default function InventoryPage() {
 
   const {
     data: productsLotData,
-    fetchNextPage,
-    hasNextPage,
     isFetching,
-  } = useInfiniteQuery(
+  } = useQuery(
     'productLots',
-    ({pageParam = 0}) => getAllProductLots(cookies.get('token'), pageParam, 20),
+    () => getAllProductLots(cookies.get('token')),
     {
-      getNextPageParam: (lastPage) => {
-        if (lastPage.data.length < 20) return undefined
-        return lastPage.meta.currentPage + 1
-      }
+      onSuccess: (data) => {
+        setProducts(data.data.filter((product:any) => product.lot.quantity > 0))
+        setProductsFiltered(products)
+        localStorage.setItem('products-items', JSON.stringify(products))
+      },
+      cacheTime: 0,
     }
   )
 
-  const {refresh, setRefresh} = useContext(ProductContext)
 
-  const productsItem = useMemo(() => productsLotData?.pages.reduce((prev, page) => {
-    return {
-      meta: page.meta,
-      data: [...prev.data, ...page.data]
-    }
-  }), [productsLotData])
-
-  useEffect(() => {
-    if (productsLotData !== undefined) {
-      const products = productsLotData.pages.map(async (page) => {
-        return await page.data.map(async (productLot: ProductLot) => {
-          return await getProduct(productLot.id)
-        })
-      })
-
-      Promise.all(products).then((products) => {
-        products = products.flat()
-        Promise.all(products).then((products) => {
-          setProducts(products as ProductComplete[])
-          setProductsFiltered(products as ProductComplete[])
-        })
-      })
-      setUpdate(false)
-    }
-  }, [productsLotData, update])
+  // const productsItem = useMemo(() => productsLotData?.pages.reduce((prev, page) => {
+  //   return {
+  //     meta: page.meta,
+  //     data: [...prev.data, ...page.data]
+  //   }
+  // }), [productsLotData])
 
 
   const SearchProduct = (name: string) => {
@@ -83,31 +63,30 @@ export default function InventoryPage() {
   }
 
 
+  // const fetchMoreData = (containerRefElement?: HTMLDivElement | null) => {
+  //   fetchMoreOnBottomReached(containerRefElement)
+  // }
 
-  const fetchMoreData = (containerRefElement?: HTMLDivElement | null) => {
-    fetchMoreOnBottomReached(containerRefElement)
-  }
+  // const fetchMoreOnBottomReached = useCallback(
+  //   (containerRefElement?: HTMLDivElement | null) => {
+  //     if (containerRefElement) {
+  //       const {scrollHeight, scrollTop, clientHeight} = containerRefElement
+  //       //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
+  //       if (
+  //         scrollHeight - scrollTop - clientHeight < 300 &&
+  //         !isFetching &&
+  //         hasNextPage
+  //       ) {
+  //         fetchNextPage()
+  //       }
+  //     }
+  //   },
+  //   [fetchNextPage, hasNextPage, isFetching]
+  // )
 
-  const fetchMoreOnBottomReached = useCallback(
-    (containerRefElement?: HTMLDivElement | null) => {
-      if (containerRefElement) {
-        const { scrollHeight, scrollTop, clientHeight } = containerRefElement
-        //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
-        if (
-          scrollHeight - scrollTop - clientHeight < 300 &&
-          !isFetching &&
-          hasNextPage
-        ) {
-          fetchNextPage()
-        }
-      }
-    },
-    [fetchNextPage, hasNextPage, isFetching]
-  )
-
-  useEffect(() => {
-    fetchMoreOnBottomReached(tableContainerRef.current)
-  }, [fetchMoreOnBottomReached])
+  // useEffect(() => {
+  //   fetchMoreOnBottomReached(tableContainerRef.current)
+  // }, [fetchMoreOnBottomReached])
 
   const AddProduct = (product: Product) => {
     showAddProduct()
@@ -134,9 +113,9 @@ export default function InventoryPage() {
         {
           <ProductList products={productsFiltered ?? []}
                        productSelected={selectProduct}
-                       fetchMoreData={fetchMoreData}
-                       hasMore={!!hasNextPage}
-                       productsTotal={productsItem}
+                       fetchMoreData={() => {}}
+                       hasMore={false}
+                       productsTotal={[]}
                        ref={tableContainerRef}
           />
         }

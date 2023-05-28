@@ -112,14 +112,14 @@
     cursor: pointer;
 }
 
-.body__actionButtons_delete {
+.body__actionButtons_details {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     padding: 1rem;
-    background-color: rgba(255, 116, 116, 0.2);
-    color: rgb(255, 116, 116);
+    background-color: rgba(173, 173, 173, 0.2);
+    color: rgb(93, 93, 93);
     border-radius: 0.5rem;
     border: none;
     font-size: 2rem;

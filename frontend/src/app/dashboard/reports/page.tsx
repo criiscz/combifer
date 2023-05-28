@@ -3,7 +3,7 @@ import styles from './style.module.css'
 import {useQuery} from "react-query";
 import {ApexOptions} from "apexcharts";
 import {useEffect, useState} from "react";
-import {getReportBuys, getReportProductMostSold} from "@/api/Reports";
+import {getReportBuys, getReportProductMostSold, getReportSales} from "@/api/Reports";
 import dynamic from "next/dynamic";
 import {useLoginStatus} from "@/hooks/useLoginStatus";
 
@@ -23,7 +23,7 @@ export default function ReportPage() {
             <BuyReport/>
           </ReportPanel>
           <ReportPanel title={'Reporte de Ventas'} description={'Ventaaas'}>
-            {/*<ProductReport/>*/}
+            <SellReport/>
           </ReportPanel>
           <ReportPanel title={'Reporte de Finanzas'} description={'Finanzaaas'}>
             {/*<ProductReport/>*/}
@@ -103,7 +103,7 @@ const ProductReport = () => {
   } as ApexOptions
 
   return typeof window !== 'undefined' && data &&
-    <Chart options={options} series={series} type={"bar"} width={600}/> || null
+      <Chart options={options} series={series} type={"bar"} width={600}/> || null
 }
 const BuyReport = () => {
 
@@ -131,7 +131,7 @@ const BuyReport = () => {
     }, {
       name: "Precio total de productos comprados",
       type: 'line',
-      data: data && data.data.map((item: any) => item.productUnitPrice) || []
+      data: data && data.data.map((item: any) => item.productUnitPrice * item.productQuantity) || []
     }
   ]
 
@@ -234,7 +234,7 @@ const BuyReport = () => {
   } as ApexOptions
 
   const [startDate, setStartDate] = useState(getDefaultStartDate())
-  const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0])
+  const [endDate, setEndDate] = useState(getDefaultEndDate())
 
 // refetch data when date changes
   useEffect(() => {
@@ -247,6 +247,12 @@ const BuyReport = () => {
     return date.toISOString().split("T")[0]
   }
 
+  function getDefaultEndDate() {
+    const date = new Date()
+    date.setHours(date.getHours() + 24)
+    return date.toISOString().split("T")[0]
+  }
+
   return (
     <div>
       <div className={styles.reports__body_item_date}>
@@ -255,12 +261,211 @@ const BuyReport = () => {
                value={startDate}
                onChange={e => setStartDate(e.target.value)}/>
         <label htmlFor="end_date">Fecha de fin</label>
-        <input type="date" min={startDate} max={new Date().toISOString().split("T")[0]}
+        <input type="date" min={startDate} max={getDefaultEndDate()}
                name="end_date" id="end_date" value={endDate}
                onChange={e => setEndDate(e.target.value)}/>
       </div>
       {typeof window !== 'undefined' && data &&
-        <Chart options={options} series={series} type={"bar"} width={600}/>}
+          <Chart options={options} series={series} type={"bar"} width={600}/>}
+    </div>
+  )
+}
+
+const SellReport = () => {
+
+  const [startDate, setStartDate] = useState(getDefaultStartDate())
+  const [endDate, setEndDate] = useState(getDefaultEndDate())
+
+  function getDefaultStartDate() {
+    const date = new Date()
+    date.setMonth(date.getMonth() - 2)
+    return date.toISOString().split("T")[0]
+  }
+
+  function getDefaultEndDate() {
+    const date = new Date()
+    date.setHours(date.getHours() + 24)
+    return date.toISOString().split("T")[0]
+  }
+
+  const {data, refetch} = useQuery('report-sell-products', async () => {
+    return await getReportSales(startDate, endDate).then(res => res.data).then(res => {
+      //[
+      //     {
+      //       "product": {
+      //         "id": 0,
+      //         "productQuantity": 0,
+      //         "productDiscount": 0,
+      //         "productMeasureUnit": "string",
+      //         "productUnitPrice": 0,
+      //         "productName": "string",
+      //         "productDescription": "string",
+      //         "saleId": 0,
+      //         "taxId": 0,
+      //         "productLotId": 0
+      //       },
+      //       "soldDate": "2023-05-28"
+      //     }
+      //   ]
+      // Group the data by soldDate
+
+      const groupedData = res.reduce((groups: {
+        [key: string]: { productQuantity: number, productTotalPrice: number }
+      }, item: any) => {
+        const soldDate = new Date(item.soldDate);
+        const year = soldDate.getFullYear();
+        const month = soldDate.getMonth() + 1; // Month is zero-based, so add 1
+        const key = `${year}-${month}`;
+
+        if (!groups[key]) {
+          groups[key] = {
+            productQuantity: 0,
+            productTotalPrice: 0
+          };
+        }
+
+        groups[key].productQuantity += item.product.productQuantity;
+        groups[key].productTotalPrice += item.product.productQuantity * item.product.productUnitPrice;
+
+        return groups;
+      }, {});
+
+
+      console.log(groupedData)
+
+      return {data: groupedData}
+    })
+  })
+
+  const sortedKeys = Object.keys(data!.data).sort((a: string, b: string) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  const series = [
+    {
+      name: "Cantidad de productos vendidos",
+      data: Object.values(data!.data).map((item: any) => item.productQuantity),
+    },
+    {
+      name: "Precio total de productos vendidos",
+      data: Object.values(data!.data).map((item: any) => item.productTotalPrice),
+    },
+  ];
+  const options = {
+    chart: {
+      type: 'bar',
+      toolbar: {
+        show: true,
+        tools: {
+          download: false,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+        },
+      },
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: '50%',
+        borderRadius: 10,
+        dataLabels: {
+          position: 'top',
+        },
+      },
+    },
+    fill: {
+      type: 'solid',
+      colors: [
+        '#eb4d4b',
+        '#4ba8eb'],
+    },
+    stroke: {
+      width: [0, 4],
+      curve: 'smooth',
+      colors: ['#4ba8eb'],
+      fill: {
+        type: 'solid',
+        colors: [
+          '#eb4d4b',
+          '#4ba8eb'],
+      },
+
+    },
+    dataLabels: {
+      enabled: false,
+      enabledOnSeries: [0, 1],
+      style: {
+        fontSize: '12px',
+        colors: ["#eb4b4b", "#4ba8eb"]
+      },
+      background: {
+        enabled: true,
+      },
+    },
+    xaxis: {
+      categories: sortedKeys,
+      labels: {
+        show: true,
+      },
+    },
+    yaxis: [
+      {
+        title: {
+          text: 'Cantidad de productos vendidos',
+          style: {
+            color: '#eb4b4b',
+          }
+        }
+      },
+      {
+        opposite: true,
+        title: {
+          text: 'Precio total de productos vendidos',
+          style: {
+            color: '#4ba8eb',
+
+          }
+        }
+      }
+    ],
+    legend: {
+      position: 'bottom',
+      horizontalAlign: 'center',
+      offsetY: 10,
+      labels: {
+        colors: ['#eb4b4b', '#4ba8eb'],
+      },
+      markers: {
+        fillColors: ['#eb4b4b', '#4ba8eb'],
+      }
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      marker: {
+        fillColors: ['#eb4b4b', '#4ba8eb'],
+      }
+    },
+  } as ApexOptions
+
+  return (
+    <div>
+      <div className={styles.reports__body_item_date}>
+        <label htmlFor="start_date">Fecha de inicio</label>
+        <input type="date" min="2022-01-01" max={endDate} name="start_date" id="start_date"
+               value={startDate}
+               onChange={e => setStartDate(e.target.value)}/>
+        <label htmlFor="end_date">Fecha de fin</label>
+        <input type="date" min={startDate} max={getDefaultEndDate()}
+               name="end_date" id="end_date" value={endDate}
+               onChange={e => setEndDate(e.target.value)}/>
+      </div>
+      {typeof window !== 'undefined' && data &&
+          <Chart options={options} series={series} type={"bar"} width={600}/>}
     </div>
   )
 }

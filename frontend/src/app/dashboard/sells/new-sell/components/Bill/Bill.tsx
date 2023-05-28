@@ -27,7 +27,6 @@ export default function CarList({products, readonly}: BillProps) {
 
   useEffect(() => {
     setProducts(products)
-    console.log(products)
   }, [products])
 
   const openModal = (id: string) => {

@@ -4,7 +4,7 @@ import Sale from "@/models/Sale";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getAllSells(token: string, page: number = 0, per_page: number = 100): Promise<BackResponse> {
+export async function getAllSells(token: string, page: number = 0, per_page: number = 20): Promise<BackResponse> {
   const response = await fetch(API_URL + `sales?page=${page}&per_page=${per_page}`, {
     method: "GET",
     headers: {

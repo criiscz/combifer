@@ -22,13 +22,20 @@ export default function SettingsPage() {
 
   const {data, refetch} = useQuery(
     'user',
-    () => getAllUsers(cookies.get('userToken'))
+    () => getAllUsers(cookies.get('userToken')),
+    {
+      cacheTime: 0,
+      onSuccess: (data) => {
+        localStorage.setItem('users-items', JSON.stringify(data.data))
+        setUsersFiltered(data.data)
+      }
+    }
   )
 
   const {isAdmin} = useLoginStatus()
   const {open, setOpen, setId} = useContext(ModalContext)
 
-  const [usersFiltered, setUsersFiltered] = useState(data?.data || [])
+  const [usersFiltered, setUsersFiltered] = useState(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('users-items') || '[]') : [])
   const [userSelected, setUserSelected] = useState<any>(undefined)
 
   useEffect(() => {

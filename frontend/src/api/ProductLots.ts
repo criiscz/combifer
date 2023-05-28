@@ -7,7 +7,7 @@ import {BackResponse} from "@/models/BackResponse";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
-export async function getAllProductLots(productId: number | string, page: number = 0, per_page: number = 10): Promise<BackResponse> {
+export async function getAllProductLots(productId: number | string, page: number = 0, per_page: number = 20): Promise<BackResponse> {
   const response = await fetch(API_URL + `product-lots?page=${page}&per_page=${per_page}`, {
     method: "GET",
     headers: {
@@ -15,6 +15,16 @@ export async function getAllProductLots(productId: number | string, page: number
     },
   });
   return await response.json() as BackResponse;
+}
+
+export async function getProductRecommendation(clientId: number | string) {
+  const response = await fetch(API_URL + `recommendation_product?client_id=${clientId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return await response.json();
 }
 
 export async function createProductLot(productLot: ProductLot): Promise<ProductLot> {

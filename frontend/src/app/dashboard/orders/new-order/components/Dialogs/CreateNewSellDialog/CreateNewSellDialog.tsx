@@ -1,24 +1,21 @@
 import styles from "./style.module.css";
-import SearchBar from "@/app/dashboard/components/SearchBar/SearchBar";
-import ProductList from "@/app/dashboard/sells/new-sell/components/ProductList/ProductList";
 import {Icon} from "@iconify/react";
-import Table from "@/app/dashboard/sells/new-sell/components/Table/Table";
+import Table from "@/app/dashboard/components/Table/Table";
 import {useContext} from "react";
-import ProductContext from "@/context/ProductContext";
 import Button from "@/app/components/Button";
-import {ProductCompleteQ} from "@/models/Product";
 import SellContext from "@/context/SellContext";
 import ToastContext from "@/context/ToastContext";
-import {useMutation} from "react-query";
-import {createClient} from "@/api/Clients";
-import {DocumentType} from "@/models/DocumentType";
-import {createNewSell, SellCreate} from "@/api/Sells";
 import Cookies from "universal-cookie";
+import orderContext from "@/context/OrderContext";
+import {useMutation} from "react-query";
+import {createOrder} from "@/api/Orders";
+import {useRouter} from "next/navigation";
 
-export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSellDialogProps) {
+export default function CreateNewBuyDialog({closeDialog, readonly}: CreateNewSellDialogProps) {
 
-  const {productsSelected} = useContext(ProductContext)
+  const {productsAdded} = useContext(orderContext)
   const {setToast, setText} = useContext(ToastContext)
+  const router = useRouter()
   const {
     productTotal,
     iva,
@@ -47,13 +44,15 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
     setProductsSelected([])
   }
 
-  const {mutate: clientMutation} = useMutation({
-    mutationFn: (sell: SellCreate) => createNewSell(cookies.get('userToken'), sell),
+
+  const {mutate: orderMutation} = useMutation({
+    mutationFn: (order:any) => createOrder(cookies.get('userToken'), order),
     onSuccess: () => {
       closeDialog()
       setToast(true)
-      setText('Venta creada con éxito')
+      setText('Orden creada con éxito')
       clearSell()
+      router.push('/dashboard/orders')
     }
   })
 
@@ -64,27 +63,25 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
     closeDialog()
   }
 
-  const createSell = () => {
-    if (productsSelected.length && selectedClient) {
-      const products = productsSelected.map((product: ProductCompleteQ) => {
+  const createBuy = () => {
+    if (productsAdded.length ) {
+      const products = productsAdded.map((product: any) => {
         return {
-          lotId: product.lot.id,
           quantity: product.quantity,
-          discount: 0,
-          taxId: taxId
+          productId: product.id,
+          name: product.name,
+          baseUnitPrice: product.buy_price,
+          unitPrice: product.sell_price,
         }
       })
-      const sell = {
-        client: selectedClient.idDocument,
-      }
-      clientMutation({
-        description: 'Venta',
+
+      orderMutation({
+        description: 'compra',
         products: products,
-        clientId: sell.client,
       })
     } else {
       setToast(true)
-      setText('No hay productos o cliente seleccionado')
+      setText('no hay productos seleccionados')
     }
   }
 
@@ -102,7 +99,7 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
             <div className={styles.item__row}>
               <div className={styles.item_title}>Cantidad de productos</div>
               <div className={styles.title__value}>{
-                productsSelected.length
+                productsAdded.length
               }</div>
             </div>
             <div className={styles.item__row}>
@@ -122,48 +119,36 @@ export default function CreateNewSellDialog({closeDialog, readonly}: CreateNewSe
               <div className={styles.title__value}>${productTotal.toFixed(2)}</div>
             </div>
           </ItemComponent>
-          <ItemComponent title="Cliente">
-            <div className={styles.item__row}>
-              <div className={styles.item__title}>Tipo de Documento</div>
-              <div className={styles.title__value}>{selectedClient?.documentType}</div>
-            </div>
-            <div className={styles.item__row}>
-              <div className={styles.item__title}>Documento</div>
-              <div className={styles.title__value}>{selectedClient?.idDocument}</div>
-            </div>
-            <div className={styles.item__row}>
-              <div className={styles.item__title}>Nombre</div>
-              <div className={styles.title__value}>{selectedClient?.name}</div>
-            </div>
-            <div className={styles.item__row}>
-              <div className={styles.item__title}>Apellido</div>
-              <div className={styles.title__value}>{selectedClient?.lastName}</div>
-            </div>
-            <div className={styles.item__row}>
-              <div className={styles.item__title}>Telefono</div>
-              <div className={styles.title__value}>{selectedClient?.phone}</div>
-            </div>
-            <div className={styles.item__row}>
-              <div className={styles.item__title}>Correo</div>
-              <div className={styles.title__value}>{selectedClient?.email}</div>
-            </div>
-          </ItemComponent>
         </div>
         <div className={styles.row}>
           <ItemComponent title="Resumen">
-            <Table products={productsSelected} header={[
-              'Id',
+            <Table items={productsAdded.map(
+              (product: any) => {
+                return {
+                  name: product.name,
+                  buy_price: '$'+product.buy_price,
+                  sell_price: '$'+product.sell_price,
+                  quantity: product.quantity,
+                  total: '$'+(product.quantity * product.buy_price),
+                  id: product.id,
+                }
+              }
+            )} itemsToDisplay={5} header={[
               'Nombre',
-              'Precio',
+              'Precio Compra',
+              'Precio Venta',
               'Cantidad',
               'Total'
             ]}
-
+                   setItemSelected={() => {
+                   }}
             />
           </ItemComponent>
         </div>
         <div className={!readonly ? styles.row : styles.no_show}>
-          <Button title={'Realizar Venta'} onClick={createSell}/>
+          <Button title={'Realizar Compra'} onClick={() => {
+            createBuy()
+          }}/>
         </div>
       </div>
     </div>

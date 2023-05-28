@@ -80,10 +80,10 @@ export default function Overview(props: OverviewProps) {
           >
             <Icon icon={'ri:delete-bin-line'}/>
           </button>
-          <button title={'Agregar Stock'}
-                  className={styles.overview__actionButtons_button_addStock}>
-            <Icon icon={'ri:add-box-line'}/>
-          </button>
+          {/*<button title={'Agregar Stock'}*/}
+          {/*        className={styles.overview__actionButtons_button_addStock}>*/}
+          {/*  <Icon icon={'ri:add-box-line'}/>*/}
+          {/*</button>*/}
         </div>
       </div>
     </div>

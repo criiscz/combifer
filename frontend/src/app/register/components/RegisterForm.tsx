@@ -85,7 +85,17 @@ export default function RegisterForm({typeForm = 'register', user}: RegisterProp
   )
 
   const {mutate: changeRole} = useMutation(
-    (data: { role: number, user: number }) => changeUserRole(data.role, data.user))
+    (data: { role: number, user: number }) => changeUserRole(data.role, data.user),
+    {
+      onSuccess: () => {
+        setOpen(false)
+        setText('Rol cambiado correctamente')
+        setToast(true)
+        router.refresh()
+        setRefresh(true)
+      }
+    }
+  )
 
   const handleChange = ({target: {name, value}}: any) => setRegisterFields({
     ...registerFields,
@@ -107,14 +117,13 @@ export default function RegisterForm({typeForm = 'register', user}: RegisterProp
           phone: registerFields!.phone,
           userName: registerFields!.username
         }).then((res) => {
-          console.log(res)
           if (res.status === 200) return res.json()
           else if (res.status === 400) return manageError(res.status, res.text())
           else manageError(res.status, res.json())
         }).then((res) => {
           console.log(res)
           if (typeForm === 'new-user') {
-            // changeRole({role: registerFields!.role || 3, user: res.document})
+            changeRole({role: registerFields!.role || 3, user: res.document})
             setOpen(false)
             setText('Usuario creado correctamente')
             setToast(true)
@@ -130,7 +139,7 @@ export default function RegisterForm({typeForm = 'register', user}: RegisterProp
           console.log(err)
         })
       else {
-        // changeRole({role: registerFields!.role || 3, user: userId})
+        changeRole({role: registerFields!.role || 3, user: userId})
       }
     }, 500)
   }
@@ -206,7 +215,8 @@ export default function RegisterForm({typeForm = 'register', user}: RegisterProp
         <div>
           <label htmlFor="surname">Apellido</label>
           <input type="text" name="surname" id="surname" required onChange={handleChange}
-                 placeholder={'Escribe tu apellido'} disabled={typeForm === 'edit-user'} value={registerFields.surname}/>
+                 placeholder={'Escribe tu apellido'} disabled={typeForm === 'edit-user'}
+                 value={registerFields.surname}/>
         </div>
         <div>
           <label htmlFor="phone">Telefono</label>
@@ -217,7 +227,8 @@ export default function RegisterForm({typeForm = 'register', user}: RegisterProp
       <div className={styles.form_row}>
         <div>
           <label htmlFor="typeDocument">Tipo de documento</label>
-          <select name="typeDocument" id="typeDocument" onChange={handleChange} disabled={typeForm === 'edit-user'} value={registerFields.typeDocument}>
+          <select name="typeDocument" id="typeDocument" onChange={handleChange} disabled={typeForm === 'edit-user'}
+                  value={registerFields.typeDocument}>
             {documentTypes.map((type) => (
               <option key={type.id} value={type.id}>{type.name}</option>
             ))}
@@ -226,24 +237,28 @@ export default function RegisterForm({typeForm = 'register', user}: RegisterProp
         <div>
           <label htmlFor="document">Documento</label>
           <input type="text" name="document" id="document" required onChange={handleChange}
-                 placeholder={'Escribe el número de documento'} disabled={typeForm === 'edit-user'} value={registerFields.document}/>
+                 placeholder={'Escribe el número de documento'} disabled={typeForm === 'edit-user'}
+                 value={registerFields.document}/>
         </div>
         <div>
           <label htmlFor="email">Correo</label>
           <input type="email" name="email" id="email" required onChange={handleChange}
-                 placeholder={'Escribe tu correo electrónico'} disabled={typeForm === 'edit-user'} value={registerFields.email}/>
+                 placeholder={'Escribe tu correo electrónico'} disabled={typeForm === 'edit-user'}
+                 value={registerFields.email}/>
         </div>
       </div>
       <div className={styles.form_row}>
         <div>
           <label htmlFor="username">Nombre de usuario</label>
           <input type="text" name="username" id="username" required onChange={handleChange}
-                 placeholder={'Escribe un nombre de usuario'} disabled={typeForm === 'edit-user'} value={registerFields.username}/>
+                 placeholder={'Escribe un nombre de usuario'} disabled={typeForm === 'edit-user'}
+                 value={registerFields.username}/>
         </div>
         <div>
           <label htmlFor="password">Contraseña</label>
           <input type="password" name="password" id="password" required onChange={handleChange}
-                 placeholder={'Escribe una contraseña'} disabled={typeForm === 'edit-user'} value={registerFields.password}/>
+                 placeholder={'Escribe una contraseña'} disabled={typeForm === 'edit-user'}
+                 value={registerFields.password}/>
         </div>
         {typeForm === 'register' ?
           <div>
