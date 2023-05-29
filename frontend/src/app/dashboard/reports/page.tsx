@@ -3,7 +3,7 @@ import styles from './style.module.css'
 import {useQuery} from "react-query";
 import {ApexOptions} from "apexcharts";
 import {useEffect, useState} from "react";
-import {getReportBuys, getReportProductMostSold, getReportSales} from "@/api/Reports";
+import {getFinanceReport, getReportBuys, getReportProductMostSold, getReportSales} from "@/api/Reports";
 import dynamic from "next/dynamic";
 import {useLoginStatus} from "@/hooks/useLoginStatus";
 
@@ -26,7 +26,7 @@ export default function ReportPage() {
             <SellReport/>
           </ReportPanel>
           <ReportPanel title={'Reporte de Finanzas'} description={'Finanzaaas'}>
-            {/*<ProductReport/>*/}
+            <FinanceReport/>
           </ReportPanel>
         </div>
       </div>
@@ -290,28 +290,7 @@ const SellReport = () => {
 
   const {data, refetch} = useQuery('report-sell-products', async () => {
     return await getReportSales(startDate, endDate).then(res => res.data).then(res => {
-      //[
-      //     {
-      //       "product": {
-      //         "id": 0,
-      //         "productQuantity": 0,
-      //         "productDiscount": 0,
-      //         "productMeasureUnit": "string",
-      //         "productUnitPrice": 0,
-      //         "productName": "string",
-      //         "productDescription": "string",
-      //         "saleId": 0,
-      //         "taxId": 0,
-      //         "productLotId": 0
-      //       },
-      //       "soldDate": "2023-05-28"
-      //     }
-      //   ]
-      // Group the data by soldDate
-
-      const groupedData = res.reduce((groups: {
-        [key: string]: { productQuantity: number, productTotalPrice: number }
-      }, item: any) => {
+      const groupedData: {[key: string]: {productQuantity: number, productTotalPrice: number, products: any[]}} = res.reduce((groups: {[key: string]: {productQuantity: number, productTotalPrice: number, products: any[]}}, item: any) => {
         const soldDate = new Date(item.soldDate);
         const year = soldDate.getFullYear();
         const month = soldDate.getMonth() + 1; // Month is zero-based, so add 1
@@ -320,37 +299,47 @@ const SellReport = () => {
         if (!groups[key]) {
           groups[key] = {
             productQuantity: 0,
-            productTotalPrice: 0
+            productTotalPrice: 0,
+            products: []
           };
         }
 
         groups[key].productQuantity += item.product.productQuantity;
         groups[key].productTotalPrice += item.product.productQuantity * item.product.productUnitPrice;
+        groups[key].products.push(item.soldDate);
 
         return groups;
       }, {});
-
-
-      console.log(groupedData)
-
+      console.log(groupedData )
       return {data: groupedData}
     })
   })
 
-  const sortedKeys = Object.keys(data!.data).sort((a: string, b: string) => {
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateA.getTime() - dateB.getTime();
-  });
+
+  // refetch data when date changes
+  useEffect(() => {
+    refetch()
+  }, [startDate, endDate, refetch])
+
+  const sortedData: {[key: string]: {productQuantity: number, productTotalPrice: number, products: any[]}} = Object.entries(data?.data || [])
+    .sort(([dateA], [dateB]) => {
+      const date1 = new Date(dateA);
+      const date2 = new Date(dateB);
+      return date1.getTime() - date2.getTime();
+    })
+    .reduce((sortedObj: {[key: string]: {productQuantity: number, productTotalPrice: number, products: any[]}}, [key, value]) => {
+      sortedObj[key] = value;
+      return sortedObj;
+    }, {});
 
   const series = [
     {
       name: "Cantidad de productos vendidos",
-      data: Object.values(data!.data).map((item: any) => item.productQuantity),
+      data: Object.values(sortedData).map((item: any) => item.productQuantity),
     },
     {
       name: "Precio total de productos vendidos",
-      data: Object.values(data!.data).map((item: any) => item.productTotalPrice),
+      data: Object.values(sortedData).map((item: any) => item.productTotalPrice),
     },
   ];
   const options = {
@@ -407,7 +396,7 @@ const SellReport = () => {
       },
     },
     xaxis: {
-      categories: sortedKeys,
+      categories: Object.keys(sortedData),
       labels: {
         show: true,
       },
@@ -468,6 +457,83 @@ const SellReport = () => {
           <Chart options={options} series={series} type={"bar"} width={600}/>}
     </div>
   )
+}
+
+const FinanceReport = () => {
+  const [startDate, setStartDate] = useState(getDefaultStartDate())
+  const [endDate, setEndDate] = useState(getDefaultEndDate())
+
+  function getDefaultStartDate() {
+    const date = new Date()
+    date.setMonth(date.getMonth() - 2)
+    return date.toISOString().split("T")[0]
+  }
+
+  function getDefaultEndDate() {
+    const date = new Date()
+    date.setHours(date.getHours() + 24)
+    return date.toISOString().split("T")[0]
+  }
+
+  const { data, refetch } = useQuery('report-finance', async () => {
+    return await getFinanceReport(startDate, endDate).then(res => {
+      // Limit decimal places for income and outcome data
+      res.incomes = limitDecimalPlaces(res.incomes, 0);
+      res.outcomes = limitDecimalPlaces(res.outcomes, 0);
+
+      console.log('res', res)
+      return res;
+    });
+  });
+
+// Function to limit decimal places for an object
+  function limitDecimalPlaces(obj:any, decimalPlaces:any) {
+    for (const key in obj) {
+      if (typeof obj[key] === 'number') {
+        obj[key] = obj[key].toFixed(decimalPlaces);
+      }
+    }
+    return obj;
+  }
+
+  useEffect(() => {
+    refetch()
+  }, [startDate, endDate, refetch])
+
+
+  const series = [
+    Number(data?.incomes.monthly) || 0,
+    Number(data?.outcomes.monthly) || 0
+  ] as ApexOptions['series'];
+
+  const options = {
+    chart: {
+      type: 'pie',
+      height: 350,
+    },
+    labels: ['Incomes', 'Outcomes'],
+    legend: {
+      position: 'bottom',
+    },
+  } as ApexOptions
+
+  return (
+    <div>
+      <div className={styles.reports__body_item_date}>
+        <label htmlFor="start_date">Fecha de inicio</label>
+        <input type="date" min="2022-01-01" max={endDate} name="start_date" id="start_date"
+               value={startDate}
+               onChange={e => setStartDate(e.target.value)}/>
+        <label htmlFor="end_date">Fecha de fin</label>
+        <input type="date" min={startDate} max={getDefaultEndDate()}
+               name="end_date" id="end_date" value={endDate}
+               onChange={e => setEndDate(e.target.value)}/>
+      </div>
+      {typeof window !== 'undefined' && data &&
+          <Chart options={options} series={series} type={"pie"} width={600}/>}
+    </div>
+  )
+
 }
 
 interface ReportPanelProps {
